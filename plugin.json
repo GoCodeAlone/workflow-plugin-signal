@@ -37,14 +37,25 @@
     }
   ],
   "stepTypes": [
+    "step.signal_session_prepare",
+    "step.signal_encrypt",
+    "step.signal_decrypt",
     "step.signal_fingerprint"
   ],
   "capabilities": {
     "configProvider": false,
-    "moduleTypes": [],
+    "moduleTypes": [
+      "signal.identity_store",
+      "signal.space"
+    ],
     "stepTypes": [
+      "step.signal_session_prepare",
+      "step.signal_encrypt",
+      "step.signal_decrypt",
       "step.signal_fingerprint"
     ],
-    "triggerTypes": []
+    "triggerTypes": [
+      "trigger.signal_envelope"
+    ]
   }
 }

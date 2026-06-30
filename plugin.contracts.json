@@ -1,11 +1,53 @@
 {
   "contracts": [
     {
-      "config": "google.protobuf.StringValue",
-      "input": "google.protobuf.StringValue",
+      "config": "workflow.plugins.signal.v1.IdentityStoreConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.identity_store"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.SpaceConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.space"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.EnvelopeTriggerConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "trigger.signal_envelope"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.SessionPrepareConfig",
+      "input": "workflow.plugins.signal.v1.SessionPrepareInput",
       "kind": "step",
       "mode": "strict",
-      "output": "google.protobuf.StringValue",
+      "output": "workflow.plugins.signal.v1.SessionPrepareOutput",
+      "type": "step.signal_session_prepare"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.SignalEncryptConfig",
+      "input": "workflow.plugins.signal.v1.SignalEncryptInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.SignalEncryptOutput",
+      "type": "step.signal_encrypt"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.SignalDecryptConfig",
+      "input": "workflow.plugins.signal.v1.SignalDecryptInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.SignalDecryptOutput",
+      "type": "step.signal_decrypt"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.SignalFingerprintConfig",
+      "input": "workflow.plugins.signal.v1.SignalFingerprintInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.SignalFingerprintOutput",
       "type": "step.signal_fingerprint"
     }
   ],
