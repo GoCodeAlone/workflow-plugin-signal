@@ -50,6 +50,7 @@ var signalStepTypes = []string{
 	"step.signal_username_link_create",
 	"step.signal_username_link_decrypt",
 	"step.signal_service_contract_check",
+	"step.signal_service_compliance_check",
 }
 
 // TypedModuleTypes implements sdk.TypedModuleProvider.
@@ -161,6 +162,14 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalServiceContractCheck,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_compliance_check":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceComplianceCheckConfig{},
+			&contracts.ServiceComplianceCheckInput{},
+			ExecuteSignalServiceComplianceCheck,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	}
 	return nil, fmt.Errorf("%w: step type %q", sdk.ErrTypedContractNotHandled, typeName)
 }
@@ -188,6 +197,7 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_username_link_create", pkg+"UsernameLinkCreateConfig", pkg+"UsernameLinkCreateInput", pkg+"UsernameLinkCreateOutput"),
 			stepContract("step.signal_username_link_decrypt", pkg+"UsernameLinkDecryptConfig", pkg+"UsernameLinkDecryptInput", pkg+"UsernameLinkDecryptOutput"),
 			stepContract("step.signal_service_contract_check", pkg+"ServiceContractCheckConfig", pkg+"ServiceContractCheckInput", pkg+"ServiceContractCheckOutput"),
+			stepContract("step.signal_service_compliance_check", pkg+"ServiceComplianceCheckConfig", pkg+"ServiceComplianceCheckInput", pkg+"ServiceComplianceCheckOutput"),
 		},
 	}
 }

@@ -31,6 +31,7 @@ make install-local
 - `step.signal_username_link_create` - create an encrypted Signal username link payload.
 - `step.signal_username_link_decrypt` - decrypt an encrypted Signal username link payload.
 - `step.signal_service_contract_check` - validate the disabled/test-double official-service boundary and return upstream compatibility metadata.
+- `step.signal_service_compliance_check` - report official-service readiness requirements, blocked live actions, and upstream service metadata without opening live transport.
 
 ## Modules
 
@@ -46,7 +47,10 @@ persistent key custody before relying on restart survival.
 
 Official Signal service login/send/receive, registration, linked-device
 automation, username hash/proof, and Encrypted Spaces proof-system features are
-deferred until their service and cryptographic boundaries are designed.
+deferred until their service, legal/operator, and cryptographic boundaries are
+designed. The service compliance step is readiness metadata only; it does not
+register accounts, link devices, send messages, receive messages, upload
+backups, reserve usernames, or contact the official Signal service.
 
 ## Module
 

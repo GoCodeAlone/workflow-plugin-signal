@@ -8,8 +8,8 @@ github.com/GoCodeAlone/go-plugin v1.7.0 h1:EwnhqPlXiNmp85S+MXnKKvm3YlfA6O4NzBb4+
 github.com/GoCodeAlone/go-plugin v1.7.0/go.mod h1:HbGQRZUIa+jbDfjsaZIMJYvrz+LnxL0mJpggfynSTMk=
 github.com/GoCodeAlone/libsignal-go v0.3.0 h1:M3rlffZayWhYO4UA7YqeGovAS4gFSZQCXtzkIrp41m0=
 github.com/GoCodeAlone/libsignal-go v0.3.0/go.mod h1:S18Sbjg7yf8WAFmrvRZjnZe6msXtioGx91NCRusiLSI=
-github.com/GoCodeAlone/libsignal-service-go v0.1.0 h1:Hm8YIoYybdTKJpwFYDtmLweTWu8NFeTEZrmD0T2mZP4=
-github.com/GoCodeAlone/libsignal-service-go v0.1.0/go.mod h1:a8uhvD/yQBWqsZbzjJkv+/y/Cs1TqsaUzyfQVbP/LmE=
+github.com/GoCodeAlone/libsignal-service-go v0.2.0 h1:2lGObBB9mUbH2p7z3zHn9Bt/JROnEXatksO8tip4Ehs=
+github.com/GoCodeAlone/libsignal-service-go v0.2.0/go.mod h1:a8uhvD/yQBWqsZbzjJkv+/y/Cs1TqsaUzyfQVbP/LmE=
 github.com/GoCodeAlone/modular v1.13.4 h1:De4p2qyJSVmstRGno/PM+fPdUCMu/7a9WgU5FUVGDa8=
 github.com/GoCodeAlone/modular v1.13.4/go.mod h1:+JEPUYOxGaD332EMZ5PbJCz5rxwvFu4Tm6MrnZT0vxM=
 github.com/GoCodeAlone/modular/modules/auth v1.17.0 h1:GbKG6s/2qe6N9YZ8vtvYsNon56MLWECncPxWvAsazSc=
