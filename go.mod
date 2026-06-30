@@ -4,7 +4,7 @@ go 1.26.4
 
 require (
 	github.com/GoCodeAlone/libsignal-go v0.1.0
-	github.com/GoCodeAlone/workflow v0.0.0-00010101000000-000000000000
+	github.com/GoCodeAlone/workflow v0.83.1
 	google.golang.org/protobuf v1.36.12-0.20260120151049-f2248ac996af
 )
 
@@ -45,5 +45,3 @@ require (
 	modernc.org/memory v1.11.0 // indirect
 	modernc.org/sqlite v1.51.0 // indirect
 )
-
-replace github.com/GoCodeAlone/workflow => ../workflow
