@@ -46,6 +46,5 @@
       "step.signal_fingerprint"
     ],
     "triggerTypes": []
-  },
-  "iacProvider": {}
+  }
 }
