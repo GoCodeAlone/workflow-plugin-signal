@@ -39,5 +39,13 @@
   "stepTypes": [
     "step.signal_fingerprint"
   ],
+  "capabilities": {
+    "configProvider": false,
+    "moduleTypes": [],
+    "stepTypes": [
+      "step.signal_fingerprint"
+    ],
+    "triggerTypes": []
+  },
   "iacProvider": {}
 }
