@@ -31,6 +31,8 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"signal.identity_store",
 		"signal.space",
 		"signal.official_service_boundary",
+		"signal.key_custody",
+		"signal.account_ref",
 		"trigger.signal_envelope",
 		"trigger.signal_service_envelope",
 	})
@@ -44,6 +46,11 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step.signal_username_link_decrypt",
 		"step.signal_service_contract_check",
 		"step.signal_service_compliance_check",
+		"step.signal_service_policy_check",
+		"step.signal_service_test_register",
+		"step.signal_service_test_link_device",
+		"step.signal_service_test_send",
+		"step.signal_service_test_receive",
 	})
 
 	registry := contractProvider.ContractRegistry()
@@ -88,6 +95,8 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"module:signal.identity_store",
 		"module:signal.space",
 		"module:signal.official_service_boundary",
+		"module:signal.key_custody",
+		"module:signal.account_ref",
 		"module:trigger.signal_envelope",
 		"module:trigger.signal_service_envelope",
 		"step:step.signal_session_prepare",
@@ -99,6 +108,11 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step:step.signal_username_link_decrypt",
 		"step:step.signal_service_contract_check",
 		"step:step.signal_service_compliance_check",
+		"step:step.signal_service_policy_check",
+		"step:step.signal_service_test_register",
+		"step:step.signal_service_test_link_device",
+		"step:step.signal_service_test_send",
+		"step:step.signal_service_test_receive",
 	} {
 		if _, ok := contractsByKey[key]; !ok {
 			t.Fatalf("missing contract %s", key)
@@ -126,6 +140,8 @@ func TestPluginJSONCapabilitiesMatchRuntimeProvider(t *testing.T) {
 		"signal.identity_store",
 		"signal.space",
 		"signal.official_service_boundary",
+		"signal.key_custody",
+		"signal.account_ref",
 	})
 	assertStringSet(t, manifest.Capabilities.TriggerTypes, []string{
 		"trigger.signal_envelope",

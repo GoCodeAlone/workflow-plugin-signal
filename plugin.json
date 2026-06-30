@@ -45,14 +45,21 @@
     "step.signal_username_link_create",
     "step.signal_username_link_decrypt",
     "step.signal_service_contract_check",
-    "step.signal_service_compliance_check"
+    "step.signal_service_compliance_check",
+    "step.signal_service_policy_check",
+    "step.signal_service_test_register",
+    "step.signal_service_test_link_device",
+    "step.signal_service_test_send",
+    "step.signal_service_test_receive"
   ],
   "capabilities": {
     "configProvider": false,
     "moduleTypes": [
       "signal.identity_store",
       "signal.space",
-      "signal.official_service_boundary"
+      "signal.official_service_boundary",
+      "signal.key_custody",
+      "signal.account_ref"
     ],
     "stepTypes": [
       "step.signal_session_prepare",
@@ -63,7 +70,12 @@
       "step.signal_username_link_create",
       "step.signal_username_link_decrypt",
       "step.signal_service_contract_check",
-      "step.signal_service_compliance_check"
+      "step.signal_service_compliance_check",
+      "step.signal_service_policy_check",
+      "step.signal_service_test_register",
+      "step.signal_service_test_link_device",
+      "step.signal_service_test_send",
+      "step.signal_service_test_receive"
     ],
     "triggerTypes": [
       "trigger.signal_envelope",
