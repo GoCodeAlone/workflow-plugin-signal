@@ -36,7 +36,9 @@ func (p *SignalProvider) Manifest() sdk.PluginManifest {
 var signalModuleTypes = []string{
 	"signal.identity_store",
 	"signal.space",
+	"signal.official_service_boundary",
 	"trigger.signal_envelope",
+	"trigger.signal_service_envelope",
 }
 
 var signalStepTypes = []string{
@@ -47,6 +49,7 @@ var signalStepTypes = []string{
 	"step.signal_account_keys",
 	"step.signal_username_link_create",
 	"step.signal_username_link_decrypt",
+	"step.signal_service_contract_check",
 }
 
 // TypedModuleTypes implements sdk.TypedModuleProvider.
@@ -67,9 +70,19 @@ func (p *SignalProvider) CreateTypedModule(typeName, name string, config *anypb.
 			return newSpaceModule(name, cfg), nil
 		})
 		return factory.CreateTypedModule(typeName, name, config)
+	case "signal.official_service_boundary":
+		factory := sdk.NewTypedModuleFactory(typeName, &contracts.OfficialServiceBoundaryConfig{}, func(name string, cfg *contracts.OfficialServiceBoundaryConfig) (sdk.ModuleInstance, error) {
+			return newOfficialServiceBoundaryModule(name, cfg)
+		})
+		return factory.CreateTypedModule(typeName, name, config)
 	case "trigger.signal_envelope":
 		factory := sdk.NewTypedModuleFactory(typeName, &contracts.EnvelopeTriggerConfig{}, func(name string, cfg *contracts.EnvelopeTriggerConfig) (sdk.ModuleInstance, error) {
 			return newEnvelopeTriggerModule(name, cfg), nil
+		})
+		return factory.CreateTypedModule(typeName, name, config)
+	case "trigger.signal_service_envelope":
+		factory := sdk.NewTypedModuleFactory(typeName, &contracts.ServiceEnvelopeTriggerConfig{}, func(name string, cfg *contracts.ServiceEnvelopeTriggerConfig) (sdk.ModuleInstance, error) {
+			return newServiceEnvelopeTriggerModule(name, cfg), nil
 		})
 		return factory.CreateTypedModule(typeName, name, config)
 	}
@@ -140,6 +153,14 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalUsernameLinkDecrypt,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_contract_check":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceContractCheckConfig{},
+			&contracts.ServiceContractCheckInput{},
+			ExecuteSignalServiceContractCheck,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	}
 	return nil, fmt.Errorf("%w: step type %q", sdk.ErrTypedContractNotHandled, typeName)
 }
@@ -150,13 +171,15 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 	return &pb.ContractRegistry{
 		FileDescriptorSet: &descriptorpb.FileDescriptorSet{
 			File: []*descriptorpb.FileDescriptorProto{
-				protodesc.ToFileDescriptorProto(contracts.File_proto_signal_proto),
+				protodesc.ToFileDescriptorProto(contracts.File_internal_contracts_signal_proto),
 			},
 		},
 		Contracts: []*pb.ContractDescriptor{
 			moduleContract("signal.identity_store", pkg+"IdentityStoreConfig"),
 			moduleContract("signal.space", pkg+"SpaceConfig"),
+			moduleContract("signal.official_service_boundary", pkg+"OfficialServiceBoundaryConfig"),
 			moduleContract("trigger.signal_envelope", pkg+"EnvelopeTriggerConfig"),
+			moduleContract("trigger.signal_service_envelope", pkg+"ServiceEnvelopeTriggerConfig"),
 			stepContract("step.signal_session_prepare", pkg+"SessionPrepareConfig", pkg+"SessionPrepareInput", pkg+"SessionPrepareOutput"),
 			stepContract("step.signal_encrypt", pkg+"SignalEncryptConfig", pkg+"SignalEncryptInput", pkg+"SignalEncryptOutput"),
 			stepContract("step.signal_decrypt", pkg+"SignalDecryptConfig", pkg+"SignalDecryptInput", pkg+"SignalDecryptOutput"),
@@ -164,6 +187,7 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_account_keys", pkg+"AccountKeysConfig", pkg+"AccountKeysInput", pkg+"AccountKeysOutput"),
 			stepContract("step.signal_username_link_create", pkg+"UsernameLinkCreateConfig", pkg+"UsernameLinkCreateInput", pkg+"UsernameLinkCreateOutput"),
 			stepContract("step.signal_username_link_decrypt", pkg+"UsernameLinkDecryptConfig", pkg+"UsernameLinkDecryptInput", pkg+"UsernameLinkDecryptOutput"),
+			stepContract("step.signal_service_contract_check", pkg+"ServiceContractCheckConfig", pkg+"ServiceContractCheckInput", pkg+"ServiceContractCheckOutput"),
 		},
 	}
 }

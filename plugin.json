@@ -43,13 +43,15 @@
     "step.signal_fingerprint",
     "step.signal_account_keys",
     "step.signal_username_link_create",
-    "step.signal_username_link_decrypt"
+    "step.signal_username_link_decrypt",
+    "step.signal_service_contract_check"
   ],
   "capabilities": {
     "configProvider": false,
     "moduleTypes": [
       "signal.identity_store",
-      "signal.space"
+      "signal.space",
+      "signal.official_service_boundary"
     ],
     "stepTypes": [
       "step.signal_session_prepare",
@@ -58,10 +60,12 @@
       "step.signal_fingerprint",
       "step.signal_account_keys",
       "step.signal_username_link_create",
-      "step.signal_username_link_decrypt"
+      "step.signal_username_link_decrypt",
+      "step.signal_service_contract_check"
     ],
     "triggerTypes": [
-      "trigger.signal_envelope"
+      "trigger.signal_envelope",
+      "trigger.signal_service_envelope"
     ]
   }
 }

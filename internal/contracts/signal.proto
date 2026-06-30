@@ -169,3 +169,32 @@ message UsernameLinkDecryptInput {
 message UsernameLinkDecryptOutput {
   string username = 1;
 }
+
+message OfficialServiceBoundaryConfig {
+  string mode = 1;
+  string upstream_tag = 2;
+  string descriptor_checksum = 3;
+  string account_secret_ref = 4;
+  string egress_policy_ref = 5;
+}
+
+message ServiceContractCheckConfig {
+  string mode = 1;
+}
+
+message ServiceContractCheckInput {
+  string mode = 1;
+}
+
+message ServiceContractCheckOutput {
+  string mode = 1;
+  string upstream_tag = 2;
+  string descriptor_checksum = 3;
+  repeated string selected_domains = 4;
+  bool live_service_disabled = 5;
+}
+
+message ServiceEnvelopeTriggerConfig {
+  string source_ref = 1;
+  string boundary_ref = 2;
+}

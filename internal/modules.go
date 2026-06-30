@@ -62,6 +62,29 @@ func newEnvelopeTriggerModule(name string, cfg *contracts.EnvelopeTriggerConfig)
 	return &envelopeTriggerModule{name: name, config: cfg}
 }
 
+type officialServiceBoundaryModule struct {
+	lifecycleModule
+	name   string
+	config *contracts.OfficialServiceBoundaryConfig
+}
+
+func newOfficialServiceBoundaryModule(name string, cfg *contracts.OfficialServiceBoundaryConfig) (*officialServiceBoundaryModule, error) {
+	if err := validateServiceBoundaryMode(cfg.GetMode()); err != nil {
+		return nil, err
+	}
+	return &officialServiceBoundaryModule{name: name, config: cfg}, nil
+}
+
+type serviceEnvelopeTriggerModule struct {
+	lifecycleModule
+	name   string
+	config *contracts.ServiceEnvelopeTriggerConfig
+}
+
+func newServiceEnvelopeTriggerModule(name string, cfg *contracts.ServiceEnvelopeTriggerConfig) *serviceEnvelopeTriggerModule {
+	return &serviceEnvelopeTriggerModule{name: name, config: cfg}
+}
+
 type signalIdentity struct {
 	ref            string
 	localID        string
