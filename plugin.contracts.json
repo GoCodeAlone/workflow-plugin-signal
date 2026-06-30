@@ -1,0 +1,13 @@
+{
+  "contracts": [
+    {
+      "config": "google.protobuf.StringValue",
+      "input": "google.protobuf.StringValue",
+      "kind": "step",
+      "mode": "strict",
+      "output": "google.protobuf.StringValue",
+      "type": "step.signal_fingerprint"
+    }
+  ],
+  "version": "v1"
+}

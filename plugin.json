@@ -1,0 +1,43 @@
+{
+  "name": "workflow-plugin-signal",
+  "version": "0.0.0",
+  "author": "GoCodeAlone",
+  "description": "Signal protocol primitives for Workflow",
+  "license": "MIT",
+  "type": "external",
+  "tier": "community",
+  "repository": "https://github.com/GoCodeAlone/workflow-plugin-signal",
+  "homepage": "https://github.com/GoCodeAlone/workflow-plugin-signal",
+  "minEngineVersion": "0.51.7",
+  "downloads": [
+    {
+      "os": "linux",
+      "arch": "amd64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.1.0/workflow-plugin-signal-linux-amd64.tar.gz"
+    },
+    {
+      "os": "linux",
+      "arch": "arm64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.1.0/workflow-plugin-signal-linux-arm64.tar.gz"
+    },
+    {
+      "os": "darwin",
+      "arch": "amd64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.1.0/workflow-plugin-signal-darwin-amd64.tar.gz"
+    },
+    {
+      "os": "darwin",
+      "arch": "arm64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.1.0/workflow-plugin-signal-darwin-arm64.tar.gz"
+    },
+    {
+      "os": "windows",
+      "arch": "amd64",
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.1.0/workflow-plugin-signal-windows-amd64.tar.gz"
+    }
+  ],
+  "stepTypes": [
+    "step.signal_fingerprint"
+  ],
+  "iacProvider": {}
+}

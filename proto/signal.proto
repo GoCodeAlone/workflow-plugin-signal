@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package workflow.plugins.signal.v1;
+
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.com/GoCodeAlone/workflow-plugin-signal/internal/contracts";
+
+// The M1 scaffold uses google.protobuf.StringValue for config, input, and
+// output so the plugin is buildable before protoc generation is wired. The
+// string value carries a JSON envelope for step.signal_fingerprint.
+message FingerprintStepContract {
+  google.protobuf.StringValue config = 1;
+  google.protobuf.StringValue input = 2;
+  google.protobuf.StringValue output = 3;
+}
