@@ -30,7 +30,9 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 	assertStringSet(t, moduleProvider.TypedModuleTypes(), []string{
 		"signal.identity_store",
 		"signal.space",
+		"signal.official_service_boundary",
 		"trigger.signal_envelope",
+		"trigger.signal_service_envelope",
 	})
 	assertStringSet(t, stepProvider.TypedStepTypes(), []string{
 		"step.signal_session_prepare",
@@ -40,6 +42,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step.signal_account_keys",
 		"step.signal_username_link_create",
 		"step.signal_username_link_decrypt",
+		"step.signal_service_contract_check",
 	})
 
 	registry := contractProvider.ContractRegistry()
@@ -83,7 +86,9 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 	for _, key := range []string{
 		"module:signal.identity_store",
 		"module:signal.space",
+		"module:signal.official_service_boundary",
 		"module:trigger.signal_envelope",
+		"module:trigger.signal_service_envelope",
 		"step:step.signal_session_prepare",
 		"step:step.signal_encrypt",
 		"step:step.signal_decrypt",
@@ -91,6 +96,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step:step.signal_account_keys",
 		"step:step.signal_username_link_create",
 		"step:step.signal_username_link_decrypt",
+		"step:step.signal_service_contract_check",
 	} {
 		if _, ok := contractsByKey[key]; !ok {
 			t.Fatalf("missing contract %s", key)
@@ -117,9 +123,11 @@ func TestPluginJSONCapabilitiesMatchRuntimeProvider(t *testing.T) {
 	assertStringSet(t, manifest.Capabilities.ModuleTypes, []string{
 		"signal.identity_store",
 		"signal.space",
+		"signal.official_service_boundary",
 	})
 	assertStringSet(t, manifest.Capabilities.TriggerTypes, []string{
 		"trigger.signal_envelope",
+		"trigger.signal_service_envelope",
 	})
 	assertStringSet(t, manifest.Capabilities.StepTypes, provider.TypedStepTypes())
 }

@@ -13,10 +13,22 @@
       "type": "signal.space"
     },
     {
+      "config": "workflow.plugins.signal.v1.OfficialServiceBoundaryConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.official_service_boundary"
+    },
+    {
       "config": "workflow.plugins.signal.v1.EnvelopeTriggerConfig",
       "kind": "module",
       "mode": "strict",
       "type": "trigger.signal_envelope"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceEnvelopeTriggerConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "trigger.signal_service_envelope"
     },
     {
       "config": "workflow.plugins.signal.v1.SessionPrepareConfig",
@@ -73,6 +85,14 @@
       "mode": "strict",
       "output": "workflow.plugins.signal.v1.UsernameLinkDecryptOutput",
       "type": "step.signal_username_link_decrypt"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceContractCheckConfig",
+      "input": "workflow.plugins.signal.v1.ServiceContractCheckInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceContractCheckOutput",
+      "type": "step.signal_service_contract_check"
     }
   ],
   "version": "v1"
