@@ -15,6 +15,9 @@ func ExecuteSignalServiceComplianceCheck(
 	req sdk.TypedStepRequest[*contracts.ServiceComplianceCheckConfig, *contracts.ServiceComplianceCheckInput],
 ) (*sdk.TypedStepResult[*contracts.ServiceComplianceCheckOutput], error) {
 	mode := firstNonEmpty(req.Input.GetMode(), req.Config.GetMode())
+	if mode == "" {
+		mode = string(servicepolicy.ModeDisabled)
+	}
 	actions := serviceComplianceActions(req.Input.GetRequestedActions(), req.Config.GetRequestedActions())
 	report := servicepolicy.EvaluateCompliance(servicepolicy.ComplianceRequest{
 		Mode:             servicepolicy.Mode(mode),
@@ -39,10 +42,14 @@ func ExecuteSignalServiceComplianceCheck(
 }
 
 func serviceComplianceActions(inputActions, configActions []string) []servicepolicy.Action {
-	values := inputActions
-	if len(values) == 0 {
-		values = configActions
+	actions := nonEmptyServicePolicyActions(inputActions)
+	if len(actions) == 0 {
+		actions = nonEmptyServicePolicyActions(configActions)
 	}
+	return actions
+}
+
+func nonEmptyServicePolicyActions(values []string) []servicepolicy.Action {
 	actions := make([]servicepolicy.Action, 0, len(values))
 	for _, value := range values {
 		if value == "" {
