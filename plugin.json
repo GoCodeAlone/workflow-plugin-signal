@@ -44,7 +44,8 @@
     "step.signal_account_keys",
     "step.signal_username_link_create",
     "step.signal_username_link_decrypt",
-    "step.signal_service_contract_check"
+    "step.signal_service_contract_check",
+    "step.signal_service_compliance_check"
   ],
   "capabilities": {
     "configProvider": false,
@@ -61,7 +62,8 @@
       "step.signal_account_keys",
       "step.signal_username_link_create",
       "step.signal_username_link_decrypt",
-      "step.signal_service_contract_check"
+      "step.signal_service_contract_check",
+      "step.signal_service_compliance_check"
     ],
     "triggerTypes": [
       "trigger.signal_envelope",

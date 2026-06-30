@@ -194,6 +194,29 @@ message ServiceContractCheckOutput {
   bool live_service_disabled = 5;
 }
 
+message ServiceComplianceCheckConfig {
+  string mode = 1;
+  repeated string requested_actions = 2;
+}
+
+message ServiceComplianceCheckInput {
+  string mode = 1;
+  repeated string requested_actions = 2;
+}
+
+message ServiceComplianceCheckOutput {
+  string mode = 1;
+  bool approved = 2;
+  bool live_service_disabled = 3;
+  repeated string blocked_actions = 4;
+  repeated string required_approvals = 5;
+  repeated string deferred_domains = 6;
+  string upstream_tag = 7;
+  string descriptor_checksum = 8;
+  string manifest_digest = 9;
+  repeated string selected_domains = 10;
+}
+
 message ServiceEnvelopeTriggerConfig {
   string source_ref = 1;
   string boundary_ref = 2;

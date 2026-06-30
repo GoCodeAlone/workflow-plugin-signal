@@ -43,6 +43,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step.signal_username_link_create",
 		"step.signal_username_link_decrypt",
 		"step.signal_service_contract_check",
+		"step.signal_service_compliance_check",
 	})
 
 	registry := contractProvider.ContractRegistry()
@@ -97,6 +98,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step:step.signal_username_link_create",
 		"step:step.signal_username_link_decrypt",
 		"step:step.signal_service_contract_check",
+		"step:step.signal_service_compliance_check",
 	} {
 		if _, ok := contractsByKey[key]; !ok {
 			t.Fatalf("missing contract %s", key)
