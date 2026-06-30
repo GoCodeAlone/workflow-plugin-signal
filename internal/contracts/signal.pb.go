@@ -1089,6 +1089,578 @@ func (x *SignalDecryptOutput) GetPlaintext() []byte {
 	return nil
 }
 
+type AccountKeysConfig struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	EntropyPool     string                 `protobuf:"bytes,1,opt,name=entropy_pool,json=entropyPool,proto3" json:"entropy_pool,omitempty"`
+	Aci             []byte                 `protobuf:"bytes,2,opt,name=aci,proto3" json:"aci,omitempty"`
+	Pin             string                 `protobuf:"bytes,3,opt,name=pin,proto3" json:"pin,omitempty"`
+	PinSalt         []byte                 `protobuf:"bytes,4,opt,name=pin_salt,json=pinSalt,proto3" json:"pin_salt,omitempty"`
+	PinSaltUsername string                 `protobuf:"bytes,5,opt,name=pin_salt_username,json=pinSaltUsername,proto3" json:"pin_salt_username,omitempty"`
+	PinSaltGroupId  uint64                 `protobuf:"varint,6,opt,name=pin_salt_group_id,json=pinSaltGroupId,proto3" json:"pin_salt_group_id,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *AccountKeysConfig) Reset() {
+	*x = AccountKeysConfig{}
+	mi := &file_proto_signal_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AccountKeysConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AccountKeysConfig) ProtoMessage() {}
+
+func (x *AccountKeysConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_signal_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AccountKeysConfig.ProtoReflect.Descriptor instead.
+func (*AccountKeysConfig) Descriptor() ([]byte, []int) {
+	return file_proto_signal_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *AccountKeysConfig) GetEntropyPool() string {
+	if x != nil {
+		return x.EntropyPool
+	}
+	return ""
+}
+
+func (x *AccountKeysConfig) GetAci() []byte {
+	if x != nil {
+		return x.Aci
+	}
+	return nil
+}
+
+func (x *AccountKeysConfig) GetPin() string {
+	if x != nil {
+		return x.Pin
+	}
+	return ""
+}
+
+func (x *AccountKeysConfig) GetPinSalt() []byte {
+	if x != nil {
+		return x.PinSalt
+	}
+	return nil
+}
+
+func (x *AccountKeysConfig) GetPinSaltUsername() string {
+	if x != nil {
+		return x.PinSaltUsername
+	}
+	return ""
+}
+
+func (x *AccountKeysConfig) GetPinSaltGroupId() uint64 {
+	if x != nil {
+		return x.PinSaltGroupId
+	}
+	return 0
+}
+
+type AccountKeysInput struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	EntropyPool     string                 `protobuf:"bytes,1,opt,name=entropy_pool,json=entropyPool,proto3" json:"entropy_pool,omitempty"`
+	Aci             []byte                 `protobuf:"bytes,2,opt,name=aci,proto3" json:"aci,omitempty"`
+	Pin             string                 `protobuf:"bytes,3,opt,name=pin,proto3" json:"pin,omitempty"`
+	PinSalt         []byte                 `protobuf:"bytes,4,opt,name=pin_salt,json=pinSalt,proto3" json:"pin_salt,omitempty"`
+	PinSaltUsername string                 `protobuf:"bytes,5,opt,name=pin_salt_username,json=pinSaltUsername,proto3" json:"pin_salt_username,omitempty"`
+	PinSaltGroupId  uint64                 `protobuf:"varint,6,opt,name=pin_salt_group_id,json=pinSaltGroupId,proto3" json:"pin_salt_group_id,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *AccountKeysInput) Reset() {
+	*x = AccountKeysInput{}
+	mi := &file_proto_signal_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AccountKeysInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AccountKeysInput) ProtoMessage() {}
+
+func (x *AccountKeysInput) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_signal_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AccountKeysInput.ProtoReflect.Descriptor instead.
+func (*AccountKeysInput) Descriptor() ([]byte, []int) {
+	return file_proto_signal_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *AccountKeysInput) GetEntropyPool() string {
+	if x != nil {
+		return x.EntropyPool
+	}
+	return ""
+}
+
+func (x *AccountKeysInput) GetAci() []byte {
+	if x != nil {
+		return x.Aci
+	}
+	return nil
+}
+
+func (x *AccountKeysInput) GetPin() string {
+	if x != nil {
+		return x.Pin
+	}
+	return ""
+}
+
+func (x *AccountKeysInput) GetPinSalt() []byte {
+	if x != nil {
+		return x.PinSalt
+	}
+	return nil
+}
+
+func (x *AccountKeysInput) GetPinSaltUsername() string {
+	if x != nil {
+		return x.PinSaltUsername
+	}
+	return ""
+}
+
+func (x *AccountKeysInput) GetPinSaltGroupId() uint64 {
+	if x != nil {
+		return x.PinSaltGroupId
+	}
+	return 0
+}
+
+type AccountKeysOutput struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	EntropyPool      string                 `protobuf:"bytes,1,opt,name=entropy_pool,json=entropyPool,proto3" json:"entropy_pool,omitempty"`
+	SvrKey           []byte                 `protobuf:"bytes,2,opt,name=svr_key,json=svrKey,proto3" json:"svr_key,omitempty"`
+	BackupKey        []byte                 `protobuf:"bytes,3,opt,name=backup_key,json=backupKey,proto3" json:"backup_key,omitempty"`
+	BackupId         []byte                 `protobuf:"bytes,4,opt,name=backup_id,json=backupId,proto3" json:"backup_id,omitempty"`
+	PinSalt          []byte                 `protobuf:"bytes,5,opt,name=pin_salt,json=pinSalt,proto3" json:"pin_salt,omitempty"`
+	PinAccessKey     []byte                 `protobuf:"bytes,6,opt,name=pin_access_key,json=pinAccessKey,proto3" json:"pin_access_key,omitempty"`
+	PinEncryptionKey []byte                 `protobuf:"bytes,7,opt,name=pin_encryption_key,json=pinEncryptionKey,proto3" json:"pin_encryption_key,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *AccountKeysOutput) Reset() {
+	*x = AccountKeysOutput{}
+	mi := &file_proto_signal_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AccountKeysOutput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AccountKeysOutput) ProtoMessage() {}
+
+func (x *AccountKeysOutput) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_signal_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AccountKeysOutput.ProtoReflect.Descriptor instead.
+func (*AccountKeysOutput) Descriptor() ([]byte, []int) {
+	return file_proto_signal_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *AccountKeysOutput) GetEntropyPool() string {
+	if x != nil {
+		return x.EntropyPool
+	}
+	return ""
+}
+
+func (x *AccountKeysOutput) GetSvrKey() []byte {
+	if x != nil {
+		return x.SvrKey
+	}
+	return nil
+}
+
+func (x *AccountKeysOutput) GetBackupKey() []byte {
+	if x != nil {
+		return x.BackupKey
+	}
+	return nil
+}
+
+func (x *AccountKeysOutput) GetBackupId() []byte {
+	if x != nil {
+		return x.BackupId
+	}
+	return nil
+}
+
+func (x *AccountKeysOutput) GetPinSalt() []byte {
+	if x != nil {
+		return x.PinSalt
+	}
+	return nil
+}
+
+func (x *AccountKeysOutput) GetPinAccessKey() []byte {
+	if x != nil {
+		return x.PinAccessKey
+	}
+	return nil
+}
+
+func (x *AccountKeysOutput) GetPinEncryptionKey() []byte {
+	if x != nil {
+		return x.PinEncryptionKey
+	}
+	return nil
+}
+
+type UsernameLinkCreateConfig struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	Entropy       []byte                 `protobuf:"bytes,2,opt,name=entropy,proto3" json:"entropy,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UsernameLinkCreateConfig) Reset() {
+	*x = UsernameLinkCreateConfig{}
+	mi := &file_proto_signal_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UsernameLinkCreateConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UsernameLinkCreateConfig) ProtoMessage() {}
+
+func (x *UsernameLinkCreateConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_signal_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UsernameLinkCreateConfig.ProtoReflect.Descriptor instead.
+func (*UsernameLinkCreateConfig) Descriptor() ([]byte, []int) {
+	return file_proto_signal_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *UsernameLinkCreateConfig) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *UsernameLinkCreateConfig) GetEntropy() []byte {
+	if x != nil {
+		return x.Entropy
+	}
+	return nil
+}
+
+type UsernameLinkCreateInput struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	Entropy       []byte                 `protobuf:"bytes,2,opt,name=entropy,proto3" json:"entropy,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UsernameLinkCreateInput) Reset() {
+	*x = UsernameLinkCreateInput{}
+	mi := &file_proto_signal_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UsernameLinkCreateInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UsernameLinkCreateInput) ProtoMessage() {}
+
+func (x *UsernameLinkCreateInput) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_signal_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UsernameLinkCreateInput.ProtoReflect.Descriptor instead.
+func (*UsernameLinkCreateInput) Descriptor() ([]byte, []int) {
+	return file_proto_signal_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *UsernameLinkCreateInput) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *UsernameLinkCreateInput) GetEntropy() []byte {
+	if x != nil {
+		return x.Entropy
+	}
+	return nil
+}
+
+type UsernameLinkCreateOutput struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Entropy           []byte                 `protobuf:"bytes,1,opt,name=entropy,proto3" json:"entropy,omitempty"`
+	EncryptedUsername []byte                 `protobuf:"bytes,2,opt,name=encrypted_username,json=encryptedUsername,proto3" json:"encrypted_username,omitempty"`
+	LinkBuffer        []byte                 `protobuf:"bytes,3,opt,name=link_buffer,json=linkBuffer,proto3" json:"link_buffer,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *UsernameLinkCreateOutput) Reset() {
+	*x = UsernameLinkCreateOutput{}
+	mi := &file_proto_signal_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UsernameLinkCreateOutput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UsernameLinkCreateOutput) ProtoMessage() {}
+
+func (x *UsernameLinkCreateOutput) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_signal_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UsernameLinkCreateOutput.ProtoReflect.Descriptor instead.
+func (*UsernameLinkCreateOutput) Descriptor() ([]byte, []int) {
+	return file_proto_signal_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *UsernameLinkCreateOutput) GetEntropy() []byte {
+	if x != nil {
+		return x.Entropy
+	}
+	return nil
+}
+
+func (x *UsernameLinkCreateOutput) GetEncryptedUsername() []byte {
+	if x != nil {
+		return x.EncryptedUsername
+	}
+	return nil
+}
+
+func (x *UsernameLinkCreateOutput) GetLinkBuffer() []byte {
+	if x != nil {
+		return x.LinkBuffer
+	}
+	return nil
+}
+
+type UsernameLinkDecryptConfig struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Entropy       []byte                 `protobuf:"bytes,1,opt,name=entropy,proto3" json:"entropy,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UsernameLinkDecryptConfig) Reset() {
+	*x = UsernameLinkDecryptConfig{}
+	mi := &file_proto_signal_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UsernameLinkDecryptConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UsernameLinkDecryptConfig) ProtoMessage() {}
+
+func (x *UsernameLinkDecryptConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_signal_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UsernameLinkDecryptConfig.ProtoReflect.Descriptor instead.
+func (*UsernameLinkDecryptConfig) Descriptor() ([]byte, []int) {
+	return file_proto_signal_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *UsernameLinkDecryptConfig) GetEntropy() []byte {
+	if x != nil {
+		return x.Entropy
+	}
+	return nil
+}
+
+type UsernameLinkDecryptInput struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Entropy           []byte                 `protobuf:"bytes,1,opt,name=entropy,proto3" json:"entropy,omitempty"`
+	EncryptedUsername []byte                 `protobuf:"bytes,2,opt,name=encrypted_username,json=encryptedUsername,proto3" json:"encrypted_username,omitempty"`
+	LinkBuffer        []byte                 `protobuf:"bytes,3,opt,name=link_buffer,json=linkBuffer,proto3" json:"link_buffer,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *UsernameLinkDecryptInput) Reset() {
+	*x = UsernameLinkDecryptInput{}
+	mi := &file_proto_signal_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UsernameLinkDecryptInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UsernameLinkDecryptInput) ProtoMessage() {}
+
+func (x *UsernameLinkDecryptInput) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_signal_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UsernameLinkDecryptInput.ProtoReflect.Descriptor instead.
+func (*UsernameLinkDecryptInput) Descriptor() ([]byte, []int) {
+	return file_proto_signal_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *UsernameLinkDecryptInput) GetEntropy() []byte {
+	if x != nil {
+		return x.Entropy
+	}
+	return nil
+}
+
+func (x *UsernameLinkDecryptInput) GetEncryptedUsername() []byte {
+	if x != nil {
+		return x.EncryptedUsername
+	}
+	return nil
+}
+
+func (x *UsernameLinkDecryptInput) GetLinkBuffer() []byte {
+	if x != nil {
+		return x.LinkBuffer
+	}
+	return nil
+}
+
+type UsernameLinkDecryptOutput struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UsernameLinkDecryptOutput) Reset() {
+	*x = UsernameLinkDecryptOutput{}
+	mi := &file_proto_signal_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UsernameLinkDecryptOutput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UsernameLinkDecryptOutput) ProtoMessage() {}
+
+func (x *UsernameLinkDecryptOutput) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_signal_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UsernameLinkDecryptOutput.ProtoReflect.Descriptor instead.
+func (*UsernameLinkDecryptOutput) Descriptor() ([]byte, []int) {
+	return file_proto_signal_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *UsernameLinkDecryptOutput) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
 var File_proto_signal_proto protoreflect.FileDescriptor
 
 const file_proto_signal_proto_rawDesc = "" +
@@ -1177,7 +1749,50 @@ const file_proto_signal_proto_rawDesc = "" +
 	"\x13SignalDecryptOutput\x12\x16\n" +
 	"\x06denied\x18\x01 \x01(\bR\x06denied\x12\x14\n" +
 	"\x05error\x18\x02 \x01(\tR\x05error\x12\x1c\n" +
-	"\tplaintext\x18\x03 \x01(\fR\tplaintextBBZ@github.com/GoCodeAlone/workflow-plugin-signal/internal/contractsb\x06proto3"
+	"\tplaintext\x18\x03 \x01(\fR\tplaintext\"\xcc\x01\n" +
+	"\x11AccountKeysConfig\x12!\n" +
+	"\fentropy_pool\x18\x01 \x01(\tR\ventropyPool\x12\x10\n" +
+	"\x03aci\x18\x02 \x01(\fR\x03aci\x12\x10\n" +
+	"\x03pin\x18\x03 \x01(\tR\x03pin\x12\x19\n" +
+	"\bpin_salt\x18\x04 \x01(\fR\apinSalt\x12*\n" +
+	"\x11pin_salt_username\x18\x05 \x01(\tR\x0fpinSaltUsername\x12)\n" +
+	"\x11pin_salt_group_id\x18\x06 \x01(\x04R\x0epinSaltGroupId\"\xcb\x01\n" +
+	"\x10AccountKeysInput\x12!\n" +
+	"\fentropy_pool\x18\x01 \x01(\tR\ventropyPool\x12\x10\n" +
+	"\x03aci\x18\x02 \x01(\fR\x03aci\x12\x10\n" +
+	"\x03pin\x18\x03 \x01(\tR\x03pin\x12\x19\n" +
+	"\bpin_salt\x18\x04 \x01(\fR\apinSalt\x12*\n" +
+	"\x11pin_salt_username\x18\x05 \x01(\tR\x0fpinSaltUsername\x12)\n" +
+	"\x11pin_salt_group_id\x18\x06 \x01(\x04R\x0epinSaltGroupId\"\xfa\x01\n" +
+	"\x11AccountKeysOutput\x12!\n" +
+	"\fentropy_pool\x18\x01 \x01(\tR\ventropyPool\x12\x17\n" +
+	"\asvr_key\x18\x02 \x01(\fR\x06svrKey\x12\x1d\n" +
+	"\n" +
+	"backup_key\x18\x03 \x01(\fR\tbackupKey\x12\x1b\n" +
+	"\tbackup_id\x18\x04 \x01(\fR\bbackupId\x12\x19\n" +
+	"\bpin_salt\x18\x05 \x01(\fR\apinSalt\x12$\n" +
+	"\x0epin_access_key\x18\x06 \x01(\fR\fpinAccessKey\x12,\n" +
+	"\x12pin_encryption_key\x18\a \x01(\fR\x10pinEncryptionKey\"P\n" +
+	"\x18UsernameLinkCreateConfig\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\x12\x18\n" +
+	"\aentropy\x18\x02 \x01(\fR\aentropy\"O\n" +
+	"\x17UsernameLinkCreateInput\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\x12\x18\n" +
+	"\aentropy\x18\x02 \x01(\fR\aentropy\"\x84\x01\n" +
+	"\x18UsernameLinkCreateOutput\x12\x18\n" +
+	"\aentropy\x18\x01 \x01(\fR\aentropy\x12-\n" +
+	"\x12encrypted_username\x18\x02 \x01(\fR\x11encryptedUsername\x12\x1f\n" +
+	"\vlink_buffer\x18\x03 \x01(\fR\n" +
+	"linkBuffer\"5\n" +
+	"\x19UsernameLinkDecryptConfig\x12\x18\n" +
+	"\aentropy\x18\x01 \x01(\fR\aentropy\"\x84\x01\n" +
+	"\x18UsernameLinkDecryptInput\x12\x18\n" +
+	"\aentropy\x18\x01 \x01(\fR\aentropy\x12-\n" +
+	"\x12encrypted_username\x18\x02 \x01(\fR\x11encryptedUsername\x12\x1f\n" +
+	"\vlink_buffer\x18\x03 \x01(\fR\n" +
+	"linkBuffer\"7\n" +
+	"\x19UsernameLinkDecryptOutput\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busernameBBZ@github.com/GoCodeAlone/workflow-plugin-signal/internal/contractsb\x06proto3"
 
 var (
 	file_proto_signal_proto_rawDescOnce sync.Once
@@ -1191,25 +1806,34 @@ func file_proto_signal_proto_rawDescGZIP() []byte {
 	return file_proto_signal_proto_rawDescData
 }
 
-var file_proto_signal_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_proto_signal_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_proto_signal_proto_goTypes = []any{
-	(*IdentityStoreConfig)(nil),     // 0: workflow.plugins.signal.v1.IdentityStoreConfig
-	(*SpaceConfig)(nil),             // 1: workflow.plugins.signal.v1.SpaceConfig
-	(*EnvelopeTriggerConfig)(nil),   // 2: workflow.plugins.signal.v1.EnvelopeTriggerConfig
-	(*SignalFingerprintConfig)(nil), // 3: workflow.plugins.signal.v1.SignalFingerprintConfig
-	(*SignalFingerprintInput)(nil),  // 4: workflow.plugins.signal.v1.SignalFingerprintInput
-	(*SignalFingerprintOutput)(nil), // 5: workflow.plugins.signal.v1.SignalFingerprintOutput
-	(*SessionPrepareConfig)(nil),    // 6: workflow.plugins.signal.v1.SessionPrepareConfig
-	(*SessionPrepareInput)(nil),     // 7: workflow.plugins.signal.v1.SessionPrepareInput
-	(*PreKeyBundle)(nil),            // 8: workflow.plugins.signal.v1.PreKeyBundle
-	(*SessionPrepareOutput)(nil),    // 9: workflow.plugins.signal.v1.SessionPrepareOutput
-	(*SignalEncryptConfig)(nil),     // 10: workflow.plugins.signal.v1.SignalEncryptConfig
-	(*SignalEncryptInput)(nil),      // 11: workflow.plugins.signal.v1.SignalEncryptInput
-	(*SignalEnvelope)(nil),          // 12: workflow.plugins.signal.v1.SignalEnvelope
-	(*SignalEncryptOutput)(nil),     // 13: workflow.plugins.signal.v1.SignalEncryptOutput
-	(*SignalDecryptConfig)(nil),     // 14: workflow.plugins.signal.v1.SignalDecryptConfig
-	(*SignalDecryptInput)(nil),      // 15: workflow.plugins.signal.v1.SignalDecryptInput
-	(*SignalDecryptOutput)(nil),     // 16: workflow.plugins.signal.v1.SignalDecryptOutput
+	(*IdentityStoreConfig)(nil),       // 0: workflow.plugins.signal.v1.IdentityStoreConfig
+	(*SpaceConfig)(nil),               // 1: workflow.plugins.signal.v1.SpaceConfig
+	(*EnvelopeTriggerConfig)(nil),     // 2: workflow.plugins.signal.v1.EnvelopeTriggerConfig
+	(*SignalFingerprintConfig)(nil),   // 3: workflow.plugins.signal.v1.SignalFingerprintConfig
+	(*SignalFingerprintInput)(nil),    // 4: workflow.plugins.signal.v1.SignalFingerprintInput
+	(*SignalFingerprintOutput)(nil),   // 5: workflow.plugins.signal.v1.SignalFingerprintOutput
+	(*SessionPrepareConfig)(nil),      // 6: workflow.plugins.signal.v1.SessionPrepareConfig
+	(*SessionPrepareInput)(nil),       // 7: workflow.plugins.signal.v1.SessionPrepareInput
+	(*PreKeyBundle)(nil),              // 8: workflow.plugins.signal.v1.PreKeyBundle
+	(*SessionPrepareOutput)(nil),      // 9: workflow.plugins.signal.v1.SessionPrepareOutput
+	(*SignalEncryptConfig)(nil),       // 10: workflow.plugins.signal.v1.SignalEncryptConfig
+	(*SignalEncryptInput)(nil),        // 11: workflow.plugins.signal.v1.SignalEncryptInput
+	(*SignalEnvelope)(nil),            // 12: workflow.plugins.signal.v1.SignalEnvelope
+	(*SignalEncryptOutput)(nil),       // 13: workflow.plugins.signal.v1.SignalEncryptOutput
+	(*SignalDecryptConfig)(nil),       // 14: workflow.plugins.signal.v1.SignalDecryptConfig
+	(*SignalDecryptInput)(nil),        // 15: workflow.plugins.signal.v1.SignalDecryptInput
+	(*SignalDecryptOutput)(nil),       // 16: workflow.plugins.signal.v1.SignalDecryptOutput
+	(*AccountKeysConfig)(nil),         // 17: workflow.plugins.signal.v1.AccountKeysConfig
+	(*AccountKeysInput)(nil),          // 18: workflow.plugins.signal.v1.AccountKeysInput
+	(*AccountKeysOutput)(nil),         // 19: workflow.plugins.signal.v1.AccountKeysOutput
+	(*UsernameLinkCreateConfig)(nil),  // 20: workflow.plugins.signal.v1.UsernameLinkCreateConfig
+	(*UsernameLinkCreateInput)(nil),   // 21: workflow.plugins.signal.v1.UsernameLinkCreateInput
+	(*UsernameLinkCreateOutput)(nil),  // 22: workflow.plugins.signal.v1.UsernameLinkCreateOutput
+	(*UsernameLinkDecryptConfig)(nil), // 23: workflow.plugins.signal.v1.UsernameLinkDecryptConfig
+	(*UsernameLinkDecryptInput)(nil),  // 24: workflow.plugins.signal.v1.UsernameLinkDecryptInput
+	(*UsernameLinkDecryptOutput)(nil), // 25: workflow.plugins.signal.v1.UsernameLinkDecryptOutput
 }
 var file_proto_signal_proto_depIdxs = []int32{
 	8,  // 0: workflow.plugins.signal.v1.SessionPrepareOutput.bundle:type_name -> workflow.plugins.signal.v1.PreKeyBundle
@@ -1234,7 +1858,7 @@ func file_proto_signal_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_signal_proto_rawDesc), len(file_proto_signal_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

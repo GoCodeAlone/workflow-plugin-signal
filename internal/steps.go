@@ -6,12 +6,14 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/GoCodeAlone/libsignal-go/accountkeys"
 	"github.com/GoCodeAlone/libsignal-go/address"
 	"github.com/GoCodeAlone/libsignal-go/curve"
 	"github.com/GoCodeAlone/libsignal-go/fingerprint"
 	"github.com/GoCodeAlone/libsignal-go/kem"
 	"github.com/GoCodeAlone/libsignal-go/protocol"
 	"github.com/GoCodeAlone/libsignal-go/session"
+	"github.com/GoCodeAlone/libsignal-go/usernames"
 	"github.com/GoCodeAlone/workflow/plugin/external/sdk"
 
 	contracts "github.com/GoCodeAlone/workflow-plugin-signal/internal/contracts"
@@ -210,6 +212,120 @@ func ExecuteSignalDecrypt(
 	}, nil
 }
 
+// ExecuteSignalAccountKeys derives Signal account keys from an entropy pool.
+func ExecuteSignalAccountKeys(
+	_ context.Context,
+	req sdk.TypedStepRequest[*contracts.AccountKeysConfig, *contracts.AccountKeysInput],
+) (*sdk.TypedStepResult[*contracts.AccountKeysOutput], error) {
+	poolText := firstNonEmpty(req.Input.GetEntropyPool(), req.Config.GetEntropyPool())
+	var pool accountkeys.AccountEntropyPool
+	var err error
+	if poolText == "" {
+		pool, err = accountkeys.GenerateAccountEntropyPool()
+	} else {
+		pool, err = accountkeys.ParseAccountEntropyPool(poolText)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("signal account keys: entropy_pool: %w", err)
+	}
+
+	backupKey := accountkeys.DeriveBackupKey(pool)
+	svrKey := pool.DeriveSVRKey()
+	output := &contracts.AccountKeysOutput{
+		EntropyPool: pool.String(),
+		SvrKey:      cloneBytes(svrKey[:]),
+		BackupKey:   cloneBytes(backupKey[:]),
+	}
+
+	if aciRaw := firstBytes(req.Input.GetAci(), req.Config.GetAci()); len(aciRaw) > 0 {
+		aci, err := serviceIDFromACI(aciRaw)
+		if err != nil {
+			return nil, fmt.Errorf("signal account keys: aci: %w", err)
+		}
+		backupID := backupKey.DeriveBackupID(aci)
+		output.BackupId = cloneBytes(backupID[:])
+	}
+
+	pin := firstNonEmpty(req.Input.GetPin(), req.Config.GetPin())
+	if pin != "" {
+		salt, err := resolvePINSalt(req)
+		if err != nil {
+			return nil, fmt.Errorf("signal account keys: pin_salt: %w", err)
+		}
+		hash := accountkeys.CreatePinHash([]byte(pin), salt)
+		output.PinSalt = cloneBytes(salt[:])
+		output.PinAccessKey = cloneBytes(hash.AccessKey[:])
+		output.PinEncryptionKey = cloneBytes(hash.EncryptionKey[:])
+	}
+
+	return &sdk.TypedStepResult[*contracts.AccountKeysOutput]{Output: output}, nil
+}
+
+// ExecuteSignalUsernameLinkCreate creates a Signal username-link ciphertext.
+func ExecuteSignalUsernameLinkCreate(
+	_ context.Context,
+	req sdk.TypedStepRequest[*contracts.UsernameLinkCreateConfig, *contracts.UsernameLinkCreateInput],
+) (*sdk.TypedStepResult[*contracts.UsernameLinkCreateOutput], error) {
+	username := firstNonEmpty(req.Input.GetUsername(), req.Config.GetUsername())
+	if username == "" {
+		return nil, fmt.Errorf("signal username link create: username is required")
+	}
+	var entropy *[usernames.LinkEntropySize]byte
+	if entropyRaw := firstBytes(req.Input.GetEntropy(), req.Config.GetEntropy()); len(entropyRaw) > 0 {
+		arr, err := usernameEntropy(entropyRaw)
+		if err != nil {
+			return nil, fmt.Errorf("signal username link create: entropy: %w", err)
+		}
+		entropy = &arr
+	}
+	link, err := usernames.CreateLink(username, entropy)
+	if err != nil {
+		return nil, fmt.Errorf("signal username link create: %w", err)
+	}
+	return &sdk.TypedStepResult[*contracts.UsernameLinkCreateOutput]{
+		Output: &contracts.UsernameLinkCreateOutput{
+			Entropy:           cloneBytes(link.Entropy[:]),
+			EncryptedUsername: cloneBytes(link.EncryptedUsername),
+			LinkBuffer:        link.Buffer(),
+		},
+	}, nil
+}
+
+// ExecuteSignalUsernameLinkDecrypt decrypts a Signal username-link ciphertext.
+func ExecuteSignalUsernameLinkDecrypt(
+	_ context.Context,
+	req sdk.TypedStepRequest[*contracts.UsernameLinkDecryptConfig, *contracts.UsernameLinkDecryptInput],
+) (*sdk.TypedStepResult[*contracts.UsernameLinkDecryptOutput], error) {
+	entropyRaw := firstBytes(req.Input.GetEntropy(), req.Config.GetEntropy())
+	encrypted := cloneBytes(req.Input.GetEncryptedUsername())
+	if len(req.Input.GetLinkBuffer()) > 0 {
+		link, err := usernames.ParseLinkBuffer(req.Input.GetLinkBuffer())
+		if err != nil {
+			return nil, fmt.Errorf("signal username link decrypt: link_buffer: %w", err)
+		}
+		if len(entropyRaw) == 0 {
+			entropyRaw = link.Entropy[:]
+		}
+		if len(encrypted) == 0 {
+			encrypted = link.EncryptedUsername
+		}
+	}
+	entropy, err := usernameEntropy(entropyRaw)
+	if err != nil {
+		return nil, fmt.Errorf("signal username link decrypt: entropy: %w", err)
+	}
+	if len(encrypted) == 0 {
+		return nil, fmt.Errorf("signal username link decrypt: encrypted_username is required")
+	}
+	username, err := usernames.DecryptUsername(entropy, encrypted)
+	if err != nil {
+		return nil, fmt.Errorf("signal username link decrypt: %w", err)
+	}
+	return &sdk.TypedStepResult[*contracts.UsernameLinkDecryptOutput]{
+		Output: &contracts.UsernameLinkDecryptOutput{Username: username},
+	}, nil
+}
+
 func decodePublicKey(value string) (curve.PublicKey, error) {
 	raw, err := hex.DecodeString(value)
 	if err != nil {
@@ -234,6 +350,15 @@ func firstNonEmpty(values ...string) string {
 		}
 	}
 	return ""
+}
+
+func firstBytes(values ...[]byte) []byte {
+	for _, value := range values {
+		if len(value) != 0 {
+			return value
+		}
+	}
+	return nil
 }
 
 func protocolAddress(name string, deviceID uint32) (address.ProtocolAddress, error) {
@@ -300,4 +425,52 @@ func decryptDenied(message string) *sdk.TypedStepResult[*contracts.SignalDecrypt
 			Error:  message,
 		},
 	}
+}
+
+func serviceIDFromACI(raw []byte) (address.ServiceID, error) {
+	if len(raw) != address.UUIDLen {
+		return address.ServiceID{}, fmt.Errorf("must be %d bytes, got %d", address.UUIDLen, len(raw))
+	}
+	var uuid [address.UUIDLen]byte
+	copy(uuid[:], raw)
+	return address.NewACI(uuid), nil
+}
+
+func resolvePINSalt(req sdk.TypedStepRequest[*contracts.AccountKeysConfig, *contracts.AccountKeysInput]) ([32]byte, error) {
+	if saltRaw := firstBytes(req.Input.GetPinSalt(), req.Config.GetPinSalt()); len(saltRaw) > 0 {
+		if len(saltRaw) != 32 {
+			return [32]byte{}, fmt.Errorf("must be 32 bytes, got %d", len(saltRaw))
+		}
+		var salt [32]byte
+		copy(salt[:], saltRaw)
+		return salt, nil
+	}
+	username := firstNonEmpty(req.Input.GetPinSaltUsername(), req.Config.GetPinSaltUsername())
+	groupID := firstNonZero64(req.Input.GetPinSaltGroupId(), req.Config.GetPinSaltGroupId())
+	if username == "" || groupID == 0 {
+		return [32]byte{}, fmt.Errorf("pin_salt or pin_salt_username plus pin_salt_group_id is required when pin is set")
+	}
+	return accountkeys.MakePINSalt(username, groupID), nil
+}
+
+func firstNonZero64(values ...uint64) uint64 {
+	for _, value := range values {
+		if value != 0 {
+			return value
+		}
+	}
+	return 0
+}
+
+func usernameEntropy(raw []byte) ([usernames.LinkEntropySize]byte, error) {
+	if len(raw) != usernames.LinkEntropySize {
+		return [usernames.LinkEntropySize]byte{}, fmt.Errorf("must be %d bytes, got %d", usernames.LinkEntropySize, len(raw))
+	}
+	var entropy [usernames.LinkEntropySize]byte
+	copy(entropy[:], raw)
+	return entropy, nil
+}
+
+func cloneBytes(in []byte) []byte {
+	return append([]byte(nil), in...)
 }

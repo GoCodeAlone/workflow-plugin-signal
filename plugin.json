@@ -40,7 +40,10 @@
     "step.signal_session_prepare",
     "step.signal_encrypt",
     "step.signal_decrypt",
-    "step.signal_fingerprint"
+    "step.signal_fingerprint",
+    "step.signal_account_keys",
+    "step.signal_username_link_create",
+    "step.signal_username_link_decrypt"
   ],
   "capabilities": {
     "configProvider": false,
@@ -52,7 +55,10 @@
       "step.signal_session_prepare",
       "step.signal_encrypt",
       "step.signal_decrypt",
-      "step.signal_fingerprint"
+      "step.signal_fingerprint",
+      "step.signal_account_keys",
+      "step.signal_username_link_create",
+      "step.signal_username_link_decrypt"
     ],
     "triggerTypes": [
       "trigger.signal_envelope"

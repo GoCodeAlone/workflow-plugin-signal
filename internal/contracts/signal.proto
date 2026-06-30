@@ -111,3 +111,61 @@ message SignalDecryptOutput {
   string error = 2;
   bytes plaintext = 3;
 }
+
+message AccountKeysConfig {
+  string entropy_pool = 1;
+  bytes aci = 2;
+  string pin = 3;
+  bytes pin_salt = 4;
+  string pin_salt_username = 5;
+  uint64 pin_salt_group_id = 6;
+}
+
+message AccountKeysInput {
+  string entropy_pool = 1;
+  bytes aci = 2;
+  string pin = 3;
+  bytes pin_salt = 4;
+  string pin_salt_username = 5;
+  uint64 pin_salt_group_id = 6;
+}
+
+message AccountKeysOutput {
+  string entropy_pool = 1;
+  bytes svr_key = 2;
+  bytes backup_key = 3;
+  bytes backup_id = 4;
+  bytes pin_salt = 5;
+  bytes pin_access_key = 6;
+  bytes pin_encryption_key = 7;
+}
+
+message UsernameLinkCreateConfig {
+  string username = 1;
+  bytes entropy = 2;
+}
+
+message UsernameLinkCreateInput {
+  string username = 1;
+  bytes entropy = 2;
+}
+
+message UsernameLinkCreateOutput {
+  bytes entropy = 1;
+  bytes encrypted_username = 2;
+  bytes link_buffer = 3;
+}
+
+message UsernameLinkDecryptConfig {
+  bytes entropy = 1;
+}
+
+message UsernameLinkDecryptInput {
+  bytes entropy = 1;
+  bytes encrypted_username = 2;
+  bytes link_buffer = 3;
+}
+
+message UsernameLinkDecryptOutput {
+  string username = 1;
+}
