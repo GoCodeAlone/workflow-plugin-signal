@@ -32,25 +32,34 @@ make install-local
 - `step.signal_username_link_decrypt` - decrypt an encrypted Signal username link payload.
 - `step.signal_service_contract_check` - validate the disabled/test-double official-service boundary and return upstream compatibility metadata.
 - `step.signal_service_compliance_check` - report official-service readiness requirements, blocked live actions, and upstream service metadata without opening live transport.
+- `step.signal_service_policy_check` - evaluate live-service approval metadata and requested actions without opening live transport.
+- `step.signal_service_test_register` - exercise deterministic fake registration with idempotency and ref-only outputs.
+- `step.signal_service_test_link_device` - exercise deterministic fake linked-device setup with idempotency and ref-only outputs.
+- `step.signal_service_test_send` - exercise deterministic fake sends, including challenge-required status.
+- `step.signal_service_test_receive` - exercise deterministic fake receives with idempotency and ref-only outputs.
 
 ## Modules
 
 - `signal.identity_store` - in-memory Phase 1 identity, pre-key, and session state.
 - `signal.space` - typed configuration surface for binding encrypted spaces to rooms/eventbus.
 - `signal.official_service_boundary` - typed disabled/test-double boundary for selected upstream service wire shapes.
+- `signal.key_custody` - host-managed key custody refs for exportable secret refs or non-exportable key handles.
+- `signal.account_ref` - account/device/consent/audit refs bound to host custody for fake official-service tests.
 - `trigger.signal_envelope` - typed trigger-module contract for encrypted envelope transports.
 - `trigger.signal_service_envelope` - typed trigger-module contract for future service-envelope transports; no live stream is opened in this phase.
 
-Phase 1 identity stores are in-memory and intended for application composition
-and conformance testing. Production deployments should provide host-managed
-persistent key custody before relying on restart survival.
+Phase 1 identity stores remain in-memory for application composition and
+conformance testing. Production deployments should bind identities to
+`signal.key_custody` and host-managed persistence before relying on restart
+survival.
 
-Official Signal service login/send/receive, registration, linked-device
-automation, username hash/proof, and Encrypted Spaces proof-system features are
-deferred until their service, legal/operator, and cryptographic boundaries are
-designed. The service compliance step is readiness metadata only; it does not
-register accounts, link devices, send messages, receive messages, upload
-backups, reserve usernames, or contact the official Signal service.
+Official Signal service registration, linked-device, send, and receive steps in
+this release use deterministic `libsignal-service-go/fake` clients only. They
+return request IDs, statuses, challenge refs, and host secret refs; they do not
+register accounts, link devices, send messages, receive messages, reserve
+usernames, upload backups, download backups, or contact the official Signal
+service. Live transport remains unavailable until a later approval-bearing
+egress transition.
 
 ## Module
 

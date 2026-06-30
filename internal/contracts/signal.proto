@@ -178,6 +178,23 @@ message OfficialServiceBoundaryConfig {
   string egress_policy_ref = 5;
 }
 
+message KeyCustodyConfig {
+  string custody_ref = 1;
+  string account_ref = 2;
+  repeated string secret_refs = 3;
+  string non_exportable_key_ref = 4;
+  bool allow_exportable_secret_refs = 5;
+}
+
+message AccountRefConfig {
+  string account_ref = 1;
+  string device_ref = 2;
+  string custody_ref = 3;
+  string credential_ref = 4;
+  string consent_ref = 5;
+  string audit_ref = 6;
+}
+
 message ServiceContractCheckConfig {
   string mode = 1;
 }
@@ -215,6 +232,116 @@ message ServiceComplianceCheckOutput {
   string descriptor_checksum = 8;
   string manifest_digest = 9;
   repeated string selected_domains = 10;
+}
+
+message ServicePolicyCheckConfig {
+  string mode = 1;
+  repeated string approvals = 2;
+  repeated string requested_actions = 3;
+}
+
+message ServicePolicyCheckInput {
+  string mode = 1;
+  repeated string approvals = 2;
+  repeated string requested_actions = 3;
+}
+
+message ServicePolicyCheckOutput {
+  string mode = 1;
+  bool approved = 2;
+  bool live_service_disabled = 3;
+  bool live_transport_allowed = 4;
+  repeated string required_approvals = 5;
+  repeated string missing_approvals = 6;
+  repeated string blocked_actions = 7;
+}
+
+message ServiceTestRegisterConfig {
+  string account_ref = 1;
+  bool expired_credentials = 2;
+}
+
+message ServiceTestRegisterInput {
+  string account_ref = 1;
+  string device_ref = 2;
+  string custody_ref = 3;
+  string idempotency_key = 4;
+  string username = 5;
+  string consent_ref = 6;
+  string audit_ref = 7;
+  string credential_ref = 8;
+  string non_exportable_key_ref = 9;
+  string challenge_ref = 10;
+  bool expired_credentials = 11;
+}
+
+message ServiceTestLinkDeviceConfig {
+  string account_ref = 1;
+  bool expired_credentials = 2;
+}
+
+message ServiceTestLinkDeviceInput {
+  string account_ref = 1;
+  string device_ref = 2;
+  string custody_ref = 3;
+  string idempotency_key = 4;
+  string link_code_ref = 5;
+  string consent_ref = 6;
+  string audit_ref = 7;
+  string credential_ref = 8;
+  string non_exportable_key_ref = 9;
+  string challenge_ref = 10;
+  bool expired_credentials = 11;
+}
+
+message ServiceTestSendConfig {
+  string account_ref = 1;
+  bool expired_credentials = 2;
+}
+
+message ServiceTestSendInput {
+  string account_ref = 1;
+  string device_ref = 2;
+  string custody_ref = 3;
+  string idempotency_key = 4;
+  string recipient_ref = 5;
+  string payload_ref = 6;
+  string consent_ref = 7;
+  string audit_ref = 8;
+  string credential_ref = 9;
+  string non_exportable_key_ref = 10;
+  string challenge_ref = 11;
+  bool expired_credentials = 12;
+}
+
+message ServiceTestReceiveConfig {
+  string account_ref = 1;
+  bool expired_credentials = 2;
+}
+
+message ServiceTestReceiveInput {
+  string account_ref = 1;
+  string device_ref = 2;
+  string custody_ref = 3;
+  string idempotency_key = 4;
+  string cursor_ref = 5;
+  string consent_ref = 6;
+  string audit_ref = 7;
+  string credential_ref = 8;
+  string non_exportable_key_ref = 9;
+  string challenge_ref = 10;
+  bool expired_credentials = 11;
+}
+
+message ServiceTestOutput {
+  string account_ref = 1;
+  string device_ref = 2;
+  string request_id = 3;
+  string status = 4;
+  string challenge_ref = 5;
+  map<string, string> secret_refs = 6;
+  string credential_ref = 7;
+  string audit_ref = 8;
 }
 
 message ServiceEnvelopeTriggerConfig {

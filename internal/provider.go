@@ -37,6 +37,8 @@ var signalModuleTypes = []string{
 	"signal.identity_store",
 	"signal.space",
 	"signal.official_service_boundary",
+	"signal.key_custody",
+	"signal.account_ref",
 	"trigger.signal_envelope",
 	"trigger.signal_service_envelope",
 }
@@ -51,6 +53,11 @@ var signalStepTypes = []string{
 	"step.signal_username_link_decrypt",
 	"step.signal_service_contract_check",
 	"step.signal_service_compliance_check",
+	"step.signal_service_policy_check",
+	"step.signal_service_test_register",
+	"step.signal_service_test_link_device",
+	"step.signal_service_test_send",
+	"step.signal_service_test_receive",
 }
 
 // TypedModuleTypes implements sdk.TypedModuleProvider.
@@ -74,6 +81,16 @@ func (p *SignalProvider) CreateTypedModule(typeName, name string, config *anypb.
 	case "signal.official_service_boundary":
 		factory := sdk.NewTypedModuleFactory(typeName, &contracts.OfficialServiceBoundaryConfig{}, func(name string, cfg *contracts.OfficialServiceBoundaryConfig) (sdk.ModuleInstance, error) {
 			return newOfficialServiceBoundaryModule(name, cfg)
+		})
+		return factory.CreateTypedModule(typeName, name, config)
+	case "signal.key_custody":
+		factory := sdk.NewTypedModuleFactory(typeName, &contracts.KeyCustodyConfig{}, func(name string, cfg *contracts.KeyCustodyConfig) (sdk.ModuleInstance, error) {
+			return newKeyCustodyModule(name, cfg)
+		})
+		return factory.CreateTypedModule(typeName, name, config)
+	case "signal.account_ref":
+		factory := sdk.NewTypedModuleFactory(typeName, &contracts.AccountRefConfig{}, func(name string, cfg *contracts.AccountRefConfig) (sdk.ModuleInstance, error) {
+			return newAccountRefModule(name, cfg)
 		})
 		return factory.CreateTypedModule(typeName, name, config)
 	case "trigger.signal_envelope":
@@ -170,6 +187,46 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalServiceComplianceCheck,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_policy_check":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServicePolicyCheckConfig{},
+			&contracts.ServicePolicyCheckInput{},
+			ExecuteSignalServicePolicyCheck,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_test_register":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceTestRegisterConfig{},
+			&contracts.ServiceTestRegisterInput{},
+			ExecuteSignalServiceTestRegister,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_test_link_device":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceTestLinkDeviceConfig{},
+			&contracts.ServiceTestLinkDeviceInput{},
+			ExecuteSignalServiceTestLinkDevice,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_test_send":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceTestSendConfig{},
+			&contracts.ServiceTestSendInput{},
+			ExecuteSignalServiceTestSend,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_test_receive":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceTestReceiveConfig{},
+			&contracts.ServiceTestReceiveInput{},
+			ExecuteSignalServiceTestReceive,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	}
 	return nil, fmt.Errorf("%w: step type %q", sdk.ErrTypedContractNotHandled, typeName)
 }
@@ -187,6 +244,8 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			moduleContract("signal.identity_store", pkg+"IdentityStoreConfig"),
 			moduleContract("signal.space", pkg+"SpaceConfig"),
 			moduleContract("signal.official_service_boundary", pkg+"OfficialServiceBoundaryConfig"),
+			moduleContract("signal.key_custody", pkg+"KeyCustodyConfig"),
+			moduleContract("signal.account_ref", pkg+"AccountRefConfig"),
 			moduleContract("trigger.signal_envelope", pkg+"EnvelopeTriggerConfig"),
 			moduleContract("trigger.signal_service_envelope", pkg+"ServiceEnvelopeTriggerConfig"),
 			stepContract("step.signal_session_prepare", pkg+"SessionPrepareConfig", pkg+"SessionPrepareInput", pkg+"SessionPrepareOutput"),
@@ -198,6 +257,11 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_username_link_decrypt", pkg+"UsernameLinkDecryptConfig", pkg+"UsernameLinkDecryptInput", pkg+"UsernameLinkDecryptOutput"),
 			stepContract("step.signal_service_contract_check", pkg+"ServiceContractCheckConfig", pkg+"ServiceContractCheckInput", pkg+"ServiceContractCheckOutput"),
 			stepContract("step.signal_service_compliance_check", pkg+"ServiceComplianceCheckConfig", pkg+"ServiceComplianceCheckInput", pkg+"ServiceComplianceCheckOutput"),
+			stepContract("step.signal_service_policy_check", pkg+"ServicePolicyCheckConfig", pkg+"ServicePolicyCheckInput", pkg+"ServicePolicyCheckOutput"),
+			stepContract("step.signal_service_test_register", pkg+"ServiceTestRegisterConfig", pkg+"ServiceTestRegisterInput", pkg+"ServiceTestOutput"),
+			stepContract("step.signal_service_test_link_device", pkg+"ServiceTestLinkDeviceConfig", pkg+"ServiceTestLinkDeviceInput", pkg+"ServiceTestOutput"),
+			stepContract("step.signal_service_test_send", pkg+"ServiceTestSendConfig", pkg+"ServiceTestSendInput", pkg+"ServiceTestOutput"),
+			stepContract("step.signal_service_test_receive", pkg+"ServiceTestReceiveConfig", pkg+"ServiceTestReceiveInput", pkg+"ServiceTestOutput"),
 		},
 	}
 }
