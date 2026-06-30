@@ -15,6 +15,7 @@ require (
 	github.com/GoCodeAlone/modular v1.13.4 // indirect
 	github.com/GoCodeAlone/yaegi v0.17.2 // indirect
 	github.com/cloudevents/sdk-go/v2 v2.16.2 // indirect
+	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/fsnotify/fsnotify v1.10.1 // indirect
