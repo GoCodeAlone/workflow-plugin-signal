@@ -64,6 +64,40 @@ func TestExecuteSignalServiceComplianceCheckDeniesLiveMode(t *testing.T) {
 	}
 }
 
+func TestExecuteSignalServiceComplianceCheckDefaultsModeToDisabled(t *testing.T) {
+	result, err := ExecuteSignalServiceComplianceCheck(context.Background(), sdk.TypedStepRequest[*contracts.ServiceComplianceCheckConfig, *contracts.ServiceComplianceCheckInput]{
+		Config: &contracts.ServiceComplianceCheckConfig{},
+		Input:  &contracts.ServiceComplianceCheckInput{},
+	})
+	if err != nil {
+		t.Fatalf("ExecuteSignalServiceComplianceCheck: %v", err)
+	}
+	if result.Output.GetMode() != "disabled" {
+		t.Fatalf("mode = %q, want disabled", result.Output.GetMode())
+	}
+	if !result.Output.GetApproved() {
+		t.Fatalf("disabled/no-action report denied: %+v", result.Output)
+	}
+}
+
+func TestExecuteSignalServiceComplianceCheckFallsBackToConfigActionsAfterFilteringInput(t *testing.T) {
+	result, err := ExecuteSignalServiceComplianceCheck(context.Background(), sdk.TypedStepRequest[*contracts.ServiceComplianceCheckConfig, *contracts.ServiceComplianceCheckInput]{
+		Config: &contracts.ServiceComplianceCheckConfig{
+			Mode:             "disabled",
+			RequestedActions: []string{"send"},
+		},
+		Input: &contracts.ServiceComplianceCheckInput{
+			RequestedActions: []string{"", ""},
+		},
+	})
+	if err != nil {
+		t.Fatalf("ExecuteSignalServiceComplianceCheck: %v", err)
+	}
+	if !containsString(result.Output.GetBlockedActions(), "send") {
+		t.Fatalf("blocked actions = %v, want send", result.Output.GetBlockedActions())
+	}
+}
+
 func TestExecuteSignalServiceComplianceCheckUsesMetadataBaseline(t *testing.T) {
 	baseline := servicemetadata.Current()
 	result, err := ExecuteSignalServiceComplianceCheck(context.Background(), sdk.TypedStepRequest[*contracts.ServiceComplianceCheckConfig, *contracts.ServiceComplianceCheckInput]{
