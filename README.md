@@ -27,6 +27,9 @@ make install-local
 - `step.signal_encrypt` - encrypt plaintext into a Signal session envelope.
 - `step.signal_decrypt` - decrypt an inbound Signal session envelope after the configured principal gate passes.
 - `step.signal_fingerprint` - compute a Signal safety number and scannable fingerprint from serialized identity public keys.
+- `step.signal_account_keys` - derive account entropy, SVR, backup, backup-id, and PIN hash keys.
+- `step.signal_username_link_create` - create an encrypted Signal username link payload.
+- `step.signal_username_link_decrypt` - decrypt an encrypted Signal username link payload.
 
 ## Modules
 
@@ -38,9 +41,9 @@ Phase 1 identity stores are in-memory and intended for application composition
 and conformance testing. Production deployments should provide host-managed
 persistent key custody before relying on restart survival.
 
-Official Signal service login/send/receive and Encrypted Spaces proof-system
-features are deferred until their service and cryptographic boundaries are
-designed.
+Official Signal service login/send/receive, username hash/proof, and Encrypted
+Spaces proof-system features are deferred until their service and cryptographic
+boundaries are designed.
 
 ## Module
 

@@ -44,6 +44,9 @@ var signalStepTypes = []string{
 	"step.signal_encrypt",
 	"step.signal_decrypt",
 	"step.signal_fingerprint",
+	"step.signal_account_keys",
+	"step.signal_username_link_create",
+	"step.signal_username_link_decrypt",
 }
 
 // TypedModuleTypes implements sdk.TypedModuleProvider.
@@ -113,6 +116,30 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalFingerprint,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_account_keys":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.AccountKeysConfig{},
+			&contracts.AccountKeysInput{},
+			ExecuteSignalAccountKeys,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_username_link_create":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.UsernameLinkCreateConfig{},
+			&contracts.UsernameLinkCreateInput{},
+			ExecuteSignalUsernameLinkCreate,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_username_link_decrypt":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.UsernameLinkDecryptConfig{},
+			&contracts.UsernameLinkDecryptInput{},
+			ExecuteSignalUsernameLinkDecrypt,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	}
 	return nil, fmt.Errorf("%w: step type %q", sdk.ErrTypedContractNotHandled, typeName)
 }
@@ -134,6 +161,9 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_encrypt", pkg+"SignalEncryptConfig", pkg+"SignalEncryptInput", pkg+"SignalEncryptOutput"),
 			stepContract("step.signal_decrypt", pkg+"SignalDecryptConfig", pkg+"SignalDecryptInput", pkg+"SignalDecryptOutput"),
 			stepContract("step.signal_fingerprint", pkg+"SignalFingerprintConfig", pkg+"SignalFingerprintInput", pkg+"SignalFingerprintOutput"),
+			stepContract("step.signal_account_keys", pkg+"AccountKeysConfig", pkg+"AccountKeysInput", pkg+"AccountKeysOutput"),
+			stepContract("step.signal_username_link_create", pkg+"UsernameLinkCreateConfig", pkg+"UsernameLinkCreateInput", pkg+"UsernameLinkCreateOutput"),
+			stepContract("step.signal_username_link_decrypt", pkg+"UsernameLinkDecryptConfig", pkg+"UsernameLinkDecryptInput", pkg+"UsernameLinkDecryptOutput"),
 		},
 	}
 }

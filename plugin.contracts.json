@@ -49,6 +49,30 @@
       "mode": "strict",
       "output": "workflow.plugins.signal.v1.SignalFingerprintOutput",
       "type": "step.signal_fingerprint"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.AccountKeysConfig",
+      "input": "workflow.plugins.signal.v1.AccountKeysInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.AccountKeysOutput",
+      "type": "step.signal_account_keys"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.UsernameLinkCreateConfig",
+      "input": "workflow.plugins.signal.v1.UsernameLinkCreateInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.UsernameLinkCreateOutput",
+      "type": "step.signal_username_link_create"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.UsernameLinkDecryptConfig",
+      "input": "workflow.plugins.signal.v1.UsernameLinkDecryptInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.UsernameLinkDecryptOutput",
+      "type": "step.signal_username_link_decrypt"
     }
   ],
   "version": "v1"
