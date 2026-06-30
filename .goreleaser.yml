@@ -5,7 +5,7 @@ before:
   hooks:
     - go mod tidy
     - >-
-      sh -c "sed -i.bak 's/\"version\": \".*\"/\"version\": \"{{ .Version }}\"/' plugin.json && sed -i.bak 's|releases/download/v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*|releases/download/v{{ .Version }}|g' plugin.json && rm -f plugin.json.bak"
+      sh -c "sed -i.bak 's/\"version\": \"[^\"]*\"/\"version\": \"{{ .Version }}\"/' plugin.json && sed -i.bak 's|releases/download/v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*|releases/download/v{{ .Version }}|g' plugin.json && rm -f plugin.json.bak"
 
 builds:
   - id: workflow-plugin-signal
@@ -22,6 +22,9 @@ builds:
     goarch:
       - amd64
       - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
 
 archives:
   - id: archive
