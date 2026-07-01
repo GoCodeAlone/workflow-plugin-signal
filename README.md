@@ -96,6 +96,13 @@ usernames, upload backups, download backups, or contact the official Signal
 service. Live transport remains unavailable until a later approval-bearing
 egress transition.
 
+Operation-specific `*_prepare`, `receive_admit`, and `challenge_respond` steps
+produce `ServiceOperationEnvelope` metadata for application composition and
+approval review. Linked-device envelopes require display name, consent evidence,
+consent expiry, revocation URI, and unlink proof refs, and reject replayed or
+revoked ceremony artifacts. Username and backup steps expose readiness
+classifications rather than claiming upstream parity without vector proof.
+
 `step.signal_service_live_submit` supports fake and sandbox transport exercises
 for register, linked device, send, receive, username reserve, backup
 upload/download, and challenge response operations. Live mode returns a denied
@@ -106,6 +113,9 @@ production egress.
 `scenarios/signal-service-operator-fixture` documents the local operator-fixture
 path for operation-specific prepare/admit steps. The fixture uses loopback
 transport metadata only and remains default-deny for production egress.
+Optional official live smoke tests require an external operator approval package,
+account-owner consent, custody policy, abuse policy, audit policy, and endpoint
+allowlist supplied by the host application; they are not CI or release gates.
 
 ## Module
 
