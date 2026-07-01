@@ -37,6 +37,12 @@
       "type": "signal.persistent_custody"
     },
     {
+      "config": "workflow.plugins.signal.v1.CustodyStoreConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.custody_store"
+    },
+    {
       "config": "workflow.plugins.signal.v1.AccountRefConfig",
       "kind": "module",
       "mode": "strict",
@@ -181,6 +187,46 @@
       "mode": "strict",
       "output": "workflow.plugins.signal.v1.ServiceTestOutput",
       "type": "step.signal_service_test_receive"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.CustodyCreateConfig",
+      "input": "workflow.plugins.signal.v1.CustodyCreateInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.CustodyCreateOutput",
+      "type": "step.signal_custody_create"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.CustodyRotateConfig",
+      "input": "workflow.plugins.signal.v1.CustodyRotateInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.CustodyRotateOutput",
+      "type": "step.signal_custody_rotate"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.CustodyRestoreConfig",
+      "input": "workflow.plugins.signal.v1.CustodyRestoreInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.CustodyRestoreOutput",
+      "type": "step.signal_custody_restore"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.CustodyRevokeConfig",
+      "input": "workflow.plugins.signal.v1.CustodyRevokeInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.CustodyRevokeOutput",
+      "type": "step.signal_custody_revoke"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.CustodyInspectConfig",
+      "input": "workflow.plugins.signal.v1.CustodyInspectInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.CustodyInspectOutput",
+      "type": "step.signal_custody_inspect"
     }
   ],
   "version": "v1"

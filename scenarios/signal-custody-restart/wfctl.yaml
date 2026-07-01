@@ -1,0 +1,13 @@
+name: signal-custody-restart
+plugins:
+  - name: workflow-plugin-signal
+    version: v0.8.0
+config:
+  scenario: custody-restart
+  expected_capabilities:
+    - signal.custody_store
+    - step.signal_custody_create
+    - step.signal_custody_restore
+    - step.signal_custody_rotate
+    - step.signal_custody_revoke
+    - step.signal_custody_inspect

@@ -39,6 +39,11 @@ make install-local
 - `step.signal_service_test_link_device` - exercise deterministic fake linked-device setup with idempotency and ref-only outputs.
 - `step.signal_service_test_send` - exercise deterministic fake sends, including challenge-required status.
 - `step.signal_service_test_receive` - exercise deterministic fake receives with idempotency and ref-only outputs.
+- `step.signal_custody_create` - create account/device custody refs and return sealed custody metadata.
+- `step.signal_custody_rotate` - rotate custody KEK metadata while preserving ref-only outputs.
+- `step.signal_custody_restore` - restore a sealed custody bundle through host-managed KEK refs.
+- `step.signal_custody_revoke` - mark a custody ref revoked and return redacted audit metadata.
+- `step.signal_custody_inspect` - inspect custody metadata without exposing key material.
 
 ## Modules
 
@@ -48,6 +53,7 @@ make install-local
 - `signal.service_transport` - registered fake, sandbox, or approval-gated live transport boundary.
 - `signal.key_custody` - host-managed key custody refs for exportable secret refs or non-exportable key handles.
 - `signal.persistent_custody` - host-secret-backed encrypted local custody for non-exportable key handles.
+- `signal.custody_store` - v2 custody-store contract with backend, KEK, schema, and storage metadata.
 - `signal.account_ref` - account/device/consent/audit refs bound to host custody for fake official-service tests.
 - `trigger.signal_envelope` - typed trigger-module contract for encrypted envelope transports.
 - `trigger.signal_service_envelope` - typed trigger-module contract for future service-envelope transports; no live stream is opened in this phase.
@@ -61,6 +67,17 @@ survival.
 file and registers only non-exportable key handles with Workflow. `local_file`
 requires a host secret resolver; `test_file` is explicitly marked non-production
 and requires opt-in for conformance tests.
+
+`signal.custody_store` is the v2 custody contract for durable host-managed
+key custody. Its step contracts return custody refs and metadata only; plain key
+bytes are not ordinary Workflow outputs. The existing `signal.persistent_custody`
+module remains available for backward compatibility.
+
+The `scenarios/signal-custody-restart` fixture covers the v2 custody lifecycle:
+create a sealed custody ref, reload the store after a simulated restart, restore
+by ref, rotate KEK metadata, inspect redacted metadata, revoke the ref, and
+reject restore after revocation. The scenario uses the `test_file` backend only;
+production hosts should use `local_file` with host-managed KEK custody.
 
 Official Signal service registration, linked-device, send, and receive steps in
 this release use deterministic `libsignal-service-go/fake` clients only. They

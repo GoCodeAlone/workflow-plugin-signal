@@ -15,6 +15,7 @@ import (
 	"sync"
 
 	contracts "github.com/GoCodeAlone/workflow-plugin-signal/internal/contracts"
+	sealedcustody "github.com/GoCodeAlone/workflow-plugin-signal/internal/custody"
 )
 
 const (
@@ -31,12 +32,21 @@ var (
 
 	signalPersistentCustodiesMu sync.RWMutex
 	signalPersistentCustodies   = map[string]*persistentCustodyRecord{}
+
+	signalCustodyStoresMu sync.RWMutex
+	signalCustodyStores   = map[string]*sealedcustody.Store{}
 )
 
 type persistentCustodyModule struct {
 	lifecycleModule
 	name   string
 	config *contracts.PersistentCustodyConfig
+}
+
+type custodyStoreModule struct {
+	lifecycleModule
+	name   string
+	config *contracts.CustodyStoreConfig
 }
 
 type persistentCustodyRecord struct {
@@ -90,6 +100,65 @@ func newPersistentCustodyModule(name string, cfg *contracts.PersistentCustodyCon
 		return nil, fmt.Errorf("signal persistent custody: unsupported backend %q", cfg.GetBackend())
 	}
 	return &persistentCustodyModule{name: name, config: cfg}, nil
+}
+
+func newCustodyStoreModule(name string, cfg *contracts.CustodyStoreConfig) (*custodyStoreModule, error) {
+	if cfg == nil {
+		cfg = &contracts.CustodyStoreConfig{}
+	}
+	if cfg.GetBackendId() == "" {
+		return nil, fmt.Errorf("signal custody store: backend_id is required")
+	}
+	if cfg.GetStoragePath() == "" {
+		return nil, fmt.Errorf("signal custody store: storage_path is required")
+	}
+	if cfg.GetKekRef() == "" {
+		return nil, fmt.Errorf("signal custody store: kek_ref is required")
+	}
+	if cfg.GetKekVersion() == "" {
+		return nil, fmt.Errorf("signal custody store: kek_version is required")
+	}
+	switch cfg.GetBackend() {
+	case persistentCustodyBackendLocalFile:
+	case persistentCustodyBackendTestFile:
+		if !cfg.GetAllowTestBackend() {
+			return nil, errPersistentCustodyTestBackendDenied
+		}
+	default:
+		return nil, fmt.Errorf("signal custody store: unsupported backend %q", cfg.GetBackend())
+	}
+	return &custodyStoreModule{name: name, config: cfg}, nil
+}
+
+func (m *custodyStoreModule) Init() error {
+	store, err := sealedcustody.NewSealedStore(sealedcustody.Config{
+		BackendID:     m.config.GetBackendId(),
+		StorageDir:    m.config.GetStoragePath(),
+		KEKRef:        m.config.GetKekRef(),
+		KEKVersion:    m.config.GetKekVersion(),
+		SchemaVersion: m.config.GetSchemaVersion(),
+		ResolveSecret: resolveSignalHostSecret,
+	})
+	if err != nil {
+		return err
+	}
+	signalCustodyStoresMu.Lock()
+	signalCustodyStores[m.name] = store
+	signalCustodyStoresMu.Unlock()
+	return nil
+}
+
+func lookupSignalCustodyStore(ref string) (*sealedcustody.Store, error) {
+	if ref == "" {
+		return nil, fmt.Errorf("signal custody store: store_ref is required")
+	}
+	signalCustodyStoresMu.RLock()
+	store := signalCustodyStores[ref]
+	signalCustodyStoresMu.RUnlock()
+	if store == nil {
+		return nil, fmt.Errorf("signal custody store: %q is not registered", ref)
+	}
+	return store, nil
 }
 
 func (m *persistentCustodyModule) Init() error {

@@ -40,6 +40,7 @@ var signalModuleTypes = []string{
 	"signal.service_transport",
 	"signal.key_custody",
 	"signal.persistent_custody",
+	"signal.custody_store",
 	"signal.account_ref",
 	"trigger.signal_envelope",
 	"trigger.signal_service_envelope",
@@ -62,6 +63,11 @@ var signalStepTypes = []string{
 	"step.signal_service_test_link_device",
 	"step.signal_service_test_send",
 	"step.signal_service_test_receive",
+	"step.signal_custody_create",
+	"step.signal_custody_rotate",
+	"step.signal_custody_restore",
+	"step.signal_custody_revoke",
+	"step.signal_custody_inspect",
 }
 
 // TypedModuleTypes implements sdk.TypedModuleProvider.
@@ -100,6 +106,11 @@ func (p *SignalProvider) CreateTypedModule(typeName, name string, config *anypb.
 	case "signal.persistent_custody":
 		factory := sdk.NewTypedModuleFactory(typeName, &contracts.PersistentCustodyConfig{}, func(name string, cfg *contracts.PersistentCustodyConfig) (sdk.ModuleInstance, error) {
 			return newPersistentCustodyModule(name, cfg)
+		})
+		return factory.CreateTypedModule(typeName, name, config)
+	case "signal.custody_store":
+		factory := sdk.NewTypedModuleFactory(typeName, &contracts.CustodyStoreConfig{}, func(name string, cfg *contracts.CustodyStoreConfig) (sdk.ModuleInstance, error) {
+			return newCustodyStoreModule(name, cfg)
 		})
 		return factory.CreateTypedModule(typeName, name, config)
 	case "signal.account_ref":
@@ -257,6 +268,46 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalServiceTestReceive,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_custody_create":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.CustodyCreateConfig{},
+			&contracts.CustodyCreateInput{},
+			ExecuteSignalCustodyCreate,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_custody_rotate":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.CustodyRotateConfig{},
+			&contracts.CustodyRotateInput{},
+			ExecuteSignalCustodyRotate,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_custody_restore":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.CustodyRestoreConfig{},
+			&contracts.CustodyRestoreInput{},
+			ExecuteSignalCustodyRestore,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_custody_revoke":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.CustodyRevokeConfig{},
+			&contracts.CustodyRevokeInput{},
+			ExecuteSignalCustodyRevoke,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_custody_inspect":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.CustodyInspectConfig{},
+			&contracts.CustodyInspectInput{},
+			ExecuteSignalCustodyInspect,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	}
 	return nil, fmt.Errorf("%w: step type %q", sdk.ErrTypedContractNotHandled, typeName)
 }
@@ -277,6 +328,7 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			moduleContract("signal.service_transport", pkg+"ServiceTransportConfig"),
 			moduleContract("signal.key_custody", pkg+"KeyCustodyConfig"),
 			moduleContract("signal.persistent_custody", pkg+"PersistentCustodyConfig"),
+			moduleContract("signal.custody_store", pkg+"CustodyStoreConfig"),
 			moduleContract("signal.account_ref", pkg+"AccountRefConfig"),
 			moduleContract("trigger.signal_envelope", pkg+"EnvelopeTriggerConfig"),
 			moduleContract("trigger.signal_service_envelope", pkg+"ServiceEnvelopeTriggerConfig"),
@@ -296,6 +348,11 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_service_test_link_device", pkg+"ServiceTestLinkDeviceConfig", pkg+"ServiceTestLinkDeviceInput", pkg+"ServiceTestOutput"),
 			stepContract("step.signal_service_test_send", pkg+"ServiceTestSendConfig", pkg+"ServiceTestSendInput", pkg+"ServiceTestOutput"),
 			stepContract("step.signal_service_test_receive", pkg+"ServiceTestReceiveConfig", pkg+"ServiceTestReceiveInput", pkg+"ServiceTestOutput"),
+			stepContract("step.signal_custody_create", pkg+"CustodyCreateConfig", pkg+"CustodyCreateInput", pkg+"CustodyCreateOutput"),
+			stepContract("step.signal_custody_rotate", pkg+"CustodyRotateConfig", pkg+"CustodyRotateInput", pkg+"CustodyRotateOutput"),
+			stepContract("step.signal_custody_restore", pkg+"CustodyRestoreConfig", pkg+"CustodyRestoreInput", pkg+"CustodyRestoreOutput"),
+			stepContract("step.signal_custody_revoke", pkg+"CustodyRevokeConfig", pkg+"CustodyRevokeInput", pkg+"CustodyRevokeOutput"),
+			stepContract("step.signal_custody_inspect", pkg+"CustodyInspectConfig", pkg+"CustodyInspectInput", pkg+"CustodyInspectOutput"),
 		},
 	}
 }
