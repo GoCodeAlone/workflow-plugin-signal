@@ -84,6 +84,50 @@ func TestSealedStoreRejectsStaleKEKVersion(t *testing.T) {
 	}
 }
 
+func TestSealedStoreRotateValidatesRequest(t *testing.T) {
+	store := newTestStore(t, "v1")
+	if _, err := store.Rotate(RotateRequest{ExpectedKekVersion: "v1", NewKekVersion: "v2"}); err == nil {
+		t.Fatal("empty ref_id rotate succeeded")
+	}
+	if _, err := store.Rotate(RotateRequest{RefID: "custody-a", NewKekVersion: "v2"}); err == nil {
+		t.Fatal("empty expected_kek_version rotate succeeded")
+	}
+	if _, err := store.Rotate(RotateRequest{RefID: "custody-a", ExpectedKekVersion: "v1"}); err == nil {
+		t.Fatal("empty new_kek_version rotate succeeded")
+	}
+}
+
+func TestSealedStoreRotateCanChangeKEKRef(t *testing.T) {
+	dir := t.TempDir()
+	store := newTestStoreWithSecrets(t, dir, "secret://signal/kek/v1", "v1", map[string][]byte{
+		"secret://signal/kek/v1": bytes.Repeat([]byte{0x42}, 32),
+		"secret://signal/kek/v2": bytes.Repeat([]byte{0x43}, 32),
+	})
+	if _, err := store.Create(CreateRequest{RefID: "custody-a", Material: map[string][]byte{"key": []byte("value")}, Now: testTime()}); err != nil {
+		t.Fatal(err)
+	}
+	rotated, err := store.Rotate(RotateRequest{
+		RefID:              "custody-a",
+		ExpectedKekVersion: "v1",
+		NewKekRef:          "secret://signal/kek/v2",
+		NewKekVersion:      "v2",
+		Now:                testTime().Add(time.Minute),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rotated.KEKRef != "secret://signal/kek/v2" || rotated.KEKVersion != "v2" {
+		t.Fatalf("rotated metadata = %+v", rotated)
+	}
+	reloaded := newTestStoreWithSecrets(t, dir, "secret://signal/kek/v2", "v2", map[string][]byte{
+		"secret://signal/kek/v1": bytes.Repeat([]byte{0x42}, 32),
+		"secret://signal/kek/v2": bytes.Repeat([]byte{0x43}, 32),
+	})
+	if _, err := reloaded.Restore("custody-a"); err != nil {
+		t.Fatalf("restore with rotated KEK ref: %v", err)
+	}
+}
+
 func TestSealedStoreConcurrentRotateReturnsConflict(t *testing.T) {
 	store := newTestStore(t, "v1")
 	if _, err := store.Create(CreateRequest{RefID: "custody-a", Material: map[string][]byte{"key": []byte("value")}, Now: testTime()}); err != nil {
@@ -143,14 +187,25 @@ func newTestStore(t *testing.T, kekVersion string) *Store {
 
 func newTestStoreAt(t *testing.T, dir, kekVersion string) *Store {
 	t.Helper()
+	return newTestStoreWithSecrets(t, dir, "secret://signal/kek", kekVersion, map[string][]byte{
+		"secret://signal/kek": bytes.Repeat([]byte{0x42}, 32),
+	})
+}
+
+func newTestStoreWithSecrets(t *testing.T, dir, kekRef, kekVersion string, secrets map[string][]byte) *Store {
+	t.Helper()
 	store, err := NewSealedStore(Config{
 		BackendID:     "test-backend",
 		StorageDir:    dir,
-		KEKRef:        "secret://signal/kek",
+		KEKRef:        kekRef,
 		KEKVersion:    kekVersion,
 		SchemaVersion: 1,
-		ResolveSecret: func(string) ([]byte, error) {
-			return bytes.Repeat([]byte{0x42}, 32), nil
+		ResolveSecret: func(ref string) ([]byte, error) {
+			secret, ok := secrets[ref]
+			if !ok {
+				return nil, os.ErrNotExist
+			}
+			return append([]byte(nil), secret...), nil
 		},
 	})
 	if err != nil {

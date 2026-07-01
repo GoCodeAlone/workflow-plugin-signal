@@ -2,6 +2,8 @@ package internal
 
 import (
 	"context"
+	"fmt"
+	"strings"
 	"time"
 
 	"github.com/GoCodeAlone/workflow/plugin/external/sdk"
@@ -38,7 +40,7 @@ func ExecuteSignalCustodyCreate(
 		Output: &contracts.CustodyCreateOutput{
 			CustodyRef: ref,
 			Metadata:   custodyMetadata(meta),
-			AuditRef:   "audit://" + ref,
+			AuditRef:   custodyAuditRef(ref),
 		},
 	}, nil
 }
@@ -58,6 +60,7 @@ func ExecuteSignalCustodyRotate(
 	meta, err := store.Rotate(sealedcustody.RotateRequest{
 		RefID:              req.Input.GetCustodyRef(),
 		ExpectedKekVersion: current.KEKVersion,
+		NewKekRef:          req.Input.GetNewKekRef(),
 		NewKekVersion:      req.Input.GetNewKekVersion(),
 		Now:                custodyUnixTime(req.Input.GetRequestedAtUnix()),
 	})
@@ -65,7 +68,12 @@ func ExecuteSignalCustodyRotate(
 		return nil, err
 	}
 	return &sdk.TypedStepResult[*contracts.CustodyRotateOutput]{
-		Output: &contracts.CustodyRotateOutput{CustodyRef: req.Input.GetCustodyRef(), Metadata: custodyMetadata(meta), AuditRef: "audit://" + req.Input.GetCustodyRef()},
+		Output: &contracts.CustodyRotateOutput{
+			CustodyRef:  req.Input.GetCustodyRef(),
+			Metadata:    custodyMetadata(meta),
+			OldRefState: current.State,
+			AuditRef:    custodyAuditRef(req.Input.GetCustodyRef()),
+		},
 	}, nil
 }
 
@@ -81,8 +89,11 @@ func ExecuteSignalCustodyRestore(
 	if err != nil {
 		return nil, err
 	}
+	if err := validateCustodyRestoreHints(req.Input, meta); err != nil {
+		return nil, err
+	}
 	return &sdk.TypedStepResult[*contracts.CustodyRestoreOutput]{
-		Output: &contracts.CustodyRestoreOutput{CustodyRef: req.Input.GetCustodyRef(), Metadata: custodyMetadata(meta), AuditRef: "audit://" + req.Input.GetCustodyRef()},
+		Output: &contracts.CustodyRestoreOutput{CustodyRef: req.Input.GetCustodyRef(), Metadata: custodyMetadata(meta), AuditRef: custodyAuditRef(req.Input.GetCustodyRef())},
 	}, nil
 }
 
@@ -99,7 +110,7 @@ func ExecuteSignalCustodyRevoke(
 		return nil, err
 	}
 	return &sdk.TypedStepResult[*contracts.CustodyRevokeOutput]{
-		Output: &contracts.CustodyRevokeOutput{CustodyRef: req.Input.GetCustodyRef(), Metadata: custodyMetadata(meta), AuditRef: "audit://" + req.Input.GetCustodyRef()},
+		Output: &contracts.CustodyRevokeOutput{CustodyRef: req.Input.GetCustodyRef(), Metadata: custodyMetadata(meta), AuditRef: custodyAuditRef(req.Input.GetCustodyRef())},
 	}, nil
 }
 
@@ -145,4 +156,27 @@ func custodyUnixTime(ts int64) time.Time {
 		return time.Now().UTC()
 	}
 	return time.Unix(ts, 0).UTC()
+}
+
+func custodyAuditRef(custodyRef string) string {
+	suffix := strings.TrimPrefix(custodyRef, "custody://")
+	suffix = strings.ReplaceAll(suffix, "://", "/")
+	suffix = strings.Trim(suffix, "/")
+	if suffix == "" {
+		suffix = "unknown"
+	}
+	return "audit://custody/" + suffix
+}
+
+func validateCustodyRestoreHints(in *contracts.CustodyRestoreInput, meta sealedcustody.Metadata) error {
+	if sealedBundleRef := in.GetSealedBundleRef(); sealedBundleRef != "" && sealedBundleRef != in.GetCustodyRef() {
+		return fmt.Errorf("signal custody restore: sealed_bundle_ref %q does not match custody_ref", sealedBundleRef)
+	}
+	if kekRef := in.GetKekRef(); kekRef != "" && kekRef != meta.KEKRef {
+		return fmt.Errorf("signal custody restore: kek_ref %q does not match sealed metadata", kekRef)
+	}
+	if kekVersion := in.GetKekVersion(); kekVersion != "" && kekVersion != meta.KEKVersion {
+		return fmt.Errorf("signal custody restore: kek_version %q does not match sealed metadata", kekVersion)
+	}
+	return nil
 }

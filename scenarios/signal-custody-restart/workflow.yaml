@@ -70,4 +70,4 @@ workflows:
         input:
           typed:
             custody_ref: custody://alice-device-1
-        expect_error: signal custody: ref is revoked
+        expect_error: revoked custody ref

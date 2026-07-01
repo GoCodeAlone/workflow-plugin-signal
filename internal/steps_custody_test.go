@@ -51,6 +51,9 @@ func TestSignalCustodyStepsUseSealedStoreWithoutKeyBytes(t *testing.T) {
 	if created.Output.GetCustodyRef() == "" || created.Output.GetMetadata().GetBackendId() != "local-test" {
 		t.Fatalf("create output = %+v", created.Output)
 	}
+	if created.Output.GetAuditRef() != "audit://custody/create-1" {
+		t.Fatalf("create audit_ref = %q", created.Output.GetAuditRef())
+	}
 
 	inspected, err := ExecuteSignalCustodyInspect(context.Background(), sdk.TypedStepRequest[*contracts.CustodyInspectConfig, *contracts.CustodyInspectInput]{
 		Config: &contracts.CustodyInspectConfig{StoreRef: "store"},
@@ -65,5 +68,33 @@ func TestSignalCustodyStepsUseSealedStoreWithoutKeyBytes(t *testing.T) {
 	}
 	if bytes.Contains(raw, []byte("private-key")) {
 		t.Fatalf("custody step output exposed secret material: %s", raw)
+	}
+
+	rotated, err := ExecuteSignalCustodyRotate(context.Background(), sdk.TypedStepRequest[*contracts.CustodyRotateConfig, *contracts.CustodyRotateInput]{
+		Config: &contracts.CustodyRotateConfig{StoreRef: "store"},
+		Input: &contracts.CustodyRotateInput{
+			CustodyRef:      created.Output.GetCustodyRef(),
+			NewKekVersion:   "v2",
+			RequestedAtUnix: 1_783_000_060,
+		},
+	})
+	if err != nil {
+		t.Fatalf("rotate: %v", err)
+	}
+	if rotated.Output.GetOldRefState() != "active" {
+		t.Fatalf("old_ref_state = %q", rotated.Output.GetOldRefState())
+	}
+	if rotated.Output.GetAuditRef() != "audit://custody/create-1" {
+		t.Fatalf("rotate audit_ref = %q", rotated.Output.GetAuditRef())
+	}
+
+	if _, err := ExecuteSignalCustodyRestore(context.Background(), sdk.TypedStepRequest[*contracts.CustodyRestoreConfig, *contracts.CustodyRestoreInput]{
+		Config: &contracts.CustodyRestoreConfig{StoreRef: "store"},
+		Input: &contracts.CustodyRestoreInput{
+			CustodyRef: created.Output.GetCustodyRef(),
+			KekVersion: "v1",
+		},
+	}); err == nil {
+		t.Fatal("restore with stale requested kek_version succeeded")
 	}
 }

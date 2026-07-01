@@ -284,7 +284,6 @@ message CustodyRotateInput {
   string custody_ref = 1;
   string new_kek_ref = 2;
   string new_kek_version = 3;
-  string idempotency_key = 4;
   int64 requested_at_unix = 5;
 }
 
@@ -318,7 +317,6 @@ message CustodyRevokeConfig {
 
 message CustodyRevokeInput {
   string custody_ref = 1;
-  string reason_ref = 2;
   int64 requested_at_unix = 3;
 }
 

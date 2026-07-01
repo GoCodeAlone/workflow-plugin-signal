@@ -2678,7 +2678,6 @@ type CustodyRotateInput struct {
 	CustodyRef      string                 `protobuf:"bytes,1,opt,name=custody_ref,json=custodyRef,proto3" json:"custody_ref,omitempty"`
 	NewKekRef       string                 `protobuf:"bytes,2,opt,name=new_kek_ref,json=newKekRef,proto3" json:"new_kek_ref,omitempty"`
 	NewKekVersion   string                 `protobuf:"bytes,3,opt,name=new_kek_version,json=newKekVersion,proto3" json:"new_kek_version,omitempty"`
-	IdempotencyKey  string                 `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	RequestedAtUnix int64                  `protobuf:"varint,5,opt,name=requested_at_unix,json=requestedAtUnix,proto3" json:"requested_at_unix,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -2731,13 +2730,6 @@ func (x *CustodyRotateInput) GetNewKekRef() string {
 func (x *CustodyRotateInput) GetNewKekVersion() string {
 	if x != nil {
 		return x.NewKekVersion
-	}
-	return ""
-}
-
-func (x *CustodyRotateInput) GetIdempotencyKey() string {
-	if x != nil {
-		return x.IdempotencyKey
 	}
 	return ""
 }
@@ -3036,7 +3028,6 @@ func (x *CustodyRevokeConfig) GetStoreRef() string {
 type CustodyRevokeInput struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	CustodyRef      string                 `protobuf:"bytes,1,opt,name=custody_ref,json=custodyRef,proto3" json:"custody_ref,omitempty"`
-	ReasonRef       string                 `protobuf:"bytes,2,opt,name=reason_ref,json=reasonRef,proto3" json:"reason_ref,omitempty"`
 	RequestedAtUnix int64                  `protobuf:"varint,3,opt,name=requested_at_unix,json=requestedAtUnix,proto3" json:"requested_at_unix,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -3075,13 +3066,6 @@ func (*CustodyRevokeInput) Descriptor() ([]byte, []int) {
 func (x *CustodyRevokeInput) GetCustodyRef() string {
 	if x != nil {
 		return x.CustodyRef
-	}
-	return ""
-}
-
-func (x *CustodyRevokeInput) GetReasonRef() string {
-	if x != nil {
-		return x.ReasonRef
 	}
 	return ""
 }
@@ -5716,13 +5700,12 @@ const file_internal_contracts_signal_proto_rawDesc = "" +
 	"\bmetadata\x18\x02 \x01(\v2+.workflow.plugins.signal.v1.CustodyMetadataR\bmetadata\x12\x1b\n" +
 	"\taudit_ref\x18\x03 \x01(\tR\bauditRef\"2\n" +
 	"\x13CustodyRotateConfig\x12\x1b\n" +
-	"\tstore_ref\x18\x01 \x01(\tR\bstoreRef\"\xd2\x01\n" +
+	"\tstore_ref\x18\x01 \x01(\tR\bstoreRef\"\xa9\x01\n" +
 	"\x12CustodyRotateInput\x12\x1f\n" +
 	"\vcustody_ref\x18\x01 \x01(\tR\n" +
 	"custodyRef\x12\x1e\n" +
 	"\vnew_kek_ref\x18\x02 \x01(\tR\tnewKekRef\x12&\n" +
-	"\x0fnew_kek_version\x18\x03 \x01(\tR\rnewKekVersion\x12'\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\x12*\n" +
+	"\x0fnew_kek_version\x18\x03 \x01(\tR\rnewKekVersion\x12*\n" +
 	"\x11requested_at_unix\x18\x05 \x01(\x03R\x0frequestedAtUnix\"\xc0\x01\n" +
 	"\x13CustodyRotateOutput\x12\x1f\n" +
 	"\vcustody_ref\x18\x01 \x01(\tR\n" +
@@ -5745,12 +5728,10 @@ const file_internal_contracts_signal_proto_rawDesc = "" +
 	"\bmetadata\x18\x02 \x01(\v2+.workflow.plugins.signal.v1.CustodyMetadataR\bmetadata\x12\x1b\n" +
 	"\taudit_ref\x18\x03 \x01(\tR\bauditRef\"2\n" +
 	"\x13CustodyRevokeConfig\x12\x1b\n" +
-	"\tstore_ref\x18\x01 \x01(\tR\bstoreRef\"\x80\x01\n" +
+	"\tstore_ref\x18\x01 \x01(\tR\bstoreRef\"a\n" +
 	"\x12CustodyRevokeInput\x12\x1f\n" +
 	"\vcustody_ref\x18\x01 \x01(\tR\n" +
-	"custodyRef\x12\x1d\n" +
-	"\n" +
-	"reason_ref\x18\x02 \x01(\tR\treasonRef\x12*\n" +
+	"custodyRef\x12*\n" +
 	"\x11requested_at_unix\x18\x03 \x01(\x03R\x0frequestedAtUnix\"\x9c\x01\n" +
 	"\x13CustodyRevokeOutput\x12\x1f\n" +
 	"\vcustody_ref\x18\x01 \x01(\tR\n" +

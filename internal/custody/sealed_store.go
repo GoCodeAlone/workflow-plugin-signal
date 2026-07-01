@@ -69,6 +69,7 @@ type CreateRequest struct {
 type RotateRequest struct {
 	RefID              string
 	ExpectedKekVersion string
+	NewKekRef          string
 	NewKekVersion      string
 	Now                time.Time
 }
@@ -102,6 +103,8 @@ func NewSealedStore(cfg Config) (*Store, error) {
 }
 
 func (s *Store) Config() Config {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	return s.cfg
 }
 
@@ -109,27 +112,35 @@ func (s *Store) Create(req CreateRequest) (Metadata, error) {
 	if req.RefID == "" {
 		return Metadata{}, fmt.Errorf("sealed custody: ref_id is required")
 	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	now := nonZeroTime(req.Now)
+	cfg := s.cfg
 	meta := Metadata{
-		BackendID:     s.cfg.BackendID,
+		BackendID:     cfg.BackendID,
 		RefID:         req.RefID,
-		SchemaVersion: s.cfg.SchemaVersion,
-		KEKRef:        s.cfg.KEKRef,
-		KEKVersion:    s.cfg.KEKVersion,
+		SchemaVersion: cfg.SchemaVersion,
+		KEKRef:        cfg.KEKRef,
+		KEKVersion:    cfg.KEKVersion,
 		CreatedAt:     now,
 		RotatedAt:     now,
 		State:         StateActive,
 		AccountRef:    req.AccountRef,
 		DeviceRef:     req.DeviceRef,
 	}
-	if err := s.writeBundle(meta, req.Material); err != nil {
+	if err := s.writeBundleLocked(cfg, meta, req.Material); err != nil {
 		return Metadata{}, err
 	}
 	return meta, nil
 }
 
 func (s *Store) Restore(refID string) (Metadata, error) {
-	bundle, _, err := s.readBundle(refID)
+	if refID == "" {
+		return Metadata{}, fmt.Errorf("sealed custody: ref_id is required")
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	bundle, _, err := s.readBundleLocked(s.cfg, refID)
 	if err != nil {
 		return Metadata{}, err
 	}
@@ -140,7 +151,12 @@ func (s *Store) Restore(refID string) (Metadata, error) {
 }
 
 func (s *Store) Inspect(refID string) (Metadata, error) {
-	bundle, _, err := s.readBundle(refID)
+	if refID == "" {
+		return Metadata{}, fmt.Errorf("sealed custody: ref_id is required")
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	bundle, _, err := s.readBundleLocked(s.cfg, refID)
 	if err != nil {
 		return Metadata{}, err
 	}
@@ -148,9 +164,19 @@ func (s *Store) Inspect(refID string) (Metadata, error) {
 }
 
 func (s *Store) Rotate(req RotateRequest) (Metadata, error) {
+	if req.RefID == "" {
+		return Metadata{}, fmt.Errorf("sealed custody: ref_id is required")
+	}
+	if req.ExpectedKekVersion == "" {
+		return Metadata{}, fmt.Errorf("sealed custody: expected_kek_version is required")
+	}
+	if req.NewKekVersion == "" {
+		return Metadata{}, fmt.Errorf("sealed custody: new_kek_version is required")
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	bundle, material, err := s.readBundle(req.RefID)
+	cfg := s.cfg
+	bundle, material, err := s.readBundleLocked(cfg, req.RefID)
 	if err != nil {
 		return Metadata{}, err
 	}
@@ -160,32 +186,42 @@ func (s *Store) Rotate(req RotateRequest) (Metadata, error) {
 	if bundle.Metadata.KEKVersion != req.ExpectedKekVersion {
 		return Metadata{}, ErrRotateConflict
 	}
-	s.cfg.KEKVersion = req.NewKekVersion
+	newKekRef := req.NewKekRef
+	if newKekRef == "" {
+		newKekRef = cfg.KEKRef
+	}
+	cfg.KEKRef = newKekRef
+	cfg.KEKVersion = req.NewKekVersion
+	bundle.Metadata.KEKRef = newKekRef
 	bundle.Metadata.KEKVersion = req.NewKekVersion
 	bundle.Metadata.RotatedAt = nonZeroTime(req.Now)
-	if err := s.writeBundle(bundle.Metadata, material); err != nil {
+	if err := s.writeBundleLocked(cfg, bundle.Metadata, material); err != nil {
 		return Metadata{}, err
 	}
+	s.cfg = cfg
 	return bundle.Metadata, nil
 }
 
 func (s *Store) Revoke(refID string, now time.Time) (Metadata, error) {
+	if refID == "" {
+		return Metadata{}, fmt.Errorf("sealed custody: ref_id is required")
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	bundle, material, err := s.readBundle(refID)
+	bundle, material, err := s.readBundleLocked(s.cfg, refID)
 	if err != nil {
 		return Metadata{}, err
 	}
 	bundle.Metadata.State = StateRevoked
 	bundle.Metadata.RevokedAt = nonZeroTime(now)
-	if err := s.writeBundle(bundle.Metadata, material); err != nil {
+	if err := s.writeBundleLocked(s.cfg, bundle.Metadata, material); err != nil {
 		return Metadata{}, err
 	}
 	return bundle.Metadata, nil
 }
 
-func (s *Store) readBundle(refID string) (sealedBundle, map[string][]byte, error) {
-	raw, err := os.ReadFile(s.path(refID))
+func (s *Store) readBundleLocked(cfg Config, refID string) (sealedBundle, map[string][]byte, error) {
+	raw, err := os.ReadFile(pathFor(cfg.StorageDir, refID))
 	if err != nil {
 		return sealedBundle{}, nil, err
 	}
@@ -193,21 +229,21 @@ func (s *Store) readBundle(refID string) (sealedBundle, map[string][]byte, error
 	if err := json.Unmarshal(raw, &bundle); err != nil {
 		return sealedBundle{}, nil, ErrPartialBundle
 	}
-	if bundle.Metadata.KEKVersion != s.cfg.KEKVersion {
+	if bundle.Metadata.KEKRef != cfg.KEKRef || bundle.Metadata.KEKVersion != cfg.KEKVersion {
 		return sealedBundle{}, nil, ErrStaleKEKVersion
 	}
-	material, err := s.decryptMaterial(bundle)
+	material, err := s.decryptMaterial(cfg, bundle)
 	if err != nil {
 		return sealedBundle{}, nil, err
 	}
 	return bundle, material, nil
 }
 
-func (s *Store) writeBundle(meta Metadata, material map[string][]byte) error {
-	if err := os.MkdirAll(s.cfg.StorageDir, 0o700); err != nil {
+func (s *Store) writeBundleLocked(cfg Config, meta Metadata, material map[string][]byte) error {
+	if err := os.MkdirAll(cfg.StorageDir, 0o700); err != nil {
 		return err
 	}
-	nonce, ciphertext, err := s.encryptMaterial(meta, material)
+	nonce, ciphertext, err := s.encryptMaterial(cfg, meta, material)
 	if err != nil {
 		return err
 	}
@@ -219,8 +255,8 @@ func (s *Store) writeBundle(meta Metadata, material map[string][]byte) error {
 	if err != nil {
 		return err
 	}
-	path := s.path(meta.RefID)
-	tmp, err := os.CreateTemp(s.cfg.StorageDir, "."+filepath.Base(path)+".tmp-*")
+	path := pathFor(cfg.StorageDir, meta.RefID)
+	tmp, err := os.CreateTemp(cfg.StorageDir, "."+filepath.Base(path)+".tmp-*")
 	if err != nil {
 		return err
 	}
@@ -240,8 +276,8 @@ func (s *Store) writeBundle(meta Metadata, material map[string][]byte) error {
 	return os.Rename(tmpName, path)
 }
 
-func (s *Store) encryptMaterial(meta Metadata, material map[string][]byte) ([]byte, []byte, error) {
-	gcm, err := s.aead()
+func (s *Store) encryptMaterial(cfg Config, meta Metadata, material map[string][]byte) ([]byte, []byte, error) {
+	gcm, err := aead(cfg)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -256,8 +292,8 @@ func (s *Store) encryptMaterial(meta Metadata, material map[string][]byte) ([]by
 	return nonce, gcm.Seal(nil, nonce, plain, aad(meta)), nil
 }
 
-func (s *Store) decryptMaterial(bundle sealedBundle) (map[string][]byte, error) {
-	gcm, err := s.aead()
+func (s *Store) decryptMaterial(cfg Config, bundle sealedBundle) (map[string][]byte, error) {
+	gcm, err := aead(cfg)
 	if err != nil {
 		return nil, err
 	}
@@ -280,8 +316,8 @@ func (s *Store) decryptMaterial(bundle sealedBundle) (map[string][]byte, error) 
 	return material, nil
 }
 
-func (s *Store) aead() (cipher.AEAD, error) {
-	secret, err := s.cfg.ResolveSecret(s.cfg.KEKRef)
+func aead(cfg Config) (cipher.AEAD, error) {
+	secret, err := cfg.ResolveSecret(cfg.KEKRef)
 	if err != nil {
 		return nil, err
 	}
@@ -294,8 +330,12 @@ func (s *Store) aead() (cipher.AEAD, error) {
 }
 
 func (s *Store) path(refID string) string {
+	return pathFor(s.cfg.StorageDir, refID)
+}
+
+func pathFor(storageDir, refID string) string {
 	sum := sha256.Sum256([]byte(refID))
-	return filepath.Join(s.cfg.StorageDir, hex.EncodeToString(sum[:16])+".json")
+	return filepath.Join(storageDir, hex.EncodeToString(sum[:16])+".json")
 }
 
 func aad(meta Metadata) []byte {
