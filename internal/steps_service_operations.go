@@ -15,7 +15,7 @@ import (
 
 var (
 	linkedDeviceCeremoniesMu   sync.Mutex
-	linkedDeviceCeremonyClaims = map[string]struct{}{}
+	linkedDeviceCeremonyClaims = map[string]int64{}
 )
 
 func ExecuteSignalServiceRegisterPrepare(
@@ -72,6 +72,10 @@ func validateLinkedDeviceCeremony(ceremony *contracts.LinkedDeviceCeremony) erro
 	if ceremony.GetConsentExpiresUnix() == 0 {
 		return fmt.Errorf("signal service link prepare: consent_expires_unix is required")
 	}
+	now := time.Now().UTC().Unix()
+	if ceremony.GetConsentExpiresUnix() <= now {
+		return fmt.Errorf("signal service link prepare: consent is expired")
+	}
 	if ceremony.GetRevocationUri() == "" {
 		return fmt.Errorf("signal service link prepare: revocation_uri is required")
 	}
@@ -83,11 +87,16 @@ func validateLinkedDeviceCeremony(ceremony *contracts.LinkedDeviceCeremony) erro
 	}
 	linkedDeviceCeremoniesMu.Lock()
 	defer linkedDeviceCeremoniesMu.Unlock()
+	for claim, expires := range linkedDeviceCeremonyClaims {
+		if expires <= now {
+			delete(linkedDeviceCeremonyClaims, claim)
+		}
+	}
 	claim := ceremony.GetConsentRef()
 	if _, ok := linkedDeviceCeremonyClaims[claim]; ok {
 		return fmt.Errorf("signal service link prepare: linked-device consent replay")
 	}
-	linkedDeviceCeremonyClaims[claim] = struct{}{}
+	linkedDeviceCeremonyClaims[claim] = ceremony.GetConsentExpiresUnix()
 	return nil
 }
 
@@ -227,7 +236,7 @@ func serviceOperationReport(operation service.Operation, classification, reason 
 			Status:               "prepared",
 			ReportClassification: classification,
 			DeferredReason:       reason,
-			AuditRef:             safeSignalRef(firstNonEmpty(fields.AuditRef, "audit://signal/"+envelope.GetOperationId())),
+			AuditRef:             safeSignalRef(firstNonEmpty(fields.AuditRef, serviceOperationAuditRef(envelope))),
 			LiveEgressAttempted:  false,
 		},
 	}
@@ -240,7 +249,7 @@ func serviceOperationEnvelope(operation service.Operation, fields serviceEnvelop
 	}
 	idempotencyKey := fields.IdempotencyKey
 	if idempotencyKey == "" {
-		idempotencyKey = string(operation) + ":" + firstNonEmpty(fields.AccountRef, "account")
+		idempotencyKey = string(operation) + "-" + signalRefSegment(firstNonEmpty(fields.AccountRef, "account"))
 	}
 	operationID := fields.OperationID
 	if operationID == "" {
@@ -268,4 +277,21 @@ func serviceOperationEnvelope(operation service.Operation, fields serviceEnvelop
 		ChallengeResponseRef: safeSignalRef(fields.ChallengeResponseRef),
 		LinkedDevice:         fields.LinkedDevice,
 	}
+}
+
+func serviceOperationAuditRef(envelope *contracts.ServiceOperationEnvelope) string {
+	return "audit://signal/" + signalRefSegment(envelope.GetOperation()) + "/" + signalRefSegment(envelope.GetOperationId())
+}
+
+func signalRefSegment(value string) string {
+	value = strings.TrimSpace(value)
+	value = strings.TrimPrefix(value, "op://")
+	value = strings.ReplaceAll(value, "://", "-")
+	replacer := strings.NewReplacer("/", "-", ":", "-", " ", "-")
+	value = replacer.Replace(value)
+	value = strings.Trim(value, "-")
+	if value == "" {
+		return "ref"
+	}
+	return value
 }

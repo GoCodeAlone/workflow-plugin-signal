@@ -43,6 +43,20 @@ func TestServiceOperationPrepareBuildsEnvelopeWithoutSubmit(t *testing.T) {
 	if got := out.GetEnvelope().GetPayloadRef(); got != "payload://ciphertext/1" {
 		t.Fatalf("payload_ref = %q", got)
 	}
+
+	fallback, err := ExecuteSignalServiceSendPrepare(context.Background(), sdk.TypedStepRequest[*contracts.ServiceSendPrepareConfig, *contracts.ServiceSendPrepareInput]{
+		Config: &contracts.ServiceSendPrepareConfig{AccountRef: "account://alice"},
+		Input:  &contracts.ServiceSendPrepareInput{RecipientRef: "recipient://bob", PayloadRef: "payload://ciphertext/1"},
+	})
+	if err != nil {
+		t.Fatalf("fallback prepare send: %v", err)
+	}
+	if strings.Contains(fallback.Output.GetEnvelope().GetOperationId(), "://account://") || strings.Contains(fallback.Output.GetEnvelope().GetIdempotencyKey(), "://") {
+		t.Fatalf("fallback ids contain nested scheme: %+v", fallback.Output.GetEnvelope())
+	}
+	if strings.Contains(fallback.Output.GetAuditRef(), "op://") {
+		t.Fatalf("fallback audit_ref contains nested operation scheme: %q", fallback.Output.GetAuditRef())
+	}
 }
 
 func TestServiceLinkPrepareValidatesCeremony(t *testing.T) {
@@ -68,6 +82,14 @@ func TestServiceLinkPrepareValidatesCeremony(t *testing.T) {
 		Input:  base("", "unlink://proof/1"),
 	}); err == nil {
 		t.Fatal("missing linked-device consent succeeded")
+	}
+	expired := base("consent://link/expired", "unlink://proof/expired")
+	expired.LinkedDevice.ConsentExpiresUnix = 1
+	if _, err := ExecuteSignalServiceLinkPrepare(ctx, sdk.TypedStepRequest[*contracts.ServiceLinkPrepareConfig, *contracts.ServiceLinkPrepareInput]{
+		Config: &contracts.ServiceLinkPrepareConfig{},
+		Input:  expired,
+	}); err == nil {
+		t.Fatal("expired linked-device consent succeeded")
 	}
 	if _, err := ExecuteSignalServiceLinkPrepare(ctx, sdk.TypedStepRequest[*contracts.ServiceLinkPrepareConfig, *contracts.ServiceLinkPrepareInput]{
 		Config: &contracts.ServiceLinkPrepareConfig{},
