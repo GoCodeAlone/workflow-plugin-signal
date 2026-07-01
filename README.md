@@ -94,7 +94,7 @@ sandbox/operator fixtures. They
 return request IDs, statuses, challenge refs, and host secret refs; they do not
 register accounts, link devices, send messages, receive messages, reserve
 usernames, upload backups, download backups, or contact the official Signal
-service through any bundled production endpoint client. Official Signal service
+service via any bundled production endpoint client. Official Signal service
 egress remains unavailable unless a host supplies an approved transport and a
 complete machine-checkable approval package.
 
