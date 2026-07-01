@@ -178,12 +178,58 @@ message OfficialServiceBoundaryConfig {
   string egress_policy_ref = 5;
 }
 
+message ServiceTransportConfig {
+  string transport_ref = 1;
+  string mode = 2;
+  string sandbox_endpoint = 3;
+  repeated string requested_actions = 4;
+  ApprovalPackage approval = 5;
+}
+
+message ApprovalPackage {
+  string operator_approval_id = 1;
+  string operator_approval_scope = 2;
+  int64 operator_approval_expires_unix = 3;
+  string service_authorization_type = 4;
+  string service_authorization_evidence_ref = 5;
+  int64 service_authorization_expires_unix = 6;
+  string account_ref = 7;
+  string account_consent_evidence_ref = 8;
+  int64 account_consent_expires_unix = 9;
+  string custody_backend = 10;
+  string custody_key_handle_ref = 11;
+  string custody_backup_ref = 12;
+  string custody_rotation_ref = 13;
+  bool abuse_idempotency_required = 14;
+  string abuse_rate_limit_ref = 15;
+  string abuse_recipient_allowlist_ref = 16;
+  string abuse_declared_audience_ref = 17;
+  string abuse_challenge_policy_ref = 18;
+  string abuse_backoff_policy_ref = 19;
+  repeated string egress_endpoint_allowlist = 20;
+  string egress_tls_policy_ref = 21;
+  bool egress_dry_run = 22;
+  string audit_ref = 23;
+  string audit_retention_ref = 24;
+  string audit_redaction_ref = 25;
+}
+
 message KeyCustodyConfig {
   string custody_ref = 1;
   string account_ref = 2;
   repeated string secret_refs = 3;
   string non_exportable_key_ref = 4;
   bool allow_exportable_secret_refs = 5;
+}
+
+message PersistentCustodyConfig {
+  string custody_ref = 1;
+  string account_ref = 2;
+  string backend = 3;
+  string storage_path = 4;
+  string key_handle = 5;
+  string host_secret_ref = 6;
+  bool allow_test_backend = 7;
 }
 
 message AccountRefConfig {
@@ -254,6 +300,77 @@ message ServicePolicyCheckOutput {
   repeated string required_approvals = 5;
   repeated string missing_approvals = 6;
   repeated string blocked_actions = 7;
+}
+
+message ServiceApprovalValidateConfig {
+  string mode = 1;
+  repeated string requested_actions = 2;
+  ApprovalPackage approval = 3;
+}
+
+message ServiceApprovalValidateInput {
+  string mode = 1;
+  repeated string requested_actions = 2;
+  ApprovalPackage approval = 3;
+}
+
+message ServiceApprovalValidateOutput {
+  string mode = 1;
+  bool live_transport_allowed = 2;
+  bool live_service_disabled = 3;
+  repeated string denied_reasons = 4;
+  repeated string requested_actions = 5;
+}
+
+message ServiceLiveSubmitConfig {
+  string transport_ref = 1;
+  string mode = 2;
+  string sandbox_endpoint = 3;
+  string account_ref = 4;
+  bool expired_credentials = 5;
+  ApprovalPackage approval = 6;
+}
+
+message ServiceLiveSubmitInput {
+  string transport_ref = 1;
+  string mode = 2;
+  string sandbox_endpoint = 3;
+  string operation = 4;
+  string account_ref = 5;
+  string device_ref = 6;
+  string custody_ref = 7;
+  string idempotency_key = 8;
+  string username = 9;
+  string link_code_ref = 10;
+  string recipient_ref = 11;
+  string payload_ref = 12;
+  string cursor_ref = 13;
+  string backup_ref = 14;
+  string backup_id = 15;
+  string challenge_ref = 16;
+  string challenge_response_ref = 17;
+  string consent_ref = 18;
+  string audit_ref = 19;
+  string credential_ref = 20;
+  string non_exportable_key_ref = 21;
+  bool expired_credentials = 22;
+  ApprovalPackage approval = 23;
+}
+
+message ServiceSubmitOutput {
+  string transport_ref = 1;
+  string transport_mode = 2;
+  string operation = 3;
+  string account_ref = 4;
+  string device_ref = 5;
+  string request_id = 6;
+  string status = 7;
+  string challenge_ref = 8;
+  map<string, string> secret_refs = 9;
+  string credential_ref = 10;
+  string audit_ref = 11;
+  bool live_egress_attempted = 12;
+  repeated string denied_reasons = 13;
 }
 
 message ServiceTestRegisterConfig {

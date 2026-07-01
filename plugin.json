@@ -47,6 +47,8 @@
     "step.signal_service_contract_check",
     "step.signal_service_compliance_check",
     "step.signal_service_policy_check",
+    "step.signal_service_approval_validate",
+    "step.signal_service_live_submit",
     "step.signal_service_test_register",
     "step.signal_service_test_link_device",
     "step.signal_service_test_send",
@@ -58,7 +60,9 @@
       "signal.identity_store",
       "signal.space",
       "signal.official_service_boundary",
+      "signal.service_transport",
       "signal.key_custody",
+      "signal.persistent_custody",
       "signal.account_ref"
     ],
     "stepTypes": [
@@ -72,6 +76,8 @@
       "step.signal_service_contract_check",
       "step.signal_service_compliance_check",
       "step.signal_service_policy_check",
+      "step.signal_service_approval_validate",
+      "step.signal_service_live_submit",
       "step.signal_service_test_register",
       "step.signal_service_test_link_device",
       "step.signal_service_test_send",

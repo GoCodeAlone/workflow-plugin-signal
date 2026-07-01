@@ -19,6 +19,30 @@
       "type": "signal.official_service_boundary"
     },
     {
+      "config": "workflow.plugins.signal.v1.ServiceTransportConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.service_transport"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.KeyCustodyConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.key_custody"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.PersistentCustodyConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.persistent_custody"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.AccountRefConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.account_ref"
+    },
+    {
       "config": "workflow.plugins.signal.v1.EnvelopeTriggerConfig",
       "kind": "module",
       "mode": "strict",
@@ -93,6 +117,70 @@
       "mode": "strict",
       "output": "workflow.plugins.signal.v1.ServiceContractCheckOutput",
       "type": "step.signal_service_contract_check"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceComplianceCheckConfig",
+      "input": "workflow.plugins.signal.v1.ServiceComplianceCheckInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceComplianceCheckOutput",
+      "type": "step.signal_service_compliance_check"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServicePolicyCheckConfig",
+      "input": "workflow.plugins.signal.v1.ServicePolicyCheckInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServicePolicyCheckOutput",
+      "type": "step.signal_service_policy_check"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceApprovalValidateConfig",
+      "input": "workflow.plugins.signal.v1.ServiceApprovalValidateInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceApprovalValidateOutput",
+      "type": "step.signal_service_approval_validate"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceLiveSubmitConfig",
+      "input": "workflow.plugins.signal.v1.ServiceLiveSubmitInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceSubmitOutput",
+      "type": "step.signal_service_live_submit"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceTestRegisterConfig",
+      "input": "workflow.plugins.signal.v1.ServiceTestRegisterInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceTestOutput",
+      "type": "step.signal_service_test_register"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceTestLinkDeviceConfig",
+      "input": "workflow.plugins.signal.v1.ServiceTestLinkDeviceInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceTestOutput",
+      "type": "step.signal_service_test_link_device"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceTestSendConfig",
+      "input": "workflow.plugins.signal.v1.ServiceTestSendInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceTestOutput",
+      "type": "step.signal_service_test_send"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceTestReceiveConfig",
+      "input": "workflow.plugins.signal.v1.ServiceTestReceiveInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceTestOutput",
+      "type": "step.signal_service_test_receive"
     }
   ],
   "version": "v1"

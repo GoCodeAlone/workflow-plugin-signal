@@ -147,7 +147,13 @@ func resetServiceTestState() {
 	signalAccountsMu.Lock()
 	clear(signalAccounts)
 	signalAccountsMu.Unlock()
+	signalPersistentCustodiesMu.Lock()
+	clear(signalPersistentCustodies)
+	signalPersistentCustodiesMu.Unlock()
 	signalServiceTestLedgerMu.Lock()
 	clear(signalServiceTestLedger)
 	signalServiceTestLedgerMu.Unlock()
+	signalServiceTransportsMu.Lock()
+	clear(signalServiceTransports)
+	signalServiceTransportsMu.Unlock()
 }
