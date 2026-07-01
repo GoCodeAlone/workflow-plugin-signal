@@ -1,0 +1,73 @@
+modules:
+  - name: custody_store
+    type: signal.custody_store
+    config:
+      typed:
+        backend_id: local-test
+        backend: test_file
+        storage_path: .wfctl/signal-custody-restart
+        kek_ref: secret://signal/kek
+        kek_version: v1
+        schema_version: 1
+        allow_test_backend: true
+
+workflows:
+  - name: signal_custody_restart
+    steps:
+      - name: create
+        type: step.signal_custody_create
+        config:
+          typed:
+            store_ref: custody_store
+        input:
+          typed:
+            account_ref: account://signal/alice
+            device_ref: device://signal/alice/1
+            material_refs:
+              - secret://signal/alice/identity-key
+            idempotency_key: alice-device-1
+            requested_at_unix: 1783000000
+      - name: restore_after_restart
+        type: step.signal_custody_restore
+        config:
+          typed:
+            store_ref: custody_store
+        input:
+          typed:
+            custody_ref: custody://alice-device-1
+      - name: rotate
+        type: step.signal_custody_rotate
+        config:
+          typed:
+            store_ref: custody_store
+        input:
+          typed:
+            custody_ref: custody://alice-device-1
+            new_kek_version: v2
+            requested_at_unix: 1783000060
+      - name: inspect
+        type: step.signal_custody_inspect
+        config:
+          typed:
+            store_ref: custody_store
+        input:
+          typed:
+            custody_ref: custody://alice-device-1
+      - name: revoke
+        type: step.signal_custody_revoke
+        config:
+          typed:
+            store_ref: custody_store
+        input:
+          typed:
+            custody_ref: custody://alice-device-1
+            requested_at_unix: 1783000120
+      - name: restore_after_revoke_fails
+        type: step.signal_custody_restore
+        config:
+          typed:
+            store_ref: custody_store
+        input:
+          typed:
+            custody_ref: custody://alice-device-1
+        expect_error: signal custody: ref is revoked

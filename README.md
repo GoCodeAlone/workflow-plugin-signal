@@ -73,6 +73,12 @@ key custody. Its step contracts return custody refs and metadata only; plain key
 bytes are not ordinary Workflow outputs. The existing `signal.persistent_custody`
 module remains available for backward compatibility.
 
+The `scenarios/signal-custody-restart` fixture covers the v2 custody lifecycle:
+create a sealed custody ref, reload the store after a simulated restart, restore
+by ref, rotate KEK metadata, inspect redacted metadata, revoke the ref, and
+reject restore after revocation. The scenario uses the `test_file` backend only;
+production hosts should use `local_file` with host-managed KEK custody.
+
 Official Signal service registration, linked-device, send, and receive steps in
 this release use deterministic `libsignal-service-go/fake` clients only. They
 return request IDs, statuses, challenge refs, and host secret refs; they do not
