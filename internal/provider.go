@@ -110,7 +110,7 @@ func (p *SignalProvider) CreateTypedModule(typeName, name string, config *anypb.
 		return factory.CreateTypedModule(typeName, name, config)
 	case "signal.custody_store":
 		factory := sdk.NewTypedModuleFactory(typeName, &contracts.CustodyStoreConfig{}, func(name string, cfg *contracts.CustodyStoreConfig) (sdk.ModuleInstance, error) {
-			return newCustodyStoreModule(name, cfg), nil
+			return newCustodyStoreModule(name, cfg)
 		})
 		return factory.CreateTypedModule(typeName, name, config)
 	case "signal.account_ref":
