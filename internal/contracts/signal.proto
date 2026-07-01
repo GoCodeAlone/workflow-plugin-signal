@@ -186,6 +186,17 @@ message ServiceTransportConfig {
   ApprovalPackage approval = 5;
 }
 
+message LivePolicyConfig {
+  string policy_ref = 1;
+  string mode = 2;
+  string transport_ref = 3;
+  string account_ref = 4;
+  repeated string requested_actions = 5;
+  ApprovalPackage approval = 6;
+  bool allow_operator_fixture = 7;
+  string operator_fixture_endpoint = 8;
+}
+
 message ApprovalPackage {
   string operator_approval_id = 1;
   string operator_approval_scope = 2;
@@ -478,6 +489,189 @@ message ServiceSubmitOutput {
   string audit_ref = 11;
   bool live_egress_attempted = 12;
   repeated string denied_reasons = 13;
+}
+
+message LinkedDeviceCeremony {
+  string device_display_name = 1;
+  string consent_ref = 2;
+  int64 consent_expires_unix = 3;
+  string revocation_uri = 4;
+  string unlink_proof_ref = 5;
+}
+
+message ServiceOperationEnvelope {
+  string operation_id = 1;
+  string operation = 2;
+  string idempotency_key = 3;
+  string account_ref = 4;
+  string device_ref = 5;
+  string custody_ref = 6;
+  int64 requested_at_unix = 7;
+  string consent_ref = 8;
+  string audit_ref = 9;
+  string credential_ref = 10;
+  string non_exportable_key_ref = 11;
+  string recipient_ref = 12;
+  string payload_ref = 13;
+  string cursor_ref = 14;
+  string username = 15;
+  string backup_ref = 16;
+  string backup_id = 17;
+  string challenge_ref = 18;
+  string challenge_response_ref = 19;
+  LinkedDeviceCeremony linked_device = 20;
+}
+
+message ServiceOperationPrepareOutput {
+  ServiceOperationEnvelope envelope = 1;
+  string status = 2;
+  string report_classification = 3;
+  string deferred_reason = 4;
+  string audit_ref = 5;
+  bool live_egress_attempted = 6;
+}
+
+message ServiceRegisterPrepareConfig {
+  string account_ref = 1;
+  string transport_ref = 2;
+  string mode = 3;
+}
+
+message ServiceRegisterPrepareInput {
+  string operation_id = 1;
+  string account_ref = 2;
+  string device_ref = 3;
+  string custody_ref = 4;
+  string idempotency_key = 5;
+  string username = 6;
+  string consent_ref = 7;
+  string audit_ref = 8;
+  string credential_ref = 9;
+  string non_exportable_key_ref = 10;
+  int64 requested_at_unix = 11;
+}
+
+message ServiceLinkPrepareConfig {
+  string account_ref = 1;
+  string transport_ref = 2;
+  string mode = 3;
+}
+
+message ServiceLinkPrepareInput {
+  string operation_id = 1;
+  string account_ref = 2;
+  string device_ref = 3;
+  string custody_ref = 4;
+  string idempotency_key = 5;
+  string link_code_ref = 6;
+  string consent_ref = 7;
+  string audit_ref = 8;
+  string credential_ref = 9;
+  string non_exportable_key_ref = 10;
+  int64 requested_at_unix = 11;
+  LinkedDeviceCeremony linked_device = 12;
+}
+
+message ServiceSendPrepareConfig {
+  string account_ref = 1;
+  string transport_ref = 2;
+  string mode = 3;
+}
+
+message ServiceSendPrepareInput {
+  string operation_id = 1;
+  string account_ref = 2;
+  string device_ref = 3;
+  string custody_ref = 4;
+  string idempotency_key = 5;
+  string recipient_ref = 6;
+  string payload_ref = 7;
+  string consent_ref = 8;
+  string audit_ref = 9;
+  string credential_ref = 10;
+  string non_exportable_key_ref = 11;
+  int64 requested_at_unix = 12;
+}
+
+message ServiceReceiveAdmitConfig {
+  string account_ref = 1;
+  string transport_ref = 2;
+  string mode = 3;
+}
+
+message ServiceReceiveAdmitInput {
+  string operation_id = 1;
+  string account_ref = 2;
+  string device_ref = 3;
+  string custody_ref = 4;
+  string idempotency_key = 5;
+  string cursor_ref = 6;
+  string consent_ref = 7;
+  string audit_ref = 8;
+  string credential_ref = 9;
+  string non_exportable_key_ref = 10;
+  int64 requested_at_unix = 11;
+}
+
+message ServiceChallengeRespondConfig {
+  string account_ref = 1;
+  string transport_ref = 2;
+  string mode = 3;
+}
+
+message ServiceChallengeRespondInput {
+  string operation_id = 1;
+  string account_ref = 2;
+  string device_ref = 3;
+  string custody_ref = 4;
+  string idempotency_key = 5;
+  string challenge_ref = 6;
+  string challenge_response_ref = 7;
+  string consent_ref = 8;
+  string audit_ref = 9;
+  string credential_ref = 10;
+  string non_exportable_key_ref = 11;
+  int64 requested_at_unix = 12;
+}
+
+message UsernameProofPrepareConfig {
+  string account_ref = 1;
+}
+
+message UsernameProofPrepareInput {
+  string operation_id = 1;
+  string account_ref = 2;
+  string idempotency_key = 3;
+  string username = 4;
+  string audit_ref = 5;
+  int64 requested_at_unix = 6;
+}
+
+message BackupManifestVerifyConfig {
+  string account_ref = 1;
+}
+
+message BackupManifestVerifyInput {
+  string operation_id = 1;
+  string account_ref = 2;
+  string idempotency_key = 3;
+  string backup_ref = 4;
+  string backup_id = 5;
+  string audit_ref = 6;
+  int64 requested_at_unix = 7;
+}
+
+message BackupAuthPrepareConfig {
+  string account_ref = 1;
+}
+
+message BackupAuthPrepareInput {
+  string operation_id = 1;
+  string account_ref = 2;
+  string idempotency_key = 3;
+  string backup_ref = 4;
+  string audit_ref = 5;
+  int64 requested_at_unix = 6;
 }
 
 message ServiceTestRegisterConfig {

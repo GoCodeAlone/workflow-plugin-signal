@@ -38,6 +38,7 @@ var signalModuleTypes = []string{
 	"signal.space",
 	"signal.official_service_boundary",
 	"signal.service_transport",
+	"signal.live_policy",
 	"signal.key_custody",
 	"signal.persistent_custody",
 	"signal.custody_store",
@@ -59,6 +60,14 @@ var signalStepTypes = []string{
 	"step.signal_service_policy_check",
 	"step.signal_service_approval_validate",
 	"step.signal_service_live_submit",
+	"step.signal_service_register_prepare",
+	"step.signal_service_link_prepare",
+	"step.signal_service_send_prepare",
+	"step.signal_service_receive_admit",
+	"step.signal_service_challenge_respond",
+	"step.signal_username_proof_prepare",
+	"step.signal_backup_manifest_verify",
+	"step.signal_backup_auth_prepare",
 	"step.signal_service_test_register",
 	"step.signal_service_test_link_device",
 	"step.signal_service_test_send",
@@ -96,6 +105,11 @@ func (p *SignalProvider) CreateTypedModule(typeName, name string, config *anypb.
 	case "signal.service_transport":
 		factory := sdk.NewTypedModuleFactory(typeName, &contracts.ServiceTransportConfig{}, func(name string, cfg *contracts.ServiceTransportConfig) (sdk.ModuleInstance, error) {
 			return newServiceTransportModule(name, cfg)
+		})
+		return factory.CreateTypedModule(typeName, name, config)
+	case "signal.live_policy":
+		factory := sdk.NewTypedModuleFactory(typeName, &contracts.LivePolicyConfig{}, func(name string, cfg *contracts.LivePolicyConfig) (sdk.ModuleInstance, error) {
+			return newLivePolicyModule(name, cfg)
 		})
 		return factory.CreateTypedModule(typeName, name, config)
 	case "signal.key_custody":
@@ -236,6 +250,70 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalServiceLiveSubmit,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_register_prepare":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceRegisterPrepareConfig{},
+			&contracts.ServiceRegisterPrepareInput{},
+			ExecuteSignalServiceRegisterPrepare,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_link_prepare":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceLinkPrepareConfig{},
+			&contracts.ServiceLinkPrepareInput{},
+			ExecuteSignalServiceLinkPrepare,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_send_prepare":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceSendPrepareConfig{},
+			&contracts.ServiceSendPrepareInput{},
+			ExecuteSignalServiceSendPrepare,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_receive_admit":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceReceiveAdmitConfig{},
+			&contracts.ServiceReceiveAdmitInput{},
+			ExecuteSignalServiceReceiveAdmit,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_challenge_respond":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceChallengeRespondConfig{},
+			&contracts.ServiceChallengeRespondInput{},
+			ExecuteSignalServiceChallengeRespond,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_username_proof_prepare":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.UsernameProofPrepareConfig{},
+			&contracts.UsernameProofPrepareInput{},
+			ExecuteSignalUsernameProofPrepare,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_backup_manifest_verify":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.BackupManifestVerifyConfig{},
+			&contracts.BackupManifestVerifyInput{},
+			ExecuteSignalBackupManifestVerify,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_backup_auth_prepare":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.BackupAuthPrepareConfig{},
+			&contracts.BackupAuthPrepareInput{},
+			ExecuteSignalBackupAuthPrepare,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	case "step.signal_service_test_register":
 		factory := sdk.NewTypedStepFactory(
 			typeName,
@@ -326,6 +404,7 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			moduleContract("signal.space", pkg+"SpaceConfig"),
 			moduleContract("signal.official_service_boundary", pkg+"OfficialServiceBoundaryConfig"),
 			moduleContract("signal.service_transport", pkg+"ServiceTransportConfig"),
+			moduleContract("signal.live_policy", pkg+"LivePolicyConfig"),
 			moduleContract("signal.key_custody", pkg+"KeyCustodyConfig"),
 			moduleContract("signal.persistent_custody", pkg+"PersistentCustodyConfig"),
 			moduleContract("signal.custody_store", pkg+"CustodyStoreConfig"),
@@ -344,6 +423,14 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_service_policy_check", pkg+"ServicePolicyCheckConfig", pkg+"ServicePolicyCheckInput", pkg+"ServicePolicyCheckOutput"),
 			stepContract("step.signal_service_approval_validate", pkg+"ServiceApprovalValidateConfig", pkg+"ServiceApprovalValidateInput", pkg+"ServiceApprovalValidateOutput"),
 			stepContract("step.signal_service_live_submit", pkg+"ServiceLiveSubmitConfig", pkg+"ServiceLiveSubmitInput", pkg+"ServiceSubmitOutput"),
+			stepContract("step.signal_service_register_prepare", pkg+"ServiceRegisterPrepareConfig", pkg+"ServiceRegisterPrepareInput", pkg+"ServiceOperationPrepareOutput"),
+			stepContract("step.signal_service_link_prepare", pkg+"ServiceLinkPrepareConfig", pkg+"ServiceLinkPrepareInput", pkg+"ServiceOperationPrepareOutput"),
+			stepContract("step.signal_service_send_prepare", pkg+"ServiceSendPrepareConfig", pkg+"ServiceSendPrepareInput", pkg+"ServiceOperationPrepareOutput"),
+			stepContract("step.signal_service_receive_admit", pkg+"ServiceReceiveAdmitConfig", pkg+"ServiceReceiveAdmitInput", pkg+"ServiceOperationPrepareOutput"),
+			stepContract("step.signal_service_challenge_respond", pkg+"ServiceChallengeRespondConfig", pkg+"ServiceChallengeRespondInput", pkg+"ServiceOperationPrepareOutput"),
+			stepContract("step.signal_username_proof_prepare", pkg+"UsernameProofPrepareConfig", pkg+"UsernameProofPrepareInput", pkg+"ServiceOperationPrepareOutput"),
+			stepContract("step.signal_backup_manifest_verify", pkg+"BackupManifestVerifyConfig", pkg+"BackupManifestVerifyInput", pkg+"ServiceOperationPrepareOutput"),
+			stepContract("step.signal_backup_auth_prepare", pkg+"BackupAuthPrepareConfig", pkg+"BackupAuthPrepareInput", pkg+"ServiceOperationPrepareOutput"),
 			stepContract("step.signal_service_test_register", pkg+"ServiceTestRegisterConfig", pkg+"ServiceTestRegisterInput", pkg+"ServiceTestOutput"),
 			stepContract("step.signal_service_test_link_device", pkg+"ServiceTestLinkDeviceConfig", pkg+"ServiceTestLinkDeviceInput", pkg+"ServiceTestOutput"),
 			stepContract("step.signal_service_test_send", pkg+"ServiceTestSendConfig", pkg+"ServiceTestSendInput", pkg+"ServiceTestOutput"),

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	pb "github.com/GoCodeAlone/workflow/plugin/external/proto"
@@ -32,6 +33,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"signal.space",
 		"signal.official_service_boundary",
 		"signal.service_transport",
+		"signal.live_policy",
 		"signal.key_custody",
 		"signal.persistent_custody",
 		"signal.custody_store",
@@ -52,6 +54,14 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step.signal_service_policy_check",
 		"step.signal_service_approval_validate",
 		"step.signal_service_live_submit",
+		"step.signal_service_register_prepare",
+		"step.signal_service_link_prepare",
+		"step.signal_service_send_prepare",
+		"step.signal_service_receive_admit",
+		"step.signal_service_challenge_respond",
+		"step.signal_username_proof_prepare",
+		"step.signal_backup_manifest_verify",
+		"step.signal_backup_auth_prepare",
 		"step.signal_service_test_register",
 		"step.signal_service_test_link_device",
 		"step.signal_service_test_send",
@@ -106,6 +116,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"module:signal.space",
 		"module:signal.official_service_boundary",
 		"module:signal.service_transport",
+		"module:signal.live_policy",
 		"module:signal.key_custody",
 		"module:signal.persistent_custody",
 		"module:signal.custody_store",
@@ -124,6 +135,14 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step:step.signal_service_policy_check",
 		"step:step.signal_service_approval_validate",
 		"step:step.signal_service_live_submit",
+		"step:step.signal_service_register_prepare",
+		"step:step.signal_service_link_prepare",
+		"step:step.signal_service_send_prepare",
+		"step:step.signal_service_receive_admit",
+		"step:step.signal_service_challenge_respond",
+		"step:step.signal_username_proof_prepare",
+		"step:step.signal_backup_manifest_verify",
+		"step:step.signal_backup_auth_prepare",
 		"step:step.signal_service_test_register",
 		"step:step.signal_service_test_link_device",
 		"step:step.signal_service_test_send",
@@ -161,6 +180,7 @@ func TestPluginJSONCapabilitiesMatchRuntimeProvider(t *testing.T) {
 		"signal.space",
 		"signal.official_service_boundary",
 		"signal.service_transport",
+		"signal.live_policy",
 		"signal.key_custody",
 		"signal.persistent_custody",
 		"signal.custody_store",
@@ -221,6 +241,77 @@ func TestProviderContractsDeclareCustodyV2(t *testing.T) {
 		if _, ok := contractsByKey[key]; !ok {
 			t.Fatalf("missing contract %s", key)
 		}
+	}
+}
+
+func TestProviderContractsDeclareServiceOperationContracts(t *testing.T) {
+	provider := NewSignalProvider()
+	moduleProvider, ok := any(provider).(sdk.TypedModuleProvider)
+	if !ok {
+		t.Fatal("expected typed module provider")
+	}
+	stepProvider, ok := any(provider).(sdk.TypedStepProvider)
+	if !ok {
+		t.Fatal("expected typed step provider")
+	}
+	contractProvider, ok := any(provider).(sdk.ContractProvider)
+	if !ok {
+		t.Fatal("expected contract provider")
+	}
+
+	assertStringSetContains(t, moduleProvider.TypedModuleTypes(), []string{
+		"signal.live_policy",
+		"signal.service_transport",
+		"signal.persistent_custody",
+	})
+	assertStringSetContains(t, stepProvider.TypedStepTypes(), []string{
+		"step.signal_service_register_prepare",
+		"step.signal_service_link_prepare",
+		"step.signal_service_send_prepare",
+		"step.signal_service_receive_admit",
+		"step.signal_service_challenge_respond",
+		"step.signal_username_proof_prepare",
+		"step.signal_backup_manifest_verify",
+		"step.signal_backup_auth_prepare",
+		"step.signal_service_approval_validate",
+		"step.signal_service_live_submit",
+	})
+
+	contractsByKey := map[string]*pb.ContractDescriptor{}
+	for _, descriptor := range contractProvider.ContractRegistry().Contracts {
+		switch descriptor.Kind {
+		case pb.ContractKind_CONTRACT_KIND_MODULE:
+			contractsByKey["module:"+descriptor.ModuleType] = descriptor
+		case pb.ContractKind_CONTRACT_KIND_STEP:
+			contractsByKey["step:"+descriptor.StepType] = descriptor
+		}
+	}
+	for _, key := range []string{
+		"module:signal.live_policy",
+		"step:step.signal_service_register_prepare",
+		"step:step.signal_service_link_prepare",
+		"step:step.signal_service_send_prepare",
+		"step:step.signal_service_receive_admit",
+		"step:step.signal_service_challenge_respond",
+		"step:step.signal_username_proof_prepare",
+		"step:step.signal_backup_manifest_verify",
+		"step:step.signal_backup_auth_prepare",
+		"step:step.signal_service_approval_validate",
+		"step:step.signal_service_live_submit",
+	} {
+		if _, ok := contractsByKey[key]; !ok {
+			t.Fatalf("missing contract %s", key)
+		}
+	}
+}
+
+func TestLibsignalServiceGoPinnedForOperationAdapters(t *testing.T) {
+	raw, err := os.ReadFile(filepath.Join("..", "go.mod"))
+	if err != nil {
+		t.Fatalf("read go.mod: %v", err)
+	}
+	if !strings.Contains(string(raw), "github.com/GoCodeAlone/libsignal-service-go v0.5.0") {
+		t.Fatalf("go.mod does not pin libsignal-service-go v0.5.0:\n%s", raw)
 	}
 }
 

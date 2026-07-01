@@ -1,6 +1,6 @@
 {
   "name": "workflow-plugin-signal",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "author": "GoCodeAlone",
   "description": "Signal protocol primitives for Workflow",
   "license": "MIT",
@@ -13,27 +13,27 @@
     {
       "os": "linux",
       "arch": "amd64",
-      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.8.0/workflow-plugin-signal-linux-amd64.tar.gz"
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.9.0/workflow-plugin-signal-linux-amd64.tar.gz"
     },
     {
       "os": "linux",
       "arch": "arm64",
-      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.8.0/workflow-plugin-signal-linux-arm64.tar.gz"
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.9.0/workflow-plugin-signal-linux-arm64.tar.gz"
     },
     {
       "os": "darwin",
       "arch": "amd64",
-      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.8.0/workflow-plugin-signal-darwin-amd64.tar.gz"
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.9.0/workflow-plugin-signal-darwin-amd64.tar.gz"
     },
     {
       "os": "darwin",
       "arch": "arm64",
-      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.8.0/workflow-plugin-signal-darwin-arm64.tar.gz"
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.9.0/workflow-plugin-signal-darwin-arm64.tar.gz"
     },
     {
       "os": "windows",
       "arch": "amd64",
-      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.8.0/workflow-plugin-signal-windows-amd64.tar.gz"
+      "url": "https://github.com/GoCodeAlone/workflow-plugin-signal/releases/download/v0.9.0/workflow-plugin-signal-windows-amd64.tar.gz"
     }
   ],
   "stepTypes": [
@@ -49,6 +49,14 @@
     "step.signal_service_policy_check",
     "step.signal_service_approval_validate",
     "step.signal_service_live_submit",
+    "step.signal_service_register_prepare",
+    "step.signal_service_link_prepare",
+    "step.signal_service_send_prepare",
+    "step.signal_service_receive_admit",
+    "step.signal_service_challenge_respond",
+    "step.signal_username_proof_prepare",
+    "step.signal_backup_manifest_verify",
+    "step.signal_backup_auth_prepare",
     "step.signal_service_test_register",
     "step.signal_service_test_link_device",
     "step.signal_service_test_send",
@@ -66,6 +74,7 @@
       "signal.space",
       "signal.official_service_boundary",
       "signal.service_transport",
+      "signal.live_policy",
       "signal.key_custody",
       "signal.persistent_custody",
       "signal.custody_store",
@@ -84,6 +93,14 @@
       "step.signal_service_policy_check",
       "step.signal_service_approval_validate",
       "step.signal_service_live_submit",
+      "step.signal_service_register_prepare",
+      "step.signal_service_link_prepare",
+      "step.signal_service_send_prepare",
+      "step.signal_service_receive_admit",
+      "step.signal_service_challenge_respond",
+      "step.signal_username_proof_prepare",
+      "step.signal_backup_manifest_verify",
+      "step.signal_backup_auth_prepare",
       "step.signal_service_test_register",
       "step.signal_service_test_link_device",
       "step.signal_service_test_send",

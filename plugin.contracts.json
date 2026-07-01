@@ -25,6 +25,12 @@
       "type": "signal.service_transport"
     },
     {
+      "config": "workflow.plugins.signal.v1.LivePolicyConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.live_policy"
+    },
+    {
       "config": "workflow.plugins.signal.v1.KeyCustodyConfig",
       "kind": "module",
       "mode": "strict",
@@ -155,6 +161,70 @@
       "mode": "strict",
       "output": "workflow.plugins.signal.v1.ServiceSubmitOutput",
       "type": "step.signal_service_live_submit"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceRegisterPrepareConfig",
+      "input": "workflow.plugins.signal.v1.ServiceRegisterPrepareInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceOperationPrepareOutput",
+      "type": "step.signal_service_register_prepare"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceLinkPrepareConfig",
+      "input": "workflow.plugins.signal.v1.ServiceLinkPrepareInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceOperationPrepareOutput",
+      "type": "step.signal_service_link_prepare"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceSendPrepareConfig",
+      "input": "workflow.plugins.signal.v1.ServiceSendPrepareInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceOperationPrepareOutput",
+      "type": "step.signal_service_send_prepare"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceReceiveAdmitConfig",
+      "input": "workflow.plugins.signal.v1.ServiceReceiveAdmitInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceOperationPrepareOutput",
+      "type": "step.signal_service_receive_admit"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.ServiceChallengeRespondConfig",
+      "input": "workflow.plugins.signal.v1.ServiceChallengeRespondInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceOperationPrepareOutput",
+      "type": "step.signal_service_challenge_respond"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.UsernameProofPrepareConfig",
+      "input": "workflow.plugins.signal.v1.UsernameProofPrepareInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceOperationPrepareOutput",
+      "type": "step.signal_username_proof_prepare"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.BackupManifestVerifyConfig",
+      "input": "workflow.plugins.signal.v1.BackupManifestVerifyInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceOperationPrepareOutput",
+      "type": "step.signal_backup_manifest_verify"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.BackupAuthPrepareConfig",
+      "input": "workflow.plugins.signal.v1.BackupAuthPrepareInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.ServiceOperationPrepareOutput",
+      "type": "step.signal_backup_auth_prepare"
     },
     {
       "config": "workflow.plugins.signal.v1.ServiceTestRegisterConfig",

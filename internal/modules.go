@@ -81,8 +81,24 @@ type serviceEnvelopeTriggerModule struct {
 	config *contracts.ServiceEnvelopeTriggerConfig
 }
 
+type livePolicyModule struct {
+	lifecycleModule
+	name   string
+	config *contracts.LivePolicyConfig
+}
+
 func newServiceEnvelopeTriggerModule(name string, cfg *contracts.ServiceEnvelopeTriggerConfig) *serviceEnvelopeTriggerModule {
 	return &serviceEnvelopeTriggerModule{name: name, config: cfg}
+}
+
+func newLivePolicyModule(name string, cfg *contracts.LivePolicyConfig) (*livePolicyModule, error) {
+	if cfg == nil {
+		cfg = &contracts.LivePolicyConfig{}
+	}
+	if err := validateServiceBoundaryMode(cfg.GetMode()); err != nil {
+		return nil, err
+	}
+	return &livePolicyModule{name: name, config: cfg}, nil
 }
 
 type signalIdentity struct {
