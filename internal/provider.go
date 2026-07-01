@@ -38,6 +38,7 @@ var signalModuleTypes = []string{
 	"signal.space",
 	"signal.official_service_boundary",
 	"signal.key_custody",
+	"signal.persistent_custody",
 	"signal.account_ref",
 	"trigger.signal_envelope",
 	"trigger.signal_service_envelope",
@@ -86,6 +87,11 @@ func (p *SignalProvider) CreateTypedModule(typeName, name string, config *anypb.
 	case "signal.key_custody":
 		factory := sdk.NewTypedModuleFactory(typeName, &contracts.KeyCustodyConfig{}, func(name string, cfg *contracts.KeyCustodyConfig) (sdk.ModuleInstance, error) {
 			return newKeyCustodyModule(name, cfg)
+		})
+		return factory.CreateTypedModule(typeName, name, config)
+	case "signal.persistent_custody":
+		factory := sdk.NewTypedModuleFactory(typeName, &contracts.PersistentCustodyConfig{}, func(name string, cfg *contracts.PersistentCustodyConfig) (sdk.ModuleInstance, error) {
+			return newPersistentCustodyModule(name, cfg)
 		})
 		return factory.CreateTypedModule(typeName, name, config)
 	case "signal.account_ref":
@@ -245,6 +251,7 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			moduleContract("signal.space", pkg+"SpaceConfig"),
 			moduleContract("signal.official_service_boundary", pkg+"OfficialServiceBoundaryConfig"),
 			moduleContract("signal.key_custody", pkg+"KeyCustodyConfig"),
+			moduleContract("signal.persistent_custody", pkg+"PersistentCustodyConfig"),
 			moduleContract("signal.account_ref", pkg+"AccountRefConfig"),
 			moduleContract("trigger.signal_envelope", pkg+"EnvelopeTriggerConfig"),
 			moduleContract("trigger.signal_service_envelope", pkg+"ServiceEnvelopeTriggerConfig"),

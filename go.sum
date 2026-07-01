@@ -12,6 +12,8 @@ github.com/GoCodeAlone/libsignal-service-go v0.2.0 h1:2lGObBB9mUbH2p7z3zHn9Bt/JR
 github.com/GoCodeAlone/libsignal-service-go v0.2.0/go.mod h1:a8uhvD/yQBWqsZbzjJkv+/y/Cs1TqsaUzyfQVbP/LmE=
 github.com/GoCodeAlone/libsignal-service-go v0.3.0 h1:tAeHamXzpw7fFqh/zcmMvqqZZ7a701CtFnLCsH9ClYk=
 github.com/GoCodeAlone/libsignal-service-go v0.3.0/go.mod h1:a8uhvD/yQBWqsZbzjJkv+/y/Cs1TqsaUzyfQVbP/LmE=
+github.com/GoCodeAlone/libsignal-service-go v0.4.0 h1:S0XrcgAPteSCh8ZlRET8zHk9yzU2qpIaZi1a+AnoeA8=
+github.com/GoCodeAlone/libsignal-service-go v0.4.0/go.mod h1:a8uhvD/yQBWqsZbzjJkv+/y/Cs1TqsaUzyfQVbP/LmE=
 github.com/GoCodeAlone/modular v1.13.4 h1:De4p2qyJSVmstRGno/PM+fPdUCMu/7a9WgU5FUVGDa8=
 github.com/GoCodeAlone/modular v1.13.4/go.mod h1:+JEPUYOxGaD332EMZ5PbJCz5rxwvFu4Tm6MrnZT0vxM=
 github.com/GoCodeAlone/modular/modules/auth v1.17.0 h1:GbKG6s/2qe6N9YZ8vtvYsNon56MLWECncPxWvAsazSc=

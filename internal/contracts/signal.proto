@@ -186,6 +186,16 @@ message KeyCustodyConfig {
   bool allow_exportable_secret_refs = 5;
 }
 
+message PersistentCustodyConfig {
+  string custody_ref = 1;
+  string account_ref = 2;
+  string backend = 3;
+  string storage_path = 4;
+  string key_handle = 5;
+  string host_secret_ref = 6;
+  bool allow_test_backend = 7;
+}
+
 message AccountRefConfig {
   string account_ref = 1;
   string device_ref = 2;

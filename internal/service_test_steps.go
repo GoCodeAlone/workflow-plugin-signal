@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/GoCodeAlone/libsignal-service-go/fake"
 	"github.com/GoCodeAlone/libsignal-service-go/serviceclient"
@@ -35,7 +36,7 @@ func ExecuteSignalServicePolicyCheck(
 		Mode:             servicepolicy.Mode(mode),
 		RequestedActions: actions,
 	})
-	liveAllowed := (servicepolicy.Policy{Mode: servicepolicy.Mode(mode)}).AllowsLiveTransport(approvalSet)
+	liveAllowed := (servicepolicy.Policy{Mode: servicepolicy.Mode(mode)}).AllowsLiveTransport(servicepolicy.ApprovalPackage{}, time.Now().UTC(), actions...)
 
 	return &sdk.TypedStepResult[*contracts.ServicePolicyCheckOutput]{
 		Output: &contracts.ServicePolicyCheckOutput{

@@ -32,6 +32,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"signal.space",
 		"signal.official_service_boundary",
 		"signal.key_custody",
+		"signal.persistent_custody",
 		"signal.account_ref",
 		"trigger.signal_envelope",
 		"trigger.signal_service_envelope",
@@ -96,6 +97,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"module:signal.space",
 		"module:signal.official_service_boundary",
 		"module:signal.key_custody",
+		"module:signal.persistent_custody",
 		"module:signal.account_ref",
 		"module:trigger.signal_envelope",
 		"module:trigger.signal_service_envelope",
@@ -141,6 +143,7 @@ func TestPluginJSONCapabilitiesMatchRuntimeProvider(t *testing.T) {
 		"signal.space",
 		"signal.official_service_boundary",
 		"signal.key_custody",
+		"signal.persistent_custody",
 		"signal.account_ref",
 	})
 	assertStringSet(t, manifest.Capabilities.TriggerTypes, []string{

@@ -59,6 +59,7 @@
       "signal.space",
       "signal.official_service_boundary",
       "signal.key_custody",
+      "signal.persistent_custody",
       "signal.account_ref"
     ],
     "stepTypes": [

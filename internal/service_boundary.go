@@ -4,28 +4,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/GoCodeAlone/libsignal-service-go/servicemetadata"
 	"github.com/GoCodeAlone/libsignal-service-go/servicepolicy"
 	"github.com/GoCodeAlone/workflow/plugin/external/sdk"
 
 	contracts "github.com/GoCodeAlone/workflow-plugin-signal/internal/contracts"
 )
-
-const (
-	serviceBoundaryUpstreamTag        = "v0.96.4"
-	serviceBoundaryDescriptorChecksum = "9f647ca4a75f581514cbe080c792871e10d7dbd7b22bd6faf2832e15d447e484"
-)
-
-var serviceBoundaryDomains = []string{
-	"account",
-	"device",
-	"messages",
-	"profile",
-	"keys",
-	"backups_metadata",
-	"challenge",
-	"credentials",
-	"chat_websocket",
-}
 
 func ExecuteSignalServiceContractCheck(
 	_ context.Context,
@@ -38,12 +22,13 @@ func ExecuteSignalServiceContractCheck(
 	if mode == "" {
 		mode = string(servicepolicy.ModeDisabled)
 	}
+	baseline := servicemetadata.Current()
 	return &sdk.TypedStepResult[*contracts.ServiceContractCheckOutput]{
 		Output: &contracts.ServiceContractCheckOutput{
 			Mode:                mode,
-			UpstreamTag:         serviceBoundaryUpstreamTag,
-			DescriptorChecksum:  serviceBoundaryDescriptorChecksum,
-			SelectedDomains:     append([]string(nil), serviceBoundaryDomains...),
+			UpstreamTag:         baseline.UpstreamTag,
+			DescriptorChecksum:  baseline.DescriptorChecksum,
+			SelectedDomains:     append([]string(nil), baseline.SelectedDomains...),
 			LiveServiceDisabled: true,
 		},
 	}, nil

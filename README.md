@@ -44,6 +44,7 @@ make install-local
 - `signal.space` - typed configuration surface for binding encrypted spaces to rooms/eventbus.
 - `signal.official_service_boundary` - typed disabled/test-double boundary for selected upstream service wire shapes.
 - `signal.key_custody` - host-managed key custody refs for exportable secret refs or non-exportable key handles.
+- `signal.persistent_custody` - host-secret-backed encrypted local custody for non-exportable key handles.
 - `signal.account_ref` - account/device/consent/audit refs bound to host custody for fake official-service tests.
 - `trigger.signal_envelope` - typed trigger-module contract for encrypted envelope transports.
 - `trigger.signal_service_envelope` - typed trigger-module contract for future service-envelope transports; no live stream is opened in this phase.
@@ -52,6 +53,11 @@ Phase 1 identity stores remain in-memory for application composition and
 conformance testing. Production deployments should bind identities to
 `signal.key_custody` and host-managed persistence before relying on restart
 survival.
+
+`signal.persistent_custody` stores encrypted custody state in a host-selected
+file and registers only non-exportable key handles with Workflow. `local_file`
+requires a host secret resolver; `test_file` is explicitly marked non-production
+and requires opt-in for conformance tests.
 
 Official Signal service registration, linked-device, send, and receive steps in
 this release use deterministic `libsignal-service-go/fake` clients only. They

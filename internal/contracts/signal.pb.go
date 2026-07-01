@@ -1813,6 +1813,98 @@ func (x *KeyCustodyConfig) GetAllowExportableSecretRefs() bool {
 	return false
 }
 
+type PersistentCustodyConfig struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	CustodyRef       string                 `protobuf:"bytes,1,opt,name=custody_ref,json=custodyRef,proto3" json:"custody_ref,omitempty"`
+	AccountRef       string                 `protobuf:"bytes,2,opt,name=account_ref,json=accountRef,proto3" json:"account_ref,omitempty"`
+	Backend          string                 `protobuf:"bytes,3,opt,name=backend,proto3" json:"backend,omitempty"`
+	StoragePath      string                 `protobuf:"bytes,4,opt,name=storage_path,json=storagePath,proto3" json:"storage_path,omitempty"`
+	KeyHandle        string                 `protobuf:"bytes,5,opt,name=key_handle,json=keyHandle,proto3" json:"key_handle,omitempty"`
+	HostSecretRef    string                 `protobuf:"bytes,6,opt,name=host_secret_ref,json=hostSecretRef,proto3" json:"host_secret_ref,omitempty"`
+	AllowTestBackend bool                   `protobuf:"varint,7,opt,name=allow_test_backend,json=allowTestBackend,proto3" json:"allow_test_backend,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *PersistentCustodyConfig) Reset() {
+	*x = PersistentCustodyConfig{}
+	mi := &file_internal_contracts_signal_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PersistentCustodyConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PersistentCustodyConfig) ProtoMessage() {}
+
+func (x *PersistentCustodyConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_contracts_signal_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PersistentCustodyConfig.ProtoReflect.Descriptor instead.
+func (*PersistentCustodyConfig) Descriptor() ([]byte, []int) {
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *PersistentCustodyConfig) GetCustodyRef() string {
+	if x != nil {
+		return x.CustodyRef
+	}
+	return ""
+}
+
+func (x *PersistentCustodyConfig) GetAccountRef() string {
+	if x != nil {
+		return x.AccountRef
+	}
+	return ""
+}
+
+func (x *PersistentCustodyConfig) GetBackend() string {
+	if x != nil {
+		return x.Backend
+	}
+	return ""
+}
+
+func (x *PersistentCustodyConfig) GetStoragePath() string {
+	if x != nil {
+		return x.StoragePath
+	}
+	return ""
+}
+
+func (x *PersistentCustodyConfig) GetKeyHandle() string {
+	if x != nil {
+		return x.KeyHandle
+	}
+	return ""
+}
+
+func (x *PersistentCustodyConfig) GetHostSecretRef() string {
+	if x != nil {
+		return x.HostSecretRef
+	}
+	return ""
+}
+
+func (x *PersistentCustodyConfig) GetAllowTestBackend() bool {
+	if x != nil {
+		return x.AllowTestBackend
+	}
+	return false
+}
+
 type AccountRefConfig struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AccountRef    string                 `protobuf:"bytes,1,opt,name=account_ref,json=accountRef,proto3" json:"account_ref,omitempty"`
@@ -1827,7 +1919,7 @@ type AccountRefConfig struct {
 
 func (x *AccountRefConfig) Reset() {
 	*x = AccountRefConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[28]
+	mi := &file_internal_contracts_signal_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1839,7 +1931,7 @@ func (x *AccountRefConfig) String() string {
 func (*AccountRefConfig) ProtoMessage() {}
 
 func (x *AccountRefConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[28]
+	mi := &file_internal_contracts_signal_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1852,7 +1944,7 @@ func (x *AccountRefConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AccountRefConfig.ProtoReflect.Descriptor instead.
 func (*AccountRefConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{28}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *AccountRefConfig) GetAccountRef() string {
@@ -1906,7 +1998,7 @@ type ServiceContractCheckConfig struct {
 
 func (x *ServiceContractCheckConfig) Reset() {
 	*x = ServiceContractCheckConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[29]
+	mi := &file_internal_contracts_signal_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1918,7 +2010,7 @@ func (x *ServiceContractCheckConfig) String() string {
 func (*ServiceContractCheckConfig) ProtoMessage() {}
 
 func (x *ServiceContractCheckConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[29]
+	mi := &file_internal_contracts_signal_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1931,7 +2023,7 @@ func (x *ServiceContractCheckConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceContractCheckConfig.ProtoReflect.Descriptor instead.
 func (*ServiceContractCheckConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{29}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *ServiceContractCheckConfig) GetMode() string {
@@ -1950,7 +2042,7 @@ type ServiceContractCheckInput struct {
 
 func (x *ServiceContractCheckInput) Reset() {
 	*x = ServiceContractCheckInput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[30]
+	mi := &file_internal_contracts_signal_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1962,7 +2054,7 @@ func (x *ServiceContractCheckInput) String() string {
 func (*ServiceContractCheckInput) ProtoMessage() {}
 
 func (x *ServiceContractCheckInput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[30]
+	mi := &file_internal_contracts_signal_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1975,7 +2067,7 @@ func (x *ServiceContractCheckInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceContractCheckInput.ProtoReflect.Descriptor instead.
 func (*ServiceContractCheckInput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{30}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *ServiceContractCheckInput) GetMode() string {
@@ -1998,7 +2090,7 @@ type ServiceContractCheckOutput struct {
 
 func (x *ServiceContractCheckOutput) Reset() {
 	*x = ServiceContractCheckOutput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[31]
+	mi := &file_internal_contracts_signal_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2010,7 +2102,7 @@ func (x *ServiceContractCheckOutput) String() string {
 func (*ServiceContractCheckOutput) ProtoMessage() {}
 
 func (x *ServiceContractCheckOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[31]
+	mi := &file_internal_contracts_signal_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2023,7 +2115,7 @@ func (x *ServiceContractCheckOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceContractCheckOutput.ProtoReflect.Descriptor instead.
 func (*ServiceContractCheckOutput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{31}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ServiceContractCheckOutput) GetMode() string {
@@ -2071,7 +2163,7 @@ type ServiceComplianceCheckConfig struct {
 
 func (x *ServiceComplianceCheckConfig) Reset() {
 	*x = ServiceComplianceCheckConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[32]
+	mi := &file_internal_contracts_signal_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2083,7 +2175,7 @@ func (x *ServiceComplianceCheckConfig) String() string {
 func (*ServiceComplianceCheckConfig) ProtoMessage() {}
 
 func (x *ServiceComplianceCheckConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[32]
+	mi := &file_internal_contracts_signal_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2096,7 +2188,7 @@ func (x *ServiceComplianceCheckConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceComplianceCheckConfig.ProtoReflect.Descriptor instead.
 func (*ServiceComplianceCheckConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{32}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *ServiceComplianceCheckConfig) GetMode() string {
@@ -2123,7 +2215,7 @@ type ServiceComplianceCheckInput struct {
 
 func (x *ServiceComplianceCheckInput) Reset() {
 	*x = ServiceComplianceCheckInput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[33]
+	mi := &file_internal_contracts_signal_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2135,7 +2227,7 @@ func (x *ServiceComplianceCheckInput) String() string {
 func (*ServiceComplianceCheckInput) ProtoMessage() {}
 
 func (x *ServiceComplianceCheckInput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[33]
+	mi := &file_internal_contracts_signal_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2148,7 +2240,7 @@ func (x *ServiceComplianceCheckInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceComplianceCheckInput.ProtoReflect.Descriptor instead.
 func (*ServiceComplianceCheckInput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{33}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *ServiceComplianceCheckInput) GetMode() string {
@@ -2183,7 +2275,7 @@ type ServiceComplianceCheckOutput struct {
 
 func (x *ServiceComplianceCheckOutput) Reset() {
 	*x = ServiceComplianceCheckOutput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[34]
+	mi := &file_internal_contracts_signal_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2195,7 +2287,7 @@ func (x *ServiceComplianceCheckOutput) String() string {
 func (*ServiceComplianceCheckOutput) ProtoMessage() {}
 
 func (x *ServiceComplianceCheckOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[34]
+	mi := &file_internal_contracts_signal_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2208,7 +2300,7 @@ func (x *ServiceComplianceCheckOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceComplianceCheckOutput.ProtoReflect.Descriptor instead.
 func (*ServiceComplianceCheckOutput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{34}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *ServiceComplianceCheckOutput) GetMode() string {
@@ -2292,7 +2384,7 @@ type ServicePolicyCheckConfig struct {
 
 func (x *ServicePolicyCheckConfig) Reset() {
 	*x = ServicePolicyCheckConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[35]
+	mi := &file_internal_contracts_signal_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2304,7 +2396,7 @@ func (x *ServicePolicyCheckConfig) String() string {
 func (*ServicePolicyCheckConfig) ProtoMessage() {}
 
 func (x *ServicePolicyCheckConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[35]
+	mi := &file_internal_contracts_signal_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2317,7 +2409,7 @@ func (x *ServicePolicyCheckConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServicePolicyCheckConfig.ProtoReflect.Descriptor instead.
 func (*ServicePolicyCheckConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{35}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *ServicePolicyCheckConfig) GetMode() string {
@@ -2352,7 +2444,7 @@ type ServicePolicyCheckInput struct {
 
 func (x *ServicePolicyCheckInput) Reset() {
 	*x = ServicePolicyCheckInput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[36]
+	mi := &file_internal_contracts_signal_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2364,7 +2456,7 @@ func (x *ServicePolicyCheckInput) String() string {
 func (*ServicePolicyCheckInput) ProtoMessage() {}
 
 func (x *ServicePolicyCheckInput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[36]
+	mi := &file_internal_contracts_signal_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2377,7 +2469,7 @@ func (x *ServicePolicyCheckInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServicePolicyCheckInput.ProtoReflect.Descriptor instead.
 func (*ServicePolicyCheckInput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{36}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *ServicePolicyCheckInput) GetMode() string {
@@ -2416,7 +2508,7 @@ type ServicePolicyCheckOutput struct {
 
 func (x *ServicePolicyCheckOutput) Reset() {
 	*x = ServicePolicyCheckOutput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[37]
+	mi := &file_internal_contracts_signal_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2428,7 +2520,7 @@ func (x *ServicePolicyCheckOutput) String() string {
 func (*ServicePolicyCheckOutput) ProtoMessage() {}
 
 func (x *ServicePolicyCheckOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[37]
+	mi := &file_internal_contracts_signal_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2441,7 +2533,7 @@ func (x *ServicePolicyCheckOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServicePolicyCheckOutput.ProtoReflect.Descriptor instead.
 func (*ServicePolicyCheckOutput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{37}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ServicePolicyCheckOutput) GetMode() string {
@@ -2503,7 +2595,7 @@ type ServiceTestRegisterConfig struct {
 
 func (x *ServiceTestRegisterConfig) Reset() {
 	*x = ServiceTestRegisterConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[38]
+	mi := &file_internal_contracts_signal_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2515,7 +2607,7 @@ func (x *ServiceTestRegisterConfig) String() string {
 func (*ServiceTestRegisterConfig) ProtoMessage() {}
 
 func (x *ServiceTestRegisterConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[38]
+	mi := &file_internal_contracts_signal_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2528,7 +2620,7 @@ func (x *ServiceTestRegisterConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestRegisterConfig.ProtoReflect.Descriptor instead.
 func (*ServiceTestRegisterConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{38}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *ServiceTestRegisterConfig) GetAccountRef() string {
@@ -2564,7 +2656,7 @@ type ServiceTestRegisterInput struct {
 
 func (x *ServiceTestRegisterInput) Reset() {
 	*x = ServiceTestRegisterInput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[39]
+	mi := &file_internal_contracts_signal_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2576,7 +2668,7 @@ func (x *ServiceTestRegisterInput) String() string {
 func (*ServiceTestRegisterInput) ProtoMessage() {}
 
 func (x *ServiceTestRegisterInput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[39]
+	mi := &file_internal_contracts_signal_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2589,7 +2681,7 @@ func (x *ServiceTestRegisterInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestRegisterInput.ProtoReflect.Descriptor instead.
 func (*ServiceTestRegisterInput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{39}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *ServiceTestRegisterInput) GetAccountRef() string {
@@ -2679,7 +2771,7 @@ type ServiceTestLinkDeviceConfig struct {
 
 func (x *ServiceTestLinkDeviceConfig) Reset() {
 	*x = ServiceTestLinkDeviceConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[40]
+	mi := &file_internal_contracts_signal_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2691,7 +2783,7 @@ func (x *ServiceTestLinkDeviceConfig) String() string {
 func (*ServiceTestLinkDeviceConfig) ProtoMessage() {}
 
 func (x *ServiceTestLinkDeviceConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[40]
+	mi := &file_internal_contracts_signal_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2704,7 +2796,7 @@ func (x *ServiceTestLinkDeviceConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestLinkDeviceConfig.ProtoReflect.Descriptor instead.
 func (*ServiceTestLinkDeviceConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{40}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *ServiceTestLinkDeviceConfig) GetAccountRef() string {
@@ -2740,7 +2832,7 @@ type ServiceTestLinkDeviceInput struct {
 
 func (x *ServiceTestLinkDeviceInput) Reset() {
 	*x = ServiceTestLinkDeviceInput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[41]
+	mi := &file_internal_contracts_signal_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2752,7 +2844,7 @@ func (x *ServiceTestLinkDeviceInput) String() string {
 func (*ServiceTestLinkDeviceInput) ProtoMessage() {}
 
 func (x *ServiceTestLinkDeviceInput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[41]
+	mi := &file_internal_contracts_signal_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2765,7 +2857,7 @@ func (x *ServiceTestLinkDeviceInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestLinkDeviceInput.ProtoReflect.Descriptor instead.
 func (*ServiceTestLinkDeviceInput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{41}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *ServiceTestLinkDeviceInput) GetAccountRef() string {
@@ -2855,7 +2947,7 @@ type ServiceTestSendConfig struct {
 
 func (x *ServiceTestSendConfig) Reset() {
 	*x = ServiceTestSendConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[42]
+	mi := &file_internal_contracts_signal_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2867,7 +2959,7 @@ func (x *ServiceTestSendConfig) String() string {
 func (*ServiceTestSendConfig) ProtoMessage() {}
 
 func (x *ServiceTestSendConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[42]
+	mi := &file_internal_contracts_signal_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2880,7 +2972,7 @@ func (x *ServiceTestSendConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestSendConfig.ProtoReflect.Descriptor instead.
 func (*ServiceTestSendConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{42}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *ServiceTestSendConfig) GetAccountRef() string {
@@ -2917,7 +3009,7 @@ type ServiceTestSendInput struct {
 
 func (x *ServiceTestSendInput) Reset() {
 	*x = ServiceTestSendInput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[43]
+	mi := &file_internal_contracts_signal_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2929,7 +3021,7 @@ func (x *ServiceTestSendInput) String() string {
 func (*ServiceTestSendInput) ProtoMessage() {}
 
 func (x *ServiceTestSendInput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[43]
+	mi := &file_internal_contracts_signal_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2942,7 +3034,7 @@ func (x *ServiceTestSendInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestSendInput.ProtoReflect.Descriptor instead.
 func (*ServiceTestSendInput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{43}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *ServiceTestSendInput) GetAccountRef() string {
@@ -3039,7 +3131,7 @@ type ServiceTestReceiveConfig struct {
 
 func (x *ServiceTestReceiveConfig) Reset() {
 	*x = ServiceTestReceiveConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[44]
+	mi := &file_internal_contracts_signal_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3051,7 +3143,7 @@ func (x *ServiceTestReceiveConfig) String() string {
 func (*ServiceTestReceiveConfig) ProtoMessage() {}
 
 func (x *ServiceTestReceiveConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[44]
+	mi := &file_internal_contracts_signal_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3064,7 +3156,7 @@ func (x *ServiceTestReceiveConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestReceiveConfig.ProtoReflect.Descriptor instead.
 func (*ServiceTestReceiveConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{44}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *ServiceTestReceiveConfig) GetAccountRef() string {
@@ -3100,7 +3192,7 @@ type ServiceTestReceiveInput struct {
 
 func (x *ServiceTestReceiveInput) Reset() {
 	*x = ServiceTestReceiveInput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[45]
+	mi := &file_internal_contracts_signal_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3112,7 +3204,7 @@ func (x *ServiceTestReceiveInput) String() string {
 func (*ServiceTestReceiveInput) ProtoMessage() {}
 
 func (x *ServiceTestReceiveInput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[45]
+	mi := &file_internal_contracts_signal_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3125,7 +3217,7 @@ func (x *ServiceTestReceiveInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestReceiveInput.ProtoReflect.Descriptor instead.
 func (*ServiceTestReceiveInput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{45}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *ServiceTestReceiveInput) GetAccountRef() string {
@@ -3221,7 +3313,7 @@ type ServiceTestOutput struct {
 
 func (x *ServiceTestOutput) Reset() {
 	*x = ServiceTestOutput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[46]
+	mi := &file_internal_contracts_signal_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3233,7 +3325,7 @@ func (x *ServiceTestOutput) String() string {
 func (*ServiceTestOutput) ProtoMessage() {}
 
 func (x *ServiceTestOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[46]
+	mi := &file_internal_contracts_signal_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3246,7 +3338,7 @@ func (x *ServiceTestOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestOutput.ProtoReflect.Descriptor instead.
 func (*ServiceTestOutput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{46}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *ServiceTestOutput) GetAccountRef() string {
@@ -3315,7 +3407,7 @@ type ServiceEnvelopeTriggerConfig struct {
 
 func (x *ServiceEnvelopeTriggerConfig) Reset() {
 	*x = ServiceEnvelopeTriggerConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[47]
+	mi := &file_internal_contracts_signal_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3327,7 +3419,7 @@ func (x *ServiceEnvelopeTriggerConfig) String() string {
 func (*ServiceEnvelopeTriggerConfig) ProtoMessage() {}
 
 func (x *ServiceEnvelopeTriggerConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[47]
+	mi := &file_internal_contracts_signal_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3340,7 +3432,7 @@ func (x *ServiceEnvelopeTriggerConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceEnvelopeTriggerConfig.ProtoReflect.Descriptor instead.
 func (*ServiceEnvelopeTriggerConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{47}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *ServiceEnvelopeTriggerConfig) GetSourceRef() string {
@@ -3503,7 +3595,18 @@ const file_internal_contracts_signal_proto_rawDesc = "" +
 	"\vsecret_refs\x18\x03 \x03(\tR\n" +
 	"secretRefs\x123\n" +
 	"\x16non_exportable_key_ref\x18\x04 \x01(\tR\x13nonExportableKeyRef\x12?\n" +
-	"\x1callow_exportable_secret_refs\x18\x05 \x01(\bR\x19allowExportableSecretRefs\"\xd8\x01\n" +
+	"\x1callow_exportable_secret_refs\x18\x05 \x01(\bR\x19allowExportableSecretRefs\"\x8d\x02\n" +
+	"\x17PersistentCustodyConfig\x12\x1f\n" +
+	"\vcustody_ref\x18\x01 \x01(\tR\n" +
+	"custodyRef\x12\x1f\n" +
+	"\vaccount_ref\x18\x02 \x01(\tR\n" +
+	"accountRef\x12\x18\n" +
+	"\abackend\x18\x03 \x01(\tR\abackend\x12!\n" +
+	"\fstorage_path\x18\x04 \x01(\tR\vstoragePath\x12\x1d\n" +
+	"\n" +
+	"key_handle\x18\x05 \x01(\tR\tkeyHandle\x12&\n" +
+	"\x0fhost_secret_ref\x18\x06 \x01(\tR\rhostSecretRef\x12,\n" +
+	"\x12allow_test_backend\x18\a \x01(\bR\x10allowTestBackend\"\xd8\x01\n" +
 	"\x10AccountRefConfig\x12\x1f\n" +
 	"\vaccount_ref\x18\x01 \x01(\tR\n" +
 	"accountRef\x12\x1d\n" +
@@ -3679,7 +3782,7 @@ func file_internal_contracts_signal_proto_rawDescGZIP() []byte {
 	return file_internal_contracts_signal_proto_rawDescData
 }
 
-var file_internal_contracts_signal_proto_msgTypes = make([]protoimpl.MessageInfo, 49)
+var file_internal_contracts_signal_proto_msgTypes = make([]protoimpl.MessageInfo, 50)
 var file_internal_contracts_signal_proto_goTypes = []any{
 	(*IdentityStoreConfig)(nil),           // 0: workflow.plugins.signal.v1.IdentityStoreConfig
 	(*SpaceConfig)(nil),                   // 1: workflow.plugins.signal.v1.SpaceConfig
@@ -3709,34 +3812,35 @@ var file_internal_contracts_signal_proto_goTypes = []any{
 	(*UsernameLinkDecryptOutput)(nil),     // 25: workflow.plugins.signal.v1.UsernameLinkDecryptOutput
 	(*OfficialServiceBoundaryConfig)(nil), // 26: workflow.plugins.signal.v1.OfficialServiceBoundaryConfig
 	(*KeyCustodyConfig)(nil),              // 27: workflow.plugins.signal.v1.KeyCustodyConfig
-	(*AccountRefConfig)(nil),              // 28: workflow.plugins.signal.v1.AccountRefConfig
-	(*ServiceContractCheckConfig)(nil),    // 29: workflow.plugins.signal.v1.ServiceContractCheckConfig
-	(*ServiceContractCheckInput)(nil),     // 30: workflow.plugins.signal.v1.ServiceContractCheckInput
-	(*ServiceContractCheckOutput)(nil),    // 31: workflow.plugins.signal.v1.ServiceContractCheckOutput
-	(*ServiceComplianceCheckConfig)(nil),  // 32: workflow.plugins.signal.v1.ServiceComplianceCheckConfig
-	(*ServiceComplianceCheckInput)(nil),   // 33: workflow.plugins.signal.v1.ServiceComplianceCheckInput
-	(*ServiceComplianceCheckOutput)(nil),  // 34: workflow.plugins.signal.v1.ServiceComplianceCheckOutput
-	(*ServicePolicyCheckConfig)(nil),      // 35: workflow.plugins.signal.v1.ServicePolicyCheckConfig
-	(*ServicePolicyCheckInput)(nil),       // 36: workflow.plugins.signal.v1.ServicePolicyCheckInput
-	(*ServicePolicyCheckOutput)(nil),      // 37: workflow.plugins.signal.v1.ServicePolicyCheckOutput
-	(*ServiceTestRegisterConfig)(nil),     // 38: workflow.plugins.signal.v1.ServiceTestRegisterConfig
-	(*ServiceTestRegisterInput)(nil),      // 39: workflow.plugins.signal.v1.ServiceTestRegisterInput
-	(*ServiceTestLinkDeviceConfig)(nil),   // 40: workflow.plugins.signal.v1.ServiceTestLinkDeviceConfig
-	(*ServiceTestLinkDeviceInput)(nil),    // 41: workflow.plugins.signal.v1.ServiceTestLinkDeviceInput
-	(*ServiceTestSendConfig)(nil),         // 42: workflow.plugins.signal.v1.ServiceTestSendConfig
-	(*ServiceTestSendInput)(nil),          // 43: workflow.plugins.signal.v1.ServiceTestSendInput
-	(*ServiceTestReceiveConfig)(nil),      // 44: workflow.plugins.signal.v1.ServiceTestReceiveConfig
-	(*ServiceTestReceiveInput)(nil),       // 45: workflow.plugins.signal.v1.ServiceTestReceiveInput
-	(*ServiceTestOutput)(nil),             // 46: workflow.plugins.signal.v1.ServiceTestOutput
-	(*ServiceEnvelopeTriggerConfig)(nil),  // 47: workflow.plugins.signal.v1.ServiceEnvelopeTriggerConfig
-	nil,                                   // 48: workflow.plugins.signal.v1.ServiceTestOutput.SecretRefsEntry
+	(*PersistentCustodyConfig)(nil),       // 28: workflow.plugins.signal.v1.PersistentCustodyConfig
+	(*AccountRefConfig)(nil),              // 29: workflow.plugins.signal.v1.AccountRefConfig
+	(*ServiceContractCheckConfig)(nil),    // 30: workflow.plugins.signal.v1.ServiceContractCheckConfig
+	(*ServiceContractCheckInput)(nil),     // 31: workflow.plugins.signal.v1.ServiceContractCheckInput
+	(*ServiceContractCheckOutput)(nil),    // 32: workflow.plugins.signal.v1.ServiceContractCheckOutput
+	(*ServiceComplianceCheckConfig)(nil),  // 33: workflow.plugins.signal.v1.ServiceComplianceCheckConfig
+	(*ServiceComplianceCheckInput)(nil),   // 34: workflow.plugins.signal.v1.ServiceComplianceCheckInput
+	(*ServiceComplianceCheckOutput)(nil),  // 35: workflow.plugins.signal.v1.ServiceComplianceCheckOutput
+	(*ServicePolicyCheckConfig)(nil),      // 36: workflow.plugins.signal.v1.ServicePolicyCheckConfig
+	(*ServicePolicyCheckInput)(nil),       // 37: workflow.plugins.signal.v1.ServicePolicyCheckInput
+	(*ServicePolicyCheckOutput)(nil),      // 38: workflow.plugins.signal.v1.ServicePolicyCheckOutput
+	(*ServiceTestRegisterConfig)(nil),     // 39: workflow.plugins.signal.v1.ServiceTestRegisterConfig
+	(*ServiceTestRegisterInput)(nil),      // 40: workflow.plugins.signal.v1.ServiceTestRegisterInput
+	(*ServiceTestLinkDeviceConfig)(nil),   // 41: workflow.plugins.signal.v1.ServiceTestLinkDeviceConfig
+	(*ServiceTestLinkDeviceInput)(nil),    // 42: workflow.plugins.signal.v1.ServiceTestLinkDeviceInput
+	(*ServiceTestSendConfig)(nil),         // 43: workflow.plugins.signal.v1.ServiceTestSendConfig
+	(*ServiceTestSendInput)(nil),          // 44: workflow.plugins.signal.v1.ServiceTestSendInput
+	(*ServiceTestReceiveConfig)(nil),      // 45: workflow.plugins.signal.v1.ServiceTestReceiveConfig
+	(*ServiceTestReceiveInput)(nil),       // 46: workflow.plugins.signal.v1.ServiceTestReceiveInput
+	(*ServiceTestOutput)(nil),             // 47: workflow.plugins.signal.v1.ServiceTestOutput
+	(*ServiceEnvelopeTriggerConfig)(nil),  // 48: workflow.plugins.signal.v1.ServiceEnvelopeTriggerConfig
+	nil,                                   // 49: workflow.plugins.signal.v1.ServiceTestOutput.SecretRefsEntry
 }
 var file_internal_contracts_signal_proto_depIdxs = []int32{
 	8,  // 0: workflow.plugins.signal.v1.SessionPrepareOutput.bundle:type_name -> workflow.plugins.signal.v1.PreKeyBundle
 	8,  // 1: workflow.plugins.signal.v1.SignalEncryptInput.remote_bundle:type_name -> workflow.plugins.signal.v1.PreKeyBundle
 	12, // 2: workflow.plugins.signal.v1.SignalEncryptOutput.envelope:type_name -> workflow.plugins.signal.v1.SignalEnvelope
 	12, // 3: workflow.plugins.signal.v1.SignalDecryptInput.envelope:type_name -> workflow.plugins.signal.v1.SignalEnvelope
-	48, // 4: workflow.plugins.signal.v1.ServiceTestOutput.secret_refs:type_name -> workflow.plugins.signal.v1.ServiceTestOutput.SecretRefsEntry
+	49, // 4: workflow.plugins.signal.v1.ServiceTestOutput.secret_refs:type_name -> workflow.plugins.signal.v1.ServiceTestOutput.SecretRefsEntry
 	5,  // [5:5] is the sub-list for method output_type
 	5,  // [5:5] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
@@ -3755,7 +3859,7 @@ func file_internal_contracts_signal_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_contracts_signal_proto_rawDesc), len(file_internal_contracts_signal_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   49,
+			NumMessages:   50,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
