@@ -153,4 +153,7 @@ func resetServiceTestState() {
 	signalServiceTestLedgerMu.Lock()
 	clear(signalServiceTestLedger)
 	signalServiceTestLedgerMu.Unlock()
+	signalServiceTransportsMu.Lock()
+	clear(signalServiceTransports)
+	signalServiceTransportsMu.Unlock()
 }

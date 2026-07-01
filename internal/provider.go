@@ -37,6 +37,7 @@ var signalModuleTypes = []string{
 	"signal.identity_store",
 	"signal.space",
 	"signal.official_service_boundary",
+	"signal.service_transport",
 	"signal.key_custody",
 	"signal.persistent_custody",
 	"signal.account_ref",
@@ -55,6 +56,8 @@ var signalStepTypes = []string{
 	"step.signal_service_contract_check",
 	"step.signal_service_compliance_check",
 	"step.signal_service_policy_check",
+	"step.signal_service_approval_validate",
+	"step.signal_service_live_submit",
 	"step.signal_service_test_register",
 	"step.signal_service_test_link_device",
 	"step.signal_service_test_send",
@@ -82,6 +85,11 @@ func (p *SignalProvider) CreateTypedModule(typeName, name string, config *anypb.
 	case "signal.official_service_boundary":
 		factory := sdk.NewTypedModuleFactory(typeName, &contracts.OfficialServiceBoundaryConfig{}, func(name string, cfg *contracts.OfficialServiceBoundaryConfig) (sdk.ModuleInstance, error) {
 			return newOfficialServiceBoundaryModule(name, cfg)
+		})
+		return factory.CreateTypedModule(typeName, name, config)
+	case "signal.service_transport":
+		factory := sdk.NewTypedModuleFactory(typeName, &contracts.ServiceTransportConfig{}, func(name string, cfg *contracts.ServiceTransportConfig) (sdk.ModuleInstance, error) {
+			return newServiceTransportModule(name, cfg)
 		})
 		return factory.CreateTypedModule(typeName, name, config)
 	case "signal.key_custody":
@@ -201,6 +209,22 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalServicePolicyCheck,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_approval_validate":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceApprovalValidateConfig{},
+			&contracts.ServiceApprovalValidateInput{},
+			ExecuteSignalServiceApprovalValidate,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_live_submit":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceLiveSubmitConfig{},
+			&contracts.ServiceLiveSubmitInput{},
+			ExecuteSignalServiceLiveSubmit,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	case "step.signal_service_test_register":
 		factory := sdk.NewTypedStepFactory(
 			typeName,
@@ -250,6 +274,7 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			moduleContract("signal.identity_store", pkg+"IdentityStoreConfig"),
 			moduleContract("signal.space", pkg+"SpaceConfig"),
 			moduleContract("signal.official_service_boundary", pkg+"OfficialServiceBoundaryConfig"),
+			moduleContract("signal.service_transport", pkg+"ServiceTransportConfig"),
 			moduleContract("signal.key_custody", pkg+"KeyCustodyConfig"),
 			moduleContract("signal.persistent_custody", pkg+"PersistentCustodyConfig"),
 			moduleContract("signal.account_ref", pkg+"AccountRefConfig"),
@@ -265,6 +290,8 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_service_contract_check", pkg+"ServiceContractCheckConfig", pkg+"ServiceContractCheckInput", pkg+"ServiceContractCheckOutput"),
 			stepContract("step.signal_service_compliance_check", pkg+"ServiceComplianceCheckConfig", pkg+"ServiceComplianceCheckInput", pkg+"ServiceComplianceCheckOutput"),
 			stepContract("step.signal_service_policy_check", pkg+"ServicePolicyCheckConfig", pkg+"ServicePolicyCheckInput", pkg+"ServicePolicyCheckOutput"),
+			stepContract("step.signal_service_approval_validate", pkg+"ServiceApprovalValidateConfig", pkg+"ServiceApprovalValidateInput", pkg+"ServiceApprovalValidateOutput"),
+			stepContract("step.signal_service_live_submit", pkg+"ServiceLiveSubmitConfig", pkg+"ServiceLiveSubmitInput", pkg+"ServiceSubmitOutput"),
 			stepContract("step.signal_service_test_register", pkg+"ServiceTestRegisterConfig", pkg+"ServiceTestRegisterInput", pkg+"ServiceTestOutput"),
 			stepContract("step.signal_service_test_link_device", pkg+"ServiceTestLinkDeviceConfig", pkg+"ServiceTestLinkDeviceInput", pkg+"ServiceTestOutput"),
 			stepContract("step.signal_service_test_send", pkg+"ServiceTestSendConfig", pkg+"ServiceTestSendInput", pkg+"ServiceTestOutput"),

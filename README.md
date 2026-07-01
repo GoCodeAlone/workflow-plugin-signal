@@ -33,6 +33,8 @@ make install-local
 - `step.signal_service_contract_check` - validate the disabled/test-double official-service boundary and return upstream compatibility metadata.
 - `step.signal_service_compliance_check` - report official-service readiness requirements, blocked live actions, and upstream service metadata without opening live transport.
 - `step.signal_service_policy_check` - evaluate live-service approval metadata and requested actions without opening live transport.
+- `step.signal_service_approval_validate` - validate machine-checkable live-service approval metadata and return denial reasons.
+- `step.signal_service_live_submit` - submit fake/sandbox service operations through a registered transport or return a no-egress live denial.
 - `step.signal_service_test_register` - exercise deterministic fake registration with idempotency and ref-only outputs.
 - `step.signal_service_test_link_device` - exercise deterministic fake linked-device setup with idempotency and ref-only outputs.
 - `step.signal_service_test_send` - exercise deterministic fake sends, including challenge-required status.
@@ -43,6 +45,7 @@ make install-local
 - `signal.identity_store` - in-memory Phase 1 identity, pre-key, and session state.
 - `signal.space` - typed configuration surface for binding encrypted spaces to rooms/eventbus.
 - `signal.official_service_boundary` - typed disabled/test-double boundary for selected upstream service wire shapes.
+- `signal.service_transport` - registered fake, sandbox, or approval-gated live transport boundary.
 - `signal.key_custody` - host-managed key custody refs for exportable secret refs or non-exportable key handles.
 - `signal.persistent_custody` - host-secret-backed encrypted local custody for non-exportable key handles.
 - `signal.account_ref` - account/device/consent/audit refs bound to host custody for fake official-service tests.
@@ -66,6 +69,13 @@ register accounts, link devices, send messages, receive messages, reserve
 usernames, upload backups, download backups, or contact the official Signal
 service. Live transport remains unavailable until a later approval-bearing
 egress transition.
+
+`step.signal_service_live_submit` supports fake and sandbox transport exercises
+for register, linked device, send, receive, username reserve, backup
+upload/download, and challenge response operations. Live mode returns a denied
+result unless the approval package is machine-checkable and complete; this
+plugin still ships no official Signal service endpoint constants or automatic
+production egress.
 
 ## Module
 
