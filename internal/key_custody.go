@@ -159,4 +159,7 @@ func resetServiceTestState() {
 	signalServiceTransportsMu.Lock()
 	clear(signalServiceTransports)
 	signalServiceTransportsMu.Unlock()
+	linkedDeviceCeremoniesMu.Lock()
+	clear(linkedDeviceCeremonyClaims)
+	linkedDeviceCeremoniesMu.Unlock()
 }

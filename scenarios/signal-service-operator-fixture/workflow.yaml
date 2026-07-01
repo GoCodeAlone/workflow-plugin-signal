@@ -1,0 +1,137 @@
+modules:
+  - name: live_policy
+    type: signal.live_policy
+    config:
+      typed:
+        policy_ref: policy://signal/operator-fixture
+        mode: live
+        transport_ref: transport://signal/operator-fixture
+        account_ref: account://signal/alice
+        requested_actions:
+          - register
+          - linked_device
+          - send
+          - receive
+          - challenge
+        allow_operator_fixture: true
+        operator_fixture_endpoint: 127.0.0.1:19091
+  - name: operator_fixture_transport
+    type: signal.service_transport
+    config:
+      typed:
+        transport_ref: transport://signal/operator-fixture
+        mode: sandbox
+        sandbox_endpoint: 127.0.0.1:19091
+        requested_actions:
+          - register
+          - linked_device
+          - send
+          - receive
+          - challenge
+
+workflows:
+  - name: signal_service_operator_fixture
+    steps:
+      - name: register_prepare
+        type: step.signal_service_register_prepare
+        config:
+          typed:
+            account_ref: account://signal/alice
+            transport_ref: transport://signal/operator-fixture
+        input:
+          typed:
+            operation_id: op://register/alice
+            idempotency_key: register-alice
+            username: alice.1
+            audit_ref: audit://signal/register/alice
+            requested_at_unix: 1783000000
+      - name: link_prepare
+        type: step.signal_service_link_prepare
+        config:
+          typed:
+            account_ref: account://signal/alice
+            transport_ref: transport://signal/operator-fixture
+        input:
+          typed:
+            operation_id: op://link/alice-laptop
+            idempotency_key: link-alice-laptop
+            audit_ref: audit://signal/link/alice-laptop
+            requested_at_unix: 1783000060
+            linked_device:
+              device_display_name: Alice laptop
+              consent_ref: consent://signal/link/alice-laptop
+              consent_expires_unix: 1783003600
+              revocation_uri: https://operator.local/revoke/alice-laptop
+              unlink_proof_ref: unlink://signal/alice-laptop
+      - name: send_prepare
+        type: step.signal_service_send_prepare
+        config:
+          typed:
+            account_ref: account://signal/alice
+            transport_ref: transport://signal/operator-fixture
+        input:
+          typed:
+            operation_id: op://send/alice-bob
+            idempotency_key: send-alice-bob
+            recipient_ref: recipient://signal/bob
+            payload_ref: payload://signal/ciphertext/1
+            audit_ref: audit://signal/send/alice-bob
+            requested_at_unix: 1783000120
+      - name: receive_admit
+        type: step.signal_service_receive_admit
+        config:
+          typed:
+            account_ref: account://signal/alice
+            transport_ref: transport://signal/operator-fixture
+        input:
+          typed:
+            operation_id: op://receive/alice
+            idempotency_key: receive-alice
+            cursor_ref: cursor://signal/alice/inbox
+            audit_ref: audit://signal/receive/alice
+            requested_at_unix: 1783000180
+      - name: challenge_respond
+        type: step.signal_service_challenge_respond
+        config:
+          typed:
+            account_ref: account://signal/alice
+            transport_ref: transport://signal/operator-fixture
+        input:
+          typed:
+            operation_id: op://challenge/alice
+            idempotency_key: challenge-alice
+            challenge_ref: challenge://signal/alice/1
+            challenge_response_ref: secret://signal/alice/challenge-response
+            audit_ref: audit://signal/challenge/alice
+            requested_at_unix: 1783000240
+      - name: username_report
+        type: step.signal_username_proof_prepare
+        config:
+          typed:
+            account_ref: account://signal/alice
+        input:
+          typed:
+            operation_id: op://username/alice
+            idempotency_key: username-alice
+            username: alice.1
+      - name: backup_manifest_report
+        type: step.signal_backup_manifest_verify
+        config:
+          typed:
+            account_ref: account://signal/alice
+        input:
+          typed:
+            operation_id: op://backup/manifest/alice
+            idempotency_key: backup-manifest-alice
+            backup_ref: backup://signal/alice/manifest
+            backup_id: backup-id://signal/alice
+      - name: backup_auth_report
+        type: step.signal_backup_auth_prepare
+        config:
+          typed:
+            account_ref: account://signal/alice
+        input:
+          typed:
+            operation_id: op://backup/auth/alice
+            idempotency_key: backup-auth-alice
+            backup_ref: backup://signal/alice/auth

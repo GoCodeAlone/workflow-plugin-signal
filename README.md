@@ -35,6 +35,14 @@ make install-local
 - `step.signal_service_policy_check` - evaluate live-service approval metadata and requested actions without opening live transport.
 - `step.signal_service_approval_validate` - validate machine-checkable live-service approval metadata and return denial reasons.
 - `step.signal_service_live_submit` - submit fake/sandbox service operations through a registered transport or return a no-egress live denial.
+- `step.signal_service_register_prepare` - build a register operation envelope without submitting it.
+- `step.signal_service_link_prepare` - build a linked-device operation envelope with consent, revocation, and unlink proof metadata.
+- `step.signal_service_send_prepare` - build a send operation envelope using recipient and payload refs only.
+- `step.signal_service_receive_admit` - build a receive admission envelope using cursor refs only.
+- `step.signal_service_challenge_respond` - build a challenge response envelope using challenge and response refs only.
+- `step.signal_username_proof_prepare` - report username proof readiness without reserving usernames.
+- `step.signal_backup_manifest_verify` - report backup manifest readiness without uploading or downloading backups.
+- `step.signal_backup_auth_prepare` - report backup auth readiness without opening service transport.
 - `step.signal_service_test_register` - exercise deterministic fake registration with idempotency and ref-only outputs.
 - `step.signal_service_test_link_device` - exercise deterministic fake linked-device setup with idempotency and ref-only outputs.
 - `step.signal_service_test_send` - exercise deterministic fake sends, including challenge-required status.
@@ -51,6 +59,7 @@ make install-local
 - `signal.space` - typed configuration surface for binding encrypted spaces to rooms/eventbus.
 - `signal.official_service_boundary` - typed disabled/test-double boundary for selected upstream service wire shapes.
 - `signal.service_transport` - registered fake, sandbox, or approval-gated live transport boundary.
+- `signal.live_policy` - operation-specific approval and local operator-fixture policy metadata.
 - `signal.key_custody` - host-managed key custody refs for exportable secret refs or non-exportable key handles.
 - `signal.persistent_custody` - host-secret-backed encrypted local custody for non-exportable key handles.
 - `signal.custody_store` - v2 custody-store contract with backend, KEK, schema, and storage metadata.
@@ -93,6 +102,10 @@ upload/download, and challenge response operations. Live mode returns a denied
 result unless the approval package is machine-checkable and complete; this
 plugin still ships no official Signal service endpoint constants or automatic
 production egress.
+
+`scenarios/signal-service-operator-fixture` documents the local operator-fixture
+path for operation-specific prepare/admit steps. The fixture uses loopback
+transport metadata only and remains default-deny for production egress.
 
 ## Module
 

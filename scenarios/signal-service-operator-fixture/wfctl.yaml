@@ -1,0 +1,17 @@
+name: signal-service-operator-fixture
+plugins:
+  - name: workflow-plugin-signal
+    version: v0.9.0
+config:
+  scenario: service-operator-fixture
+  expected_capabilities:
+    - signal.live_policy
+    - signal.service_transport
+    - step.signal_service_register_prepare
+    - step.signal_service_link_prepare
+    - step.signal_service_send_prepare
+    - step.signal_service_receive_admit
+    - step.signal_service_challenge_respond
+    - step.signal_username_proof_prepare
+    - step.signal_backup_manifest_verify
+    - step.signal_backup_auth_prepare

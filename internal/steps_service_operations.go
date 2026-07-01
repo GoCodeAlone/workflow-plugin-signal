@@ -2,12 +2,20 @@ package internal
 
 import (
 	"context"
+	"fmt"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/GoCodeAlone/libsignal-service-go/service"
 	"github.com/GoCodeAlone/workflow/plugin/external/sdk"
 
 	contracts "github.com/GoCodeAlone/workflow-plugin-signal/internal/contracts"
+)
+
+var (
+	linkedDeviceCeremoniesMu   sync.Mutex
+	linkedDeviceCeremonyClaims = map[string]struct{}{}
 )
 
 func ExecuteSignalServiceRegisterPrepare(
@@ -33,6 +41,9 @@ func ExecuteSignalServiceLinkPrepare(
 	_ context.Context,
 	req sdk.TypedStepRequest[*contracts.ServiceLinkPrepareConfig, *contracts.ServiceLinkPrepareInput],
 ) (*sdk.TypedStepResult[*contracts.ServiceOperationPrepareOutput], error) {
+	if err := validateLinkedDeviceCeremony(req.Input.GetLinkedDevice()); err != nil {
+		return nil, err
+	}
 	return serviceOperationPrepared(service.OperationLinkDevice, serviceEnvelopeFields{
 		OperationID:         req.Input.GetOperationId(),
 		AccountRef:          firstNonEmpty(req.Input.GetAccountRef(), req.Config.GetAccountRef()),
@@ -46,6 +57,38 @@ func ExecuteSignalServiceLinkPrepare(
 		RequestedAtUnix:     req.Input.GetRequestedAtUnix(),
 		LinkedDevice:        req.Input.GetLinkedDevice(),
 	}), nil
+}
+
+func validateLinkedDeviceCeremony(ceremony *contracts.LinkedDeviceCeremony) error {
+	if ceremony == nil {
+		return fmt.Errorf("signal service link prepare: linked_device is required")
+	}
+	if ceremony.GetDeviceDisplayName() == "" {
+		return fmt.Errorf("signal service link prepare: device_display_name is required")
+	}
+	if ceremony.GetConsentRef() == "" {
+		return fmt.Errorf("signal service link prepare: consent_ref is required")
+	}
+	if ceremony.GetConsentExpiresUnix() == 0 {
+		return fmt.Errorf("signal service link prepare: consent_expires_unix is required")
+	}
+	if ceremony.GetRevocationUri() == "" {
+		return fmt.Errorf("signal service link prepare: revocation_uri is required")
+	}
+	if ceremony.GetUnlinkProofRef() == "" {
+		return fmt.Errorf("signal service link prepare: unlink_proof_ref is required")
+	}
+	if strings.HasPrefix(ceremony.GetUnlinkProofRef(), "revoked://") {
+		return fmt.Errorf("signal service link prepare: unlink proof is revoked")
+	}
+	linkedDeviceCeremoniesMu.Lock()
+	defer linkedDeviceCeremoniesMu.Unlock()
+	claim := ceremony.GetConsentRef()
+	if _, ok := linkedDeviceCeremonyClaims[claim]; ok {
+		return fmt.Errorf("signal service link prepare: linked-device consent replay")
+	}
+	linkedDeviceCeremonyClaims[claim] = struct{}{}
+	return nil
 }
 
 func ExecuteSignalServiceSendPrepare(
