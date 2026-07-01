@@ -39,6 +39,12 @@ type persistentCustodyModule struct {
 	config *contracts.PersistentCustodyConfig
 }
 
+type custodyStoreModule struct {
+	lifecycleModule
+	name   string
+	config *contracts.CustodyStoreConfig
+}
+
 type persistentCustodyRecord struct {
 	CustodyRef    string `json:"custody_ref"`
 	AccountRef    string `json:"account_ref"`
@@ -90,6 +96,13 @@ func newPersistentCustodyModule(name string, cfg *contracts.PersistentCustodyCon
 		return nil, fmt.Errorf("signal persistent custody: unsupported backend %q", cfg.GetBackend())
 	}
 	return &persistentCustodyModule{name: name, config: cfg}, nil
+}
+
+func newCustodyStoreModule(name string, cfg *contracts.CustodyStoreConfig) *custodyStoreModule {
+	if cfg == nil {
+		cfg = &contracts.CustodyStoreConfig{}
+	}
+	return &custodyStoreModule{name: name, config: cfg}
 }
 
 func (m *persistentCustodyModule) Init() error {

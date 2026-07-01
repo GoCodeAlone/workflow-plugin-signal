@@ -1,6 +1,6 @@
 {
   "name": "workflow-plugin-signal",
-  "version": "0.0.0",
+  "version": "0.8.0",
   "author": "GoCodeAlone",
   "description": "Signal protocol primitives for Workflow",
   "license": "MIT",
@@ -52,7 +52,12 @@
     "step.signal_service_test_register",
     "step.signal_service_test_link_device",
     "step.signal_service_test_send",
-    "step.signal_service_test_receive"
+    "step.signal_service_test_receive",
+    "step.signal_custody_create",
+    "step.signal_custody_rotate",
+    "step.signal_custody_restore",
+    "step.signal_custody_revoke",
+    "step.signal_custody_inspect"
   ],
   "capabilities": {
     "configProvider": false,
@@ -63,6 +68,7 @@
       "signal.service_transport",
       "signal.key_custody",
       "signal.persistent_custody",
+      "signal.custody_store",
       "signal.account_ref"
     ],
     "stepTypes": [
@@ -81,7 +87,12 @@
       "step.signal_service_test_register",
       "step.signal_service_test_link_device",
       "step.signal_service_test_send",
-      "step.signal_service_test_receive"
+      "step.signal_service_test_receive",
+      "step.signal_custody_create",
+      "step.signal_custody_rotate",
+      "step.signal_custody_restore",
+      "step.signal_custody_revoke",
+      "step.signal_custody_inspect"
     ],
     "triggerTypes": [
       "trigger.signal_envelope",

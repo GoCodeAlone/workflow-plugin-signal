@@ -34,6 +34,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"signal.service_transport",
 		"signal.key_custody",
 		"signal.persistent_custody",
+		"signal.custody_store",
 		"signal.account_ref",
 		"trigger.signal_envelope",
 		"trigger.signal_service_envelope",
@@ -55,6 +56,11 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step.signal_service_test_link_device",
 		"step.signal_service_test_send",
 		"step.signal_service_test_receive",
+		"step.signal_custody_create",
+		"step.signal_custody_rotate",
+		"step.signal_custody_restore",
+		"step.signal_custody_revoke",
+		"step.signal_custody_inspect",
 	})
 
 	registry := contractProvider.ContractRegistry()
@@ -102,6 +108,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"module:signal.service_transport",
 		"module:signal.key_custody",
 		"module:signal.persistent_custody",
+		"module:signal.custody_store",
 		"module:signal.account_ref",
 		"module:trigger.signal_envelope",
 		"module:trigger.signal_service_envelope",
@@ -121,6 +128,11 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step:step.signal_service_test_link_device",
 		"step:step.signal_service_test_send",
 		"step:step.signal_service_test_receive",
+		"step:step.signal_custody_create",
+		"step:step.signal_custody_rotate",
+		"step:step.signal_custody_restore",
+		"step:step.signal_custody_revoke",
+		"step:step.signal_custody_inspect",
 	} {
 		if _, ok := contractsByKey[key]; !ok {
 			t.Fatalf("missing contract %s", key)
@@ -151,6 +163,7 @@ func TestPluginJSONCapabilitiesMatchRuntimeProvider(t *testing.T) {
 		"signal.service_transport",
 		"signal.key_custody",
 		"signal.persistent_custody",
+		"signal.custody_store",
 		"signal.account_ref",
 	})
 	assertStringSet(t, manifest.Capabilities.TriggerTypes, []string{
@@ -158,6 +171,57 @@ func TestPluginJSONCapabilitiesMatchRuntimeProvider(t *testing.T) {
 		"trigger.signal_service_envelope",
 	})
 	assertStringSet(t, manifest.Capabilities.StepTypes, provider.TypedStepTypes())
+}
+
+func TestProviderContractsDeclareCustodyV2(t *testing.T) {
+	provider := NewSignalProvider()
+	moduleProvider, ok := any(provider).(sdk.TypedModuleProvider)
+	if !ok {
+		t.Fatal("expected typed module provider")
+	}
+	stepProvider, ok := any(provider).(sdk.TypedStepProvider)
+	if !ok {
+		t.Fatal("expected typed step provider")
+	}
+	contractProvider, ok := any(provider).(sdk.ContractProvider)
+	if !ok {
+		t.Fatal("expected contract provider")
+	}
+
+	assertStringSetContains(t, moduleProvider.TypedModuleTypes(), []string{
+		"signal.persistent_custody",
+		"signal.custody_store",
+	})
+	assertStringSetContains(t, stepProvider.TypedStepTypes(), []string{
+		"step.signal_custody_create",
+		"step.signal_custody_rotate",
+		"step.signal_custody_restore",
+		"step.signal_custody_revoke",
+		"step.signal_custody_inspect",
+	})
+
+	contractsByKey := map[string]*pb.ContractDescriptor{}
+	for _, descriptor := range contractProvider.ContractRegistry().Contracts {
+		switch descriptor.Kind {
+		case pb.ContractKind_CONTRACT_KIND_MODULE:
+			contractsByKey["module:"+descriptor.ModuleType] = descriptor
+		case pb.ContractKind_CONTRACT_KIND_STEP:
+			contractsByKey["step:"+descriptor.StepType] = descriptor
+		}
+	}
+	for _, key := range []string{
+		"module:signal.persistent_custody",
+		"module:signal.custody_store",
+		"step:step.signal_custody_create",
+		"step:step.signal_custody_rotate",
+		"step:step.signal_custody_restore",
+		"step:step.signal_custody_revoke",
+		"step:step.signal_custody_inspect",
+	} {
+		if _, ok := contractsByKey[key]; !ok {
+			t.Fatalf("missing contract %s", key)
+		}
+	}
 }
 
 func contractKey(descriptor *pb.ContractDescriptor) string {
@@ -184,5 +248,18 @@ func assertStringSet(t *testing.T, got, want []string) {
 	}
 	if len(got) != len(want) {
 		t.Fatalf("values = %v, want %v", got, want)
+	}
+}
+
+func assertStringSetContains(t *testing.T, got, want []string) {
+	t.Helper()
+	seen := make(map[string]int, len(got))
+	for _, value := range got {
+		seen[value]++
+	}
+	for _, value := range want {
+		if seen[value] != 1 {
+			t.Fatalf("values = %v, want exactly one %q", got, value)
+		}
 	}
 }
