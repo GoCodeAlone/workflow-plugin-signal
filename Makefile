@@ -9,7 +9,7 @@ test:
 	go test ./...
 
 pipeline-test:
-	./scripts/run-pipeline-tests.sh
+	VERSION="$(VERSION)" ./scripts/run-pipeline-tests.sh
 
 generate-contracts:
 	protoc --go_out=. --go_opt=paths=source_relative internal/contracts/signal.proto
