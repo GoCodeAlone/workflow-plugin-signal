@@ -55,7 +55,7 @@ make install-local
 
 ## Modules
 
-- `signal.identity_store` - in-memory Phase 1 identity, pre-key, and session state.
+- `signal.identity_store` - in-memory identity, pre-key, and session state for local composition and conformance tests.
 - `signal.space` - typed configuration surface for binding encrypted spaces to rooms/eventbus.
 - `signal.official_service_boundary` - typed disabled/test-double boundary for selected upstream service wire shapes.
 - `signal.service_transport` - registered fake, sandbox, or approval-gated live transport boundary.
@@ -65,9 +65,9 @@ make install-local
 - `signal.custody_store` - v2 custody-store contract with backend, KEK, schema, and storage metadata.
 - `signal.account_ref` - account/device/consent/audit refs bound to host custody for fake official-service tests.
 - `trigger.signal_envelope` - typed trigger-module contract for encrypted envelope transports.
-- `trigger.signal_service_envelope` - typed trigger-module contract for future service-envelope transports; no live stream is opened in this phase.
+- `trigger.signal_service_envelope` - typed trigger-module contract for service-envelope transports; no live stream is opened unless a host supplies an approved transport.
 
-Phase 1 identity stores remain in-memory for application composition and
+The built-in identity store remains in-memory for application composition and
 conformance testing. Production deployments should bind identities to
 `signal.key_custody` and host-managed persistence before relying on restart
 survival.
@@ -88,13 +88,14 @@ by ref, rotate KEK metadata, inspect redacted metadata, revoke the ref, and
 reject restore after revocation. The scenario uses the `test_file` backend only;
 production hosts should use `local_file` with host-managed KEK custody.
 
-Official Signal service registration, linked-device, send, and receive steps in
-this release use deterministic `libsignal-service-go/fake` clients only. They
+Official Signal service registration, linked-device, send, and receive steps
+support deterministic `libsignal-service-go/fake` clients and host-supplied
+sandbox/operator fixtures. They
 return request IDs, statuses, challenge refs, and host secret refs; they do not
 register accounts, link devices, send messages, receive messages, reserve
 usernames, upload backups, download backups, or contact the official Signal
-service. Live transport remains unavailable until a later approval-bearing
-egress transition.
+service. Official Signal service egress remains unavailable until a later
+approval-bearing egress transition.
 
 Operation-specific `*_prepare`, `receive_admit`, and `challenge_respond` steps
 produce `ServiceOperationEnvelope` metadata for application composition and
