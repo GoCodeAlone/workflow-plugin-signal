@@ -94,8 +94,9 @@ sandbox/operator fixtures. They
 return request IDs, statuses, challenge refs, and host secret refs; they do not
 register accounts, link devices, send messages, receive messages, reserve
 usernames, upload backups, download backups, or contact the official Signal
-service. Official Signal service egress remains unavailable until a later
-approval-bearing egress transition.
+service through any bundled production endpoint client. Official Signal service
+egress remains unavailable unless a host supplies an approved transport and a
+complete machine-checkable approval package.
 
 Operation-specific `*_prepare`, `receive_admit`, and `challenge_respond` steps
 produce `ServiceOperationEnvelope` metadata for application composition and
