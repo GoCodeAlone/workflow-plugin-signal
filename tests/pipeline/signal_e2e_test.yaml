@@ -15,11 +15,18 @@ yaml: |
         local_id: bob@example.test
         device_id: 1
         registration_id: 2002
+    - name: service_custody
+      type: signal.key_custody
+      config:
+        custody_ref: custody://signal/service-test/device-1
+        account_ref: account://signal/service-test
+        non_exportable_key_ref: kms://signal/service-test/device-1
     - name: service_account
       type: signal.account_ref
       config:
         account_ref: account://signal/service-test
         device_ref: device://signal/service-test/device-1
+        custody_ref: custody://signal/service-test/device-1
         credential_ref: secret://signal/service-test/credential
         consent_ref: consent://signal/service-test/consent
         audit_ref: audit://signal/service-test/audit
@@ -108,6 +115,33 @@ yaml: |
           config:
             account_ref: account://signal/service-test
       on_error: stop
+    signal-service-custody-readiness:
+      steps:
+        - name: prepare_input
+          type: step.set
+          config:
+            values:
+              idempotency_key: "{{ .request_id }}"
+              recipient_ref: "{{ .recipient_ref }}"
+              payload_ref: "{{ .payload_ref }}"
+        - name: prepare_send
+          type: step.signal_service_send_prepare
+          config:
+            account_ref: account://signal/service-test
+        - name: custody_summary
+          type: step.set
+          config:
+            values:
+              custody_attested: "{{ index .steps \"prepare_send\" \"custody_attested\" }}"
+              custody_attestation_ref: "{{ index .steps \"prepare_send\" \"custody_attestation_ref\" }}"
+              account_ref: "{{ index .steps \"prepare_send\" \"envelope\" \"account_ref\" }}"
+              device_ref: "{{ index .steps \"prepare_send\" \"envelope\" \"device_ref\" }}"
+              custody_ref: "{{ index .steps \"prepare_send\" \"envelope\" \"custody_ref\" }}"
+              credential_ref: "{{ index .steps \"prepare_send\" \"envelope\" \"credential_ref\" }}"
+              non_exportable_key_ref: "{{ index .steps \"prepare_send\" \"envelope\" \"non_exportable_key_ref\" }}"
+              recipient_ref: "{{ index .steps \"prepare_send\" \"envelope\" \"recipient_ref\" }}"
+              payload_ref: "{{ index .steps \"prepare_send\" \"envelope\" \"payload_ref\" }}"
+      on_error: stop
 tests:
   signal-session-roundtrip:
     trigger:
@@ -149,3 +183,27 @@ tests:
           status: challenge_required
           request_id: caller-a-backup-download
           challenge_ref: challenge://signal/caller-a/backup-download
+  signal-service-custody-readiness:
+    trigger:
+      type: pipeline
+      name: signal-service-custody-readiness
+      data:
+        request_id: caller-b-send
+        recipient_ref: recipient://signal/caller-b
+        payload_ref: payload://signal/caller-b/ciphertext-1
+    assertions:
+      - step: prepare_send
+        output:
+          custody_attested: true
+          custody_attestation_ref: attest://signal/custody/custody-signal-service-test-device-1
+      - step: custody_summary
+        output:
+          custody_attested: "true"
+          custody_attestation_ref: attest://signal/custody/custody-signal-service-test-device-1
+          account_ref: account://signal/service-test
+          device_ref: device://signal/service-test/device-1
+          custody_ref: custody://signal/service-test/device-1
+          credential_ref: secret://signal/service-test/credential
+          non_exportable_key_ref: kms://signal/service-test/device-1
+          recipient_ref: recipient://signal/caller-b
+          payload_ref: payload://signal/caller-b/ciphertext-1

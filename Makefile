@@ -1,4 +1,4 @@
-VERSION ?= 0.10.0
+VERSION ?= 0.11.0
 
 .PHONY: build test pipeline-test install-local generate-contracts clean
 

@@ -529,6 +529,9 @@ message ServiceOperationPrepareOutput {
   string deferred_reason = 4;
   string audit_ref = 5;
   bool live_egress_attempted = 6;
+  bool custody_attested = 7;
+  string custody_attestation_ref = 8;
+  repeated string readiness_warnings = 9;
 }
 
 message ServiceRegisterPrepareConfig {

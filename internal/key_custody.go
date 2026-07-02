@@ -40,6 +40,7 @@ type signalKeyCustody struct {
 type signalAccountRef struct {
 	ref           string
 	deviceRef     string
+	custodyRef    string
 	credentialRef string
 	consentRef    string
 	auditRef      string
@@ -90,19 +91,20 @@ func newAccountRefModule(name string, cfg *contracts.AccountRefConfig) (*account
 
 func (m *accountRefModule) Init() error {
 	var custody *signalKeyCustody
-	if custodyRef := m.config.GetCustodyRef(); custodyRef != "" {
-		var err error
-		custody, err = lookupSignalKeyCustody(custodyRef)
-		if err != nil {
-			return err
-		}
-		if custody.accountRef != "" && custody.accountRef != m.config.GetAccountRef() {
+	custodyRef := m.config.GetCustodyRef()
+	if custodyRef != "" {
+		var ok bool
+		custody, ok = registeredSignalKeyCustody(custodyRef)
+		if !ok {
+			custody = nil
+		} else if custody.accountRef != "" && custody.accountRef != m.config.GetAccountRef() {
 			return fmt.Errorf("signal account ref: custody %q belongs to account %q", custody.ref, custody.accountRef)
 		}
 	}
 	account := &signalAccountRef{
 		ref:           m.config.GetAccountRef(),
 		deviceRef:     m.config.GetDeviceRef(),
+		custodyRef:    custodyRef,
 		credentialRef: m.config.GetCredentialRef(),
 		consentRef:    m.config.GetConsentRef(),
 		auditRef:      m.config.GetAuditRef(),
@@ -127,6 +129,16 @@ func lookupSignalKeyCustody(ref string) (*signalKeyCustody, error) {
 	return custody, nil
 }
 
+func registeredSignalKeyCustody(ref string) (*signalKeyCustody, bool) {
+	if ref == "" {
+		return nil, false
+	}
+	signalCustodiesMu.RLock()
+	custody := signalCustodies[ref]
+	signalCustodiesMu.RUnlock()
+	return custody, custody != nil
+}
+
 func lookupSignalAccountRef(ref string) (*signalAccountRef, error) {
 	if ref == "" {
 		return nil, fmt.Errorf("signal account ref: account_ref is required")
@@ -138,6 +150,16 @@ func lookupSignalAccountRef(ref string) (*signalAccountRef, error) {
 		return nil, fmt.Errorf("signal account ref: %q is not registered", ref)
 	}
 	return account, nil
+}
+
+func registeredSignalAccountRef(ref string) (*signalAccountRef, bool) {
+	if ref == "" {
+		return nil, false
+	}
+	signalAccountsMu.RLock()
+	account := signalAccounts[ref]
+	signalAccountsMu.RUnlock()
+	return account, account != nil
 }
 
 func resetServiceTestState() {
