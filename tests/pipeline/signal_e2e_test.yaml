@@ -30,6 +30,16 @@ yaml: |
         credential_ref: secret://signal/service-test/credential
         consent_ref: consent://signal/service-test/consent
         audit_ref: audit://signal/service-test/audit
+    - name: custody_store
+      type: signal.custody_store
+      config:
+        backend_id: local-test
+        backend: test_file
+        storage_path: .wfctl/signal-pipeline-custody
+        kek_ref: test://signal/kek
+        kek_version: v1
+        schema_version: 1
+        allow_test_backend: true
 
   pipelines:
     signal-e2e:
@@ -142,6 +152,57 @@ yaml: |
               recipient_ref: "{{ index .steps \"prepare_send\" \"envelope\" \"recipient_ref\" }}"
               payload_ref: "{{ index .steps \"prepare_send\" \"envelope\" \"payload_ref\" }}"
       on_error: stop
+    signal-custody-round-trip:
+      steps:
+        - name: create_input
+          type: step.set
+          config:
+            values:
+              account_ref: "account://signal/{{ .principal }}"
+              device_ref: "device://signal/{{ .principal }}/device-1"
+              material_refs:
+                - "secret://signal/{{ .principal }}/identity-key"
+              idempotency_key: "{{ .principal }}-device-1"
+              requested_at_unix: 1783000000
+        - name: create
+          type: step.signal_custody_create
+          config:
+            store_ref: custody_store
+        - name: attest_input
+          type: step.set
+          config:
+            values:
+              custody_ref: "{{ index .steps \"create\" \"custody_ref\" }}"
+              audience_ref: "workflow://signal-custody/{{ .environment }}/{{ .principal }}"
+              requested_at_unix: 1783000060
+        - name: attest
+          type: step.signal_custody_attest
+          config:
+            store_ref: custody_store
+        - name: rotate_input
+          type: step.set
+          config:
+            values:
+              custody_ref: "{{ index .steps \"create\" \"custody_ref\" }}"
+              new_kek_version: v2
+              requested_at_unix: 1783000120
+        - name: rotate
+          type: step.signal_custody_rotate
+          config:
+            store_ref: custody_store
+        - name: export_request_input
+          type: step.set
+          config:
+            values:
+              custody_ref: "{{ index .steps \"create\" \"custody_ref\" }}"
+              requester_ref: "principal://{{ .principal }}"
+              reason_ref: "ticket://signal-custody/{{ .principal }}/export-review"
+              requested_at_unix: 1783000180
+        - name: export_request
+          type: step.signal_custody_export_request
+          config:
+            store_ref: custody_store
+      on_error: stop
 tests:
   signal-session-roundtrip:
     trigger:
@@ -207,3 +268,24 @@ tests:
           non_exportable_key_ref: kms://signal/service-test/device-1
           recipient_ref: recipient://signal/caller-b
           payload_ref: payload://signal/caller-b/ciphertext-1
+  signal-custody-round-trip:
+    trigger:
+      type: pipeline
+      name: signal-custody-round-trip
+      data:
+        principal: user-a
+        environment: development
+    assertions:
+      - step: create
+        output:
+          custody_ref: custody://user-a-device-1
+      - step: attest
+        output:
+          custody_ref: custody://user-a-device-1
+      - step: rotate
+        output:
+          custody_ref: custody://user-a-device-1
+      - step: export_request
+        output:
+          custody_ref: custody://user-a-device-1
+          status: approval_required
