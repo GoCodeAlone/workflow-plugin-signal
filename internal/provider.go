@@ -81,6 +81,8 @@ var signalStepTypes = []string{
 	"step.signal_custody_restore",
 	"step.signal_custody_revoke",
 	"step.signal_custody_inspect",
+	"step.signal_custody_attest",
+	"step.signal_custody_export_request",
 	"step.signal_outbox_enqueue",
 	"step.signal_outbox_claim",
 	"step.signal_inbox_receive",
@@ -423,6 +425,22 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalCustodyInspect,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_custody_attest":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.CustodyAttestConfig{},
+			&contracts.CustodyAttestInput{},
+			ExecuteSignalCustodyAttest,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_custody_export_request":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.CustodyExportRequestConfig{},
+			&contracts.CustodyExportRequestInput{},
+			ExecuteSignalCustodyExportRequest,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	case "step.signal_outbox_enqueue":
 		factory := sdk.NewTypedStepFactory(
 			typeName,
@@ -513,6 +531,8 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_custody_restore", pkg+"CustodyRestoreConfig", pkg+"CustodyRestoreInput", pkg+"CustodyRestoreOutput"),
 			stepContract("step.signal_custody_revoke", pkg+"CustodyRevokeConfig", pkg+"CustodyRevokeInput", pkg+"CustodyRevokeOutput"),
 			stepContract("step.signal_custody_inspect", pkg+"CustodyInspectConfig", pkg+"CustodyInspectInput", pkg+"CustodyInspectOutput"),
+			stepContract("step.signal_custody_attest", pkg+"CustodyAttestConfig", pkg+"CustodyAttestInput", pkg+"CustodyAttestOutput"),
+			stepContract("step.signal_custody_export_request", pkg+"CustodyExportRequestConfig", pkg+"CustodyExportRequestInput", pkg+"CustodyExportRequestOutput"),
 			stepContract("step.signal_outbox_enqueue", pkg+"OutboxEnqueueConfig", pkg+"OutboxEnqueueInput", pkg+"OutboxEnqueueOutput"),
 			stepContract("step.signal_outbox_claim", pkg+"OutboxClaimConfig", pkg+"OutboxClaimInput", pkg+"OutboxClaimOutput"),
 			stepContract("step.signal_inbox_receive", pkg+"InboxReceiveConfig", pkg+"InboxReceiveInput", pkg+"InboxReceiveOutput"),

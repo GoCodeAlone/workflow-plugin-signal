@@ -375,12 +375,3 @@ func cloneEnvelopeRecord(in *envelopeRecord) *envelopeRecord {
 	out.Envelope = cloneSignalEnvelope(in.Envelope)
 	return &out
 }
-
-func productionPolicyMode(mode string) bool {
-	switch strings.ToLower(strings.TrimSpace(mode)) {
-	case "production", "prod":
-		return true
-	default:
-		return false
-	}
-}

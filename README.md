@@ -59,6 +59,8 @@ make install-local
 - `step.signal_custody_restore` - restore a sealed custody bundle through host-managed KEK refs.
 - `step.signal_custody_revoke` - mark a custody ref revoked and return redacted audit metadata.
 - `step.signal_custody_inspect` - inspect custody metadata without exposing key material.
+- `step.signal_custody_attest` - return custody attestation and evidence refs for application policy checks.
+- `step.signal_custody_export_request` - create ref-only export review metadata that remains approval-required.
 
 ## Modules
 
@@ -89,19 +91,28 @@ authorization refs before it delegates to the local Signal decrypt primitive.
 
 `signal.persistent_custody` stores encrypted custody state in a host-selected
 file and registers only non-exportable key handles with Workflow. `local_file`
-requires a host secret resolver; `test_file` is explicitly marked non-production
-and requires opt-in for conformance tests.
+requires both `allow_local_file_custody: true` and a host secret resolver.
+`test_file` is explicitly marked non-production and requires opt-in for
+conformance tests. Production policy mode rejects both file-backed custody
+backends; production hosts should provide approved KMS/HSM/security service
+refs instead of local files. Hermetic `test://signal/...` KEK refs derive
+deterministic test secrets only when no host resolver is configured.
 
 `signal.custody_store` is the v2 custody contract for durable host-managed
 key custody. Its step contracts return custody refs and metadata only; plain key
-bytes are not ordinary Workflow outputs. The existing `signal.persistent_custody`
-module remains available for backward compatibility.
+bytes are not ordinary Workflow outputs. Attestation and export-request steps
+return refs/evidence/status metadata for application policy checks and do not
+restore sealed material. The existing `signal.persistent_custody` module remains
+available for backward compatibility.
 
 The `scenarios/signal-custody-restart` fixture covers the v2 custody lifecycle:
 create a sealed custody ref, reload the store after a simulated restart, restore
 by ref, rotate KEK metadata, inspect redacted metadata, revoke the ref, and
 reject restore after revocation. The scenario uses the `test_file` backend only;
 production hosts should use `local_file` with host-managed KEK custody.
+The standalone `testdata/pipelines/signal-custody.yaml` fixture can be run with
+`WFCTL_PLUGIN_DIR` pointing at a local plugin install and exercises create,
+attest, rotate, and export-request steps through `wfctl pipeline run`.
 
 Official Signal service registration, linked-device, send, and receive steps
 support deterministic `libsignal-service-go/fake` clients and host-supplied

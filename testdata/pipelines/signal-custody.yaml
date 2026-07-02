@@ -1,0 +1,78 @@
+plugins:
+  external:
+    - name: workflow-plugin-signal
+
+modules:
+  - name: custody_store
+    type: signal.custody_store
+    config:
+      backend_id: local-test
+      backend: test_file
+      storage_path: .wfctl/signal-custody-pipeline
+      kek_ref: test://signal/kek
+      kek_version: v1
+      schema_version: 1
+      allow_test_backend: true
+
+pipelines:
+  custody_round_trip:
+    steps:
+      - name: create_input
+        type: step.set
+        config:
+          values:
+            account_ref: "account://signal/{{ .principal }}"
+            device_ref: "device://signal/{{ .principal }}/device-1"
+            material_refs:
+              - "secret://signal/{{ .principal }}/identity-key"
+            idempotency_key: "{{ .principal }}-device-1"
+            requested_at_unix: 1783000000
+      - name: create
+        type: step.signal_custody_create
+        config:
+          store_ref: custody_store
+      - name: attest_input
+        type: step.set
+        config:
+          values:
+            custody_ref: "{{ index .steps \"create\" \"custody_ref\" }}"
+            audience_ref: "workflow://signal-custody/{{ .environment }}/{{ .principal }}"
+            requested_at_unix: 1783000060
+      - name: attest
+        type: step.signal_custody_attest
+        config:
+          store_ref: custody_store
+      - name: rotate_input
+        type: step.set
+        config:
+          values:
+            custody_ref: "{{ index .steps \"create\" \"custody_ref\" }}"
+            new_kek_version: v2
+            requested_at_unix: 1783000120
+      - name: rotate
+        type: step.signal_custody_rotate
+        config:
+          store_ref: custody_store
+      - name: export_request_input
+        type: step.set
+        config:
+          values:
+            custody_ref: "{{ index .steps \"create\" \"custody_ref\" }}"
+            requester_ref: "principal://{{ .principal }}"
+            reason_ref: "ticket://signal-custody/{{ .principal }}/export-review"
+            requested_at_unix: 1783000180
+      - name: export_request
+        type: step.signal_custody_export_request
+        config:
+          store_ref: custody_store
+      - name: custody_summary
+        type: step.set
+        config:
+          values:
+            custody_ref: "{{ index .steps \"create\" \"custody_ref\" }}"
+            attestation_ref: "{{ index .steps \"attest\" \"attestation_ref\" }}"
+            evidence_ref: "{{ index .steps \"attest\" \"evidence_ref\" }}"
+            export_request_ref: "{{ index .steps \"export_request\" \"export_request_ref\" }}"
+            approval_required_ref: "{{ index .steps \"export_request\" \"approval_required_ref\" }}"
+            export_status: "{{ index .steps \"export_request\" \"status\" }}"
+    on_error: stop

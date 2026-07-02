@@ -75,6 +75,8 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step.signal_custody_restore",
 		"step.signal_custody_revoke",
 		"step.signal_custody_inspect",
+		"step.signal_custody_attest",
+		"step.signal_custody_export_request",
 		"step.signal_outbox_enqueue",
 		"step.signal_outbox_claim",
 		"step.signal_inbox_receive",
@@ -164,6 +166,8 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step:step.signal_custody_restore",
 		"step:step.signal_custody_revoke",
 		"step:step.signal_custody_inspect",
+		"step:step.signal_custody_attest",
+		"step:step.signal_custody_export_request",
 		"step:step.signal_outbox_enqueue",
 		"step:step.signal_outbox_claim",
 		"step:step.signal_inbox_receive",
@@ -235,6 +239,8 @@ func TestProviderContractsDeclareCustodyV2(t *testing.T) {
 		"step.signal_custody_restore",
 		"step.signal_custody_revoke",
 		"step.signal_custody_inspect",
+		"step.signal_custody_attest",
+		"step.signal_custody_export_request",
 	})
 
 	contractsByKey := map[string]*pb.ContractDescriptor{}
@@ -254,6 +260,8 @@ func TestProviderContractsDeclareCustodyV2(t *testing.T) {
 		"step:step.signal_custody_restore",
 		"step:step.signal_custody_revoke",
 		"step:step.signal_custody_inspect",
+		"step:step.signal_custody_attest",
+		"step:step.signal_custody_export_request",
 	} {
 		if _, ok := contractsByKey[key]; !ok {
 			t.Fatalf("missing contract %s", key)

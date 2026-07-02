@@ -305,6 +305,22 @@
       "type": "step.signal_custody_inspect"
     },
     {
+      "config": "workflow.plugins.signal.v1.CustodyAttestConfig",
+      "input": "workflow.plugins.signal.v1.CustodyAttestInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.CustodyAttestOutput",
+      "type": "step.signal_custody_attest"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.CustodyExportRequestConfig",
+      "input": "workflow.plugins.signal.v1.CustodyExportRequestInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.CustodyExportRequestOutput",
+      "type": "step.signal_custody_export_request"
+    },
+    {
       "config": "workflow.plugins.signal.v1.OutboxEnqueueConfig",
       "input": "workflow.plugins.signal.v1.OutboxEnqueueInput",
       "kind": "step",

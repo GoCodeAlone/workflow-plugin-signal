@@ -348,6 +348,8 @@ message PersistentCustodyConfig {
   string key_handle = 5;
   string host_secret_ref = 6;
   bool allow_test_backend = 7;
+  bool allow_local_file_custody = 8;
+  string policy_mode = 9;
 }
 
 message CustodyStoreConfig {
@@ -358,6 +360,8 @@ message CustodyStoreConfig {
   string kek_version = 5;
   uint32 schema_version = 6;
   bool allow_test_backend = 7;
+  bool allow_local_file_custody = 8;
+  string policy_mode = 9;
 }
 
 message CustodyMetadata {
@@ -455,6 +459,42 @@ message CustodyInspectInput {
 message CustodyInspectOutput {
   string custody_ref = 1;
   CustodyMetadata metadata = 2;
+}
+
+message CustodyAttestConfig {
+  string store_ref = 1;
+}
+
+message CustodyAttestInput {
+  string custody_ref = 1;
+  string audience_ref = 2;
+  int64 requested_at_unix = 3;
+}
+
+message CustodyAttestOutput {
+  string custody_ref = 1;
+  CustodyMetadata metadata = 2;
+  string attestation_ref = 3;
+  string evidence_ref = 4;
+}
+
+message CustodyExportRequestConfig {
+  string store_ref = 1;
+}
+
+message CustodyExportRequestInput {
+  string custody_ref = 1;
+  string requester_ref = 2;
+  string reason_ref = 3;
+  int64 requested_at_unix = 4;
+}
+
+message CustodyExportRequestOutput {
+  string custody_ref = 1;
+  string export_request_ref = 2;
+  string approval_required_ref = 3;
+  string status = 4;
+  CustodyMetadata metadata = 5;
 }
 
 message AccountRefConfig {
