@@ -37,6 +37,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"signal.key_custody",
 		"signal.persistent_custody",
 		"signal.custody_store",
+		"signal.envelope_store",
 		"signal.account_ref",
 		"trigger.signal_envelope",
 		"trigger.signal_service_envelope",
@@ -76,6 +77,10 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step.signal_custody_inspect",
 		"step.signal_custody_attest",
 		"step.signal_custody_export_request",
+		"step.signal_outbox_enqueue",
+		"step.signal_outbox_claim",
+		"step.signal_inbox_receive",
+		"step.signal_inbox_decrypt",
 	})
 
 	registry := contractProvider.ContractRegistry()
@@ -125,6 +130,7 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"module:signal.key_custody",
 		"module:signal.persistent_custody",
 		"module:signal.custody_store",
+		"module:signal.envelope_store",
 		"module:signal.account_ref",
 		"module:trigger.signal_envelope",
 		"module:trigger.signal_service_envelope",
@@ -162,6 +168,10 @@ func TestSignalProviderDeclaresStrictPhaseOneContracts(t *testing.T) {
 		"step:step.signal_custody_inspect",
 		"step:step.signal_custody_attest",
 		"step:step.signal_custody_export_request",
+		"step:step.signal_outbox_enqueue",
+		"step:step.signal_outbox_claim",
+		"step:step.signal_inbox_receive",
+		"step:step.signal_inbox_decrypt",
 	} {
 		if _, ok := contractsByKey[key]; !ok {
 			t.Fatalf("missing contract %s", key)
@@ -194,6 +204,7 @@ func TestPluginJSONCapabilitiesMatchRuntimeProvider(t *testing.T) {
 		"signal.key_custody",
 		"signal.persistent_custody",
 		"signal.custody_store",
+		"signal.envelope_store",
 		"signal.account_ref",
 	})
 	assertStringSet(t, manifest.Capabilities.TriggerTypes, []string{

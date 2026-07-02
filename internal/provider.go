@@ -42,6 +42,7 @@ var signalModuleTypes = []string{
 	"signal.key_custody",
 	"signal.persistent_custody",
 	"signal.custody_store",
+	"signal.envelope_store",
 	"signal.account_ref",
 	"trigger.signal_envelope",
 	"trigger.signal_service_envelope",
@@ -82,6 +83,10 @@ var signalStepTypes = []string{
 	"step.signal_custody_inspect",
 	"step.signal_custody_attest",
 	"step.signal_custody_export_request",
+	"step.signal_outbox_enqueue",
+	"step.signal_outbox_claim",
+	"step.signal_inbox_receive",
+	"step.signal_inbox_decrypt",
 }
 
 // TypedModuleTypes implements sdk.TypedModuleProvider.
@@ -130,6 +135,11 @@ func (p *SignalProvider) CreateTypedModule(typeName, name string, config *anypb.
 	case "signal.custody_store":
 		factory := sdk.NewTypedModuleFactory(typeName, &contracts.CustodyStoreConfig{}, func(name string, cfg *contracts.CustodyStoreConfig) (sdk.ModuleInstance, error) {
 			return newCustodyStoreModule(name, cfg)
+		})
+		return factory.CreateTypedModule(typeName, name, config)
+	case "signal.envelope_store":
+		factory := sdk.NewTypedModuleFactory(typeName, &contracts.EnvelopeStoreConfig{}, func(name string, cfg *contracts.EnvelopeStoreConfig) (sdk.ModuleInstance, error) {
+			return newEnvelopeStoreModule(name, cfg)
 		})
 		return factory.CreateTypedModule(typeName, name, config)
 	case "signal.account_ref":
@@ -431,6 +441,38 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalCustodyExportRequest,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_outbox_enqueue":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.OutboxEnqueueConfig{},
+			&contracts.OutboxEnqueueInput{},
+			ExecuteSignalOutboxEnqueue,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_outbox_claim":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.OutboxClaimConfig{},
+			&contracts.OutboxClaimInput{},
+			ExecuteSignalOutboxClaim,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_inbox_receive":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.InboxReceiveConfig{},
+			&contracts.InboxReceiveInput{},
+			ExecuteSignalInboxReceive,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_inbox_decrypt":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.InboxDecryptConfig{},
+			&contracts.InboxDecryptInput{},
+			ExecuteSignalInboxDecrypt,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	}
 	return nil, fmt.Errorf("%w: step type %q", sdk.ErrTypedContractNotHandled, typeName)
 }
@@ -453,6 +495,7 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			moduleContract("signal.key_custody", pkg+"KeyCustodyConfig"),
 			moduleContract("signal.persistent_custody", pkg+"PersistentCustodyConfig"),
 			moduleContract("signal.custody_store", pkg+"CustodyStoreConfig"),
+			moduleContract("signal.envelope_store", pkg+"EnvelopeStoreConfig"),
 			moduleContract("signal.account_ref", pkg+"AccountRefConfig"),
 			moduleContract("trigger.signal_envelope", pkg+"EnvelopeTriggerConfig"),
 			moduleContract("trigger.signal_service_envelope", pkg+"ServiceEnvelopeTriggerConfig"),
@@ -490,6 +533,10 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_custody_inspect", pkg+"CustodyInspectConfig", pkg+"CustodyInspectInput", pkg+"CustodyInspectOutput"),
 			stepContract("step.signal_custody_attest", pkg+"CustodyAttestConfig", pkg+"CustodyAttestInput", pkg+"CustodyAttestOutput"),
 			stepContract("step.signal_custody_export_request", pkg+"CustodyExportRequestConfig", pkg+"CustodyExportRequestInput", pkg+"CustodyExportRequestOutput"),
+			stepContract("step.signal_outbox_enqueue", pkg+"OutboxEnqueueConfig", pkg+"OutboxEnqueueInput", pkg+"OutboxEnqueueOutput"),
+			stepContract("step.signal_outbox_claim", pkg+"OutboxClaimConfig", pkg+"OutboxClaimInput", pkg+"OutboxClaimOutput"),
+			stepContract("step.signal_inbox_receive", pkg+"InboxReceiveConfig", pkg+"InboxReceiveInput", pkg+"InboxReceiveOutput"),
+			stepContract("step.signal_inbox_decrypt", pkg+"InboxDecryptConfig", pkg+"InboxDecryptInput", pkg+"InboxDecryptOutput"),
 		},
 	}
 }

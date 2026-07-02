@@ -40,6 +40,12 @@ yaml: |
         kek_version: v1
         schema_version: 1
         allow_test_backend: true
+    - name: envelope_store
+      type: signal.envelope_store
+      config:
+        store_ref: envelope_store
+        backend: memory
+        retention_limit: 32
 
   pipelines:
     signal-e2e:
@@ -203,6 +209,101 @@ yaml: |
           config:
             store_ref: custody_store
       on_error: stop
+    signal-envelope-two-party:
+      steps:
+        - name: prepare_recipient
+          type: step.signal_session_prepare
+          config:
+            identity_ref: bob
+        - name: encrypt_input
+          type: step.set
+          config:
+            values:
+              remote_id: bob@example.test
+              remote_device_id: 1
+              plaintext: cXVldWVkIHdvcmtmbG93IGVudmVsb3Bl
+              remote_bundle:
+                identity_ref: "{{ index .steps \"prepare_recipient\" \"bundle\" \"identity_ref\" }}"
+                local_id: "{{ index .steps \"prepare_recipient\" \"bundle\" \"local_id\" }}"
+                device_id: "{{ index .steps \"prepare_recipient\" \"bundle\" \"device_id\" }}"
+                registration_id: "{{ index .steps \"prepare_recipient\" \"bundle\" \"registration_id\" }}"
+                pre_key_id: "{{ index .steps \"prepare_recipient\" \"bundle\" \"pre_key_id\" }}"
+                pre_key: "{{ index .steps \"prepare_recipient\" \"bundle\" \"pre_key\" }}"
+                signed_pre_key_id: "{{ index .steps \"prepare_recipient\" \"bundle\" \"signed_pre_key_id\" }}"
+                signed_pre_key: "{{ index .steps \"prepare_recipient\" \"bundle\" \"signed_pre_key\" }}"
+                signed_pre_key_signature: "{{ index .steps \"prepare_recipient\" \"bundle\" \"signed_pre_key_signature\" }}"
+                kyber_pre_key_id: "{{ index .steps \"prepare_recipient\" \"bundle\" \"kyber_pre_key_id\" }}"
+                kyber_pre_key: "{{ index .steps \"prepare_recipient\" \"bundle\" \"kyber_pre_key\" }}"
+                kyber_pre_key_signature: "{{ index .steps \"prepare_recipient\" \"bundle\" \"kyber_pre_key_signature\" }}"
+                identity_key: "{{ index .steps \"prepare_recipient\" \"bundle\" \"identity_key\" }}"
+        - name: encrypt
+          type: step.signal_encrypt
+          config:
+            identity_ref: alice
+        - name: enqueue_input
+          type: step.set
+          config:
+            values:
+              envelope:
+                sender_id: "{{ index .steps \"encrypt\" \"envelope\" \"sender_id\" }}"
+                sender_device_id: "{{ index .steps \"encrypt\" \"envelope\" \"sender_device_id\" }}"
+                recipient_id: "{{ index .steps \"encrypt\" \"envelope\" \"recipient_id\" }}"
+                recipient_device_id: "{{ index .steps \"encrypt\" \"envelope\" \"recipient_device_id\" }}"
+                message_type: "{{ index .steps \"encrypt\" \"envelope\" \"message_type\" }}"
+                ciphertext: "{{ index .steps \"encrypt\" \"envelope\" \"ciphertext\" }}"
+              sender_ref: "principal://{{ .sender }}"
+              recipient_ref: "principal://{{ .recipient }}"
+              custody_ref: "custody://{{ .sender }}/device-1"
+              authz_ref: "authz://{{ .sender }}/send/{{ .recipient }}"
+              message_ref: "{{ .message_ref }}"
+              idempotency_key: "{{ .sender }}-{{ .recipient }}-{{ .message_ref }}"
+        - name: enqueue
+          type: step.signal_outbox_enqueue
+          config:
+            store_ref: envelope_store
+        - name: claim_input
+          type: step.set
+          config:
+            values:
+              envelope_ref: "{{ index .steps \"enqueue\" \"envelope_ref\" }}"
+              claimant_ref: worker://signal/outbox
+              lease_id: "{{ .sender }}-{{ .recipient }}-lease"
+        - name: claim
+          type: step.signal_outbox_claim
+          config:
+            store_ref: envelope_store
+        - name: receive_input
+          type: step.set
+          config:
+            values:
+              envelope_ref: "{{ index .steps \"claim\" \"envelope_ref\" }}"
+              envelope:
+                sender_id: "{{ index .steps \"claim\" \"envelope\" \"sender_id\" }}"
+                sender_device_id: "{{ index .steps \"claim\" \"envelope\" \"sender_device_id\" }}"
+                recipient_id: "{{ index .steps \"claim\" \"envelope\" \"recipient_id\" }}"
+                recipient_device_id: "{{ index .steps \"claim\" \"envelope\" \"recipient_device_id\" }}"
+                message_type: "{{ index .steps \"claim\" \"envelope\" \"message_type\" }}"
+                ciphertext: "{{ index .steps \"claim\" \"envelope\" \"ciphertext\" }}"
+              recipient_ref: "principal://{{ .recipient }}"
+              idempotency_key: "{{ .recipient }}-receive-{{ .message_ref }}"
+        - name: receive
+          type: step.signal_inbox_receive
+          config:
+            store_ref: envelope_store
+        - name: decrypt_input
+          type: step.set
+          config:
+            values:
+              envelope_ref: "{{ index .steps \"receive\" \"envelope_ref\" }}"
+              principal: "principal://{{ .recipient }}"
+              custody_ref: "custody://{{ .recipient }}/device-1"
+              authz_ref: "authz://{{ .recipient }}/decrypt/{{ .message_ref }}"
+        - name: decrypt
+          type: step.signal_inbox_decrypt
+          config:
+            store_ref: envelope_store
+            identity_ref: bob
+      on_error: stop
 tests:
   signal-session-roundtrip:
     trigger:
@@ -289,3 +390,24 @@ tests:
         output:
           custody_ref: custody://user-a-device-1
           status: approval_required
+  signal-envelope-two-party:
+    trigger:
+      type: pipeline
+      name: signal-envelope-two-party
+      data:
+        sender: user-a
+        recipient: user-b
+        message_ref: ciphertext-fixture-1
+    assertions:
+      - step: enqueue
+        output:
+          status: queued
+      - step: claim
+        output:
+          status: claimed
+      - step: receive
+        output:
+          status: received
+      - step: decrypt
+        output:
+          plaintext: cXVldWVkIHdvcmtmbG93IGVudmVsb3Bl
