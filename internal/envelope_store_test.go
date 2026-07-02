@@ -67,6 +67,19 @@ func TestEnvelopeStoreQueuesCiphertextAndDecryptRequiresCustodyAndAuthz(t *testi
 	if !bytes.Equal(claim.Output.GetEnvelope().GetCiphertext(), []byte("ciphertext-only")) {
 		t.Fatalf("claim envelope = %+v", claim.Output.GetEnvelope())
 	}
+	if claim.Output.GetLeaseRef() == "" || !bytes.Contains([]byte(claim.Output.GetLeaseRef()), []byte("lease-1")) {
+		t.Fatalf("claim lease ref = %q, want lease id", claim.Output.GetLeaseRef())
+	}
+	if _, err := ExecuteSignalOutboxClaim(context.Background(), sdk.TypedStepRequest[*contracts.OutboxClaimConfig, *contracts.OutboxClaimInput]{
+		Config: &contracts.OutboxClaimConfig{StoreRef: "envelopes"},
+		Input: &contracts.OutboxClaimInput{
+			EnvelopeRef: enqueued.Output.GetEnvelopeRef(),
+			ClaimantRef: "worker://signal/outbox/second",
+			LeaseId:     "lease-2",
+		},
+	}); err == nil {
+		t.Fatal("second claim of already claimed envelope succeeded")
+	}
 
 	received, err := ExecuteSignalInboxReceive(context.Background(), sdk.TypedStepRequest[*contracts.InboxReceiveConfig, *contracts.InboxReceiveInput]{
 		Config: &contracts.InboxReceiveConfig{StoreRef: "envelopes"},
@@ -100,6 +113,57 @@ func TestEnvelopeStoreQueuesCiphertextAndDecryptRequiresCustodyAndAuthz(t *testi
 	}
 	if bytes.Contains(raw, plaintext) || bytes.Contains(raw, []byte("private workflow message")) {
 		t.Fatalf("envelope store snapshot exposed plaintext: %s", raw)
+	}
+}
+
+func TestEnvelopeStoreRejectsAmbiguousEnvelopeAndClaimRefs(t *testing.T) {
+	t.Cleanup(resetServiceTestState)
+	store, err := newEnvelopeStoreModule("envelopes", &contracts.EnvelopeStoreConfig{StoreRef: "envelopes", Backend: "memory"})
+	if err != nil {
+		t.Fatalf("newEnvelopeStoreModule: %v", err)
+	}
+	if err := store.Init(); err != nil {
+		t.Fatalf("store init: %v", err)
+	}
+	envelope := &contracts.SignalEnvelope{
+		SenderId:          "alice@example.test",
+		SenderDeviceId:    1,
+		RecipientId:       "bob@example.test",
+		RecipientDeviceId: 1,
+		MessageType:       "signal",
+		Ciphertext:        []byte("ciphertext-only"),
+	}
+	if _, err := ExecuteSignalOutboxEnqueue(context.Background(), sdk.TypedStepRequest[*contracts.OutboxEnqueueConfig, *contracts.OutboxEnqueueInput]{
+		Config: &contracts.OutboxEnqueueConfig{StoreRef: "envelopes"},
+		Input: &contracts.OutboxEnqueueInput{
+			Envelope:     envelope,
+			SenderRef:    "principal://alice",
+			RecipientRef: "principal://bob",
+			CustodyRef:   "custody://alice/device-1",
+			AuthzRef:     "authz://send/1",
+		},
+	}); err == nil {
+		t.Fatal("enqueue without idempotency_key or message_ref succeeded")
+	}
+	enqueued, err := ExecuteSignalOutboxEnqueue(context.Background(), sdk.TypedStepRequest[*contracts.OutboxEnqueueConfig, *contracts.OutboxEnqueueInput]{
+		Config: &contracts.OutboxEnqueueConfig{StoreRef: "envelopes"},
+		Input: &contracts.OutboxEnqueueInput{
+			Envelope:       envelope,
+			SenderRef:      "principal://alice",
+			RecipientRef:   "principal://bob",
+			CustodyRef:     "custody://alice/device-1",
+			AuthzRef:       "authz://send/1",
+			IdempotencyKey: "send-1",
+		},
+	})
+	if err != nil {
+		t.Fatalf("enqueue with stable refs: %v", err)
+	}
+	if _, err := ExecuteSignalOutboxClaim(context.Background(), sdk.TypedStepRequest[*contracts.OutboxClaimConfig, *contracts.OutboxClaimInput]{
+		Config: &contracts.OutboxClaimConfig{StoreRef: "envelopes"},
+		Input:  &contracts.OutboxClaimInput{EnvelopeRef: enqueued.Output.GetEnvelopeRef()},
+	}); err == nil {
+		t.Fatal("claim without claimant_ref succeeded")
 	}
 }
 

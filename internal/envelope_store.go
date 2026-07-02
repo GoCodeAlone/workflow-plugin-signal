@@ -146,6 +146,15 @@ func (s *envelopeStore) enqueueOutbox(in *contracts.OutboxEnqueueInput) (*envelo
 	if in.GetAuthzRef() == "" {
 		return nil, fmt.Errorf("signal outbox enqueue: authz_ref is required")
 	}
+	if in.GetSenderRef() == "" {
+		return nil, fmt.Errorf("signal outbox enqueue: sender_ref is required")
+	}
+	if in.GetRecipientRef() == "" {
+		return nil, fmt.Errorf("signal outbox enqueue: recipient_ref is required")
+	}
+	if in.GetIdempotencyKey() == "" && in.GetMessageRef() == "" {
+		return nil, fmt.Errorf("signal outbox enqueue: idempotency_key or message_ref is required")
+	}
 	ref := envelopeRef("outbox", in.GetIdempotencyKey(), in.GetSenderRef(), in.GetRecipientRef(), in.GetMessageRef())
 	now := envelopeUnixTime(in.GetRequestedAtUnix())
 	record := &envelopeRecord{
@@ -174,15 +183,21 @@ func (s *envelopeStore) claimOutbox(in *contracts.OutboxClaimInput) (*envelopeRe
 	if in.GetEnvelopeRef() == "" {
 		return nil, fmt.Errorf("signal outbox claim: envelope_ref is required")
 	}
+	if in.GetClaimantRef() == "" {
+		return nil, fmt.Errorf("signal outbox claim: claimant_ref is required")
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	record := s.state.Outbox[in.GetEnvelopeRef()]
 	if record == nil {
 		return nil, fmt.Errorf("signal outbox claim: %q is not queued", in.GetEnvelopeRef())
 	}
+	if record.Status != "queued" {
+		return nil, fmt.Errorf("signal outbox claim: %q is already %s", in.GetEnvelopeRef(), record.Status)
+	}
 	record.Status = "claimed"
 	record.ClaimedAtUnix = envelopeUnixTime(in.GetRequestedAtUnix())
-	record.LeaseRef = "lease://signal/outbox/" + firstNonEmpty(in.GetLeaseId(), in.GetEnvelopeRef())
+	record.LeaseRef = "lease://signal/outbox/" + sanitizeEnvelopeRefPart(firstNonEmpty(in.GetLeaseId(), in.GetClaimantRef())) + "/" + sanitizeEnvelopeRefPart(in.GetEnvelopeRef())
 	if err := s.persistLocked(); err != nil {
 		return nil, err
 	}
@@ -320,11 +335,15 @@ func envelopeMetadata(record *envelopeRecord) *contracts.EnvelopeQueueMetadata {
 func envelopeRef(queue, idempotencyKey, senderRef, recipientRef, messageRef string) string {
 	base := firstNonEmpty(idempotencyKey, messageRef, senderRef+"\x00"+recipientRef)
 	base = strings.Trim(base, "/")
-	base = strings.NewReplacer("://", "-", "/", "-", "\x00", "-").Replace(base)
+	base = sanitizeEnvelopeRefPart(base)
 	if base == "" {
 		base = fmt.Sprint(time.Now().UTC().UnixNano())
 	}
 	return "signal-envelope://" + queue + "/" + base
+}
+
+func sanitizeEnvelopeRefPart(value string) string {
+	return strings.NewReplacer("://", "-", "/", "-", "\x00", "-").Replace(strings.Trim(value, "/"))
 }
 
 func envelopeUnixTime(ts int64) int64 {

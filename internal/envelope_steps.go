@@ -106,12 +106,15 @@ func ExecuteSignalInboxDecrypt(
 	if err != nil {
 		return nil, err
 	}
+	metadata := envelopeMetadata(record)
+	metadata.CustodyRef = req.Input.GetCustodyRef()
+	metadata.AuthzRef = req.Input.GetAuthzRef()
 	return &sdk.TypedStepResult[*contracts.InboxDecryptOutput]{
 		Output: &contracts.InboxDecryptOutput{
 			Denied:    decrypted.Output.GetDenied(),
 			Error:     decrypted.Output.GetError(),
 			Plaintext: decrypted.Output.GetPlaintext(),
-			Metadata:  envelopeMetadata(record),
+			Metadata:  metadata,
 		},
 	}, nil
 }
