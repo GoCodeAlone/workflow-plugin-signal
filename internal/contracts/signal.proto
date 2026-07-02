@@ -751,6 +751,63 @@ message ServiceTestReceiveInput {
   bool expired_credentials = 11;
 }
 
+message ServiceTestUsernameReserveConfig {
+  string account_ref = 1;
+  bool expired_credentials = 2;
+}
+
+message ServiceTestUsernameReserveInput {
+  string account_ref = 1;
+  string device_ref = 2;
+  string custody_ref = 3;
+  string idempotency_key = 4;
+  string username = 5;
+  string consent_ref = 6;
+  string audit_ref = 7;
+  string credential_ref = 8;
+  string non_exportable_key_ref = 9;
+  string challenge_ref = 10;
+  bool expired_credentials = 11;
+}
+
+message ServiceTestBackupUploadConfig {
+  string account_ref = 1;
+  bool expired_credentials = 2;
+}
+
+message ServiceTestBackupUploadInput {
+  string account_ref = 1;
+  string device_ref = 2;
+  string custody_ref = 3;
+  string idempotency_key = 4;
+  string backup_ref = 5;
+  string consent_ref = 6;
+  string audit_ref = 7;
+  string credential_ref = 8;
+  string non_exportable_key_ref = 9;
+  string challenge_ref = 10;
+  bool expired_credentials = 11;
+}
+
+message ServiceTestBackupDownloadConfig {
+  string account_ref = 1;
+  bool expired_credentials = 2;
+}
+
+message ServiceTestBackupDownloadInput {
+  string account_ref = 1;
+  string device_ref = 2;
+  string custody_ref = 3;
+  string idempotency_key = 4;
+  string backup_id = 5;
+  string consent_ref = 6;
+  string audit_ref = 7;
+  string credential_ref = 8;
+  string non_exportable_key_ref = 9;
+  string challenge_ref = 10;
+  bool expired_credentials = 11;
+}
+
 message ServiceTestOutput {
   string account_ref = 1;
   string device_ref = 2;

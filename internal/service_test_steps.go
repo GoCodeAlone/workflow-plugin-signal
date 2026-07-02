@@ -128,6 +128,63 @@ func ExecuteSignalServiceTestReceive(
 	return serviceTestResult(account, meta, resp.Common(), client.Ledger()), nil
 }
 
+func ExecuteSignalServiceTestUsernameReserve(
+	ctx context.Context,
+	req sdk.TypedStepRequest[*contracts.ServiceTestUsernameReserveConfig, *contracts.ServiceTestUsernameReserveInput],
+) (*sdk.TypedStepResult[*contracts.ServiceTestOutput], error) {
+	account, meta, opts, err := serviceTestRequestContext(req.Config.GetAccountRef(), req.Config.GetExpiredCredentials(), req.Input)
+	if err != nil {
+		return nil, fmt.Errorf("signal service test username reserve: %w", err)
+	}
+	client := serviceTestClient(opts...)
+	resp, err := client.ReserveUsername(ctx, serviceclient.ReserveUsernameRequest{
+		Metadata: meta,
+		Username: req.Input.GetUsername(),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("signal service test username reserve: %w", err)
+	}
+	return serviceTestResult(account, meta, resp.Common(), client.Ledger()), nil
+}
+
+func ExecuteSignalServiceTestBackupUpload(
+	ctx context.Context,
+	req sdk.TypedStepRequest[*contracts.ServiceTestBackupUploadConfig, *contracts.ServiceTestBackupUploadInput],
+) (*sdk.TypedStepResult[*contracts.ServiceTestOutput], error) {
+	account, meta, opts, err := serviceTestRequestContext(req.Config.GetAccountRef(), req.Config.GetExpiredCredentials(), req.Input)
+	if err != nil {
+		return nil, fmt.Errorf("signal service test backup upload: %w", err)
+	}
+	client := serviceTestClient(opts...)
+	resp, err := client.UploadBackup(ctx, serviceclient.UploadBackupRequest{
+		Metadata:  meta,
+		BackupRef: req.Input.GetBackupRef(),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("signal service test backup upload: %w", err)
+	}
+	return serviceTestResult(account, meta, resp.Common(), client.Ledger()), nil
+}
+
+func ExecuteSignalServiceTestBackupDownload(
+	ctx context.Context,
+	req sdk.TypedStepRequest[*contracts.ServiceTestBackupDownloadConfig, *contracts.ServiceTestBackupDownloadInput],
+) (*sdk.TypedStepResult[*contracts.ServiceTestOutput], error) {
+	account, meta, opts, err := serviceTestRequestContext(req.Config.GetAccountRef(), req.Config.GetExpiredCredentials(), req.Input)
+	if err != nil {
+		return nil, fmt.Errorf("signal service test backup download: %w", err)
+	}
+	client := serviceTestClient(opts...)
+	resp, err := client.DownloadBackup(ctx, serviceclient.DownloadBackupRequest{
+		Metadata: meta,
+		BackupID: req.Input.GetBackupId(),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("signal service test backup download: %w", err)
+	}
+	return serviceTestResult(account, meta, resp.Common(), client.Ledger()), nil
+}
+
 type serviceTestInput interface {
 	GetAccountRef() string
 	GetDeviceRef() string
@@ -196,6 +253,12 @@ func serviceTestOperation(in serviceTestInput) string {
 		return "send"
 	case *contracts.ServiceTestReceiveInput:
 		return "receive"
+	case *contracts.ServiceTestUsernameReserveInput:
+		return "username_reserve"
+	case *contracts.ServiceTestBackupUploadInput:
+		return "backup_upload"
+	case *contracts.ServiceTestBackupDownloadInput:
+		return "backup_download"
 	default:
 		return ""
 	}

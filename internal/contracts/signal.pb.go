@@ -7101,6 +7101,534 @@ func (x *ServiceTestReceiveInput) GetExpiredCredentials() bool {
 	return false
 }
 
+type ServiceTestUsernameReserveConfig struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	AccountRef         string                 `protobuf:"bytes,1,opt,name=account_ref,json=accountRef,proto3" json:"account_ref,omitempty"`
+	ExpiredCredentials bool                   `protobuf:"varint,2,opt,name=expired_credentials,json=expiredCredentials,proto3" json:"expired_credentials,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *ServiceTestUsernameReserveConfig) Reset() {
+	*x = ServiceTestUsernameReserveConfig{}
+	mi := &file_internal_contracts_signal_proto_msgTypes[92]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServiceTestUsernameReserveConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServiceTestUsernameReserveConfig) ProtoMessage() {}
+
+func (x *ServiceTestUsernameReserveConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_contracts_signal_proto_msgTypes[92]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServiceTestUsernameReserveConfig.ProtoReflect.Descriptor instead.
+func (*ServiceTestUsernameReserveConfig) Descriptor() ([]byte, []int) {
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{92}
+}
+
+func (x *ServiceTestUsernameReserveConfig) GetAccountRef() string {
+	if x != nil {
+		return x.AccountRef
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveConfig) GetExpiredCredentials() bool {
+	if x != nil {
+		return x.ExpiredCredentials
+	}
+	return false
+}
+
+type ServiceTestUsernameReserveInput struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	AccountRef          string                 `protobuf:"bytes,1,opt,name=account_ref,json=accountRef,proto3" json:"account_ref,omitempty"`
+	DeviceRef           string                 `protobuf:"bytes,2,opt,name=device_ref,json=deviceRef,proto3" json:"device_ref,omitempty"`
+	CustodyRef          string                 `protobuf:"bytes,3,opt,name=custody_ref,json=custodyRef,proto3" json:"custody_ref,omitempty"`
+	IdempotencyKey      string                 `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	Username            string                 `protobuf:"bytes,5,opt,name=username,proto3" json:"username,omitempty"`
+	ConsentRef          string                 `protobuf:"bytes,6,opt,name=consent_ref,json=consentRef,proto3" json:"consent_ref,omitempty"`
+	AuditRef            string                 `protobuf:"bytes,7,opt,name=audit_ref,json=auditRef,proto3" json:"audit_ref,omitempty"`
+	CredentialRef       string                 `protobuf:"bytes,8,opt,name=credential_ref,json=credentialRef,proto3" json:"credential_ref,omitempty"`
+	NonExportableKeyRef string                 `protobuf:"bytes,9,opt,name=non_exportable_key_ref,json=nonExportableKeyRef,proto3" json:"non_exportable_key_ref,omitempty"`
+	ChallengeRef        string                 `protobuf:"bytes,10,opt,name=challenge_ref,json=challengeRef,proto3" json:"challenge_ref,omitempty"`
+	ExpiredCredentials  bool                   `protobuf:"varint,11,opt,name=expired_credentials,json=expiredCredentials,proto3" json:"expired_credentials,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *ServiceTestUsernameReserveInput) Reset() {
+	*x = ServiceTestUsernameReserveInput{}
+	mi := &file_internal_contracts_signal_proto_msgTypes[93]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServiceTestUsernameReserveInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServiceTestUsernameReserveInput) ProtoMessage() {}
+
+func (x *ServiceTestUsernameReserveInput) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_contracts_signal_proto_msgTypes[93]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServiceTestUsernameReserveInput.ProtoReflect.Descriptor instead.
+func (*ServiceTestUsernameReserveInput) Descriptor() ([]byte, []int) {
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{93}
+}
+
+func (x *ServiceTestUsernameReserveInput) GetAccountRef() string {
+	if x != nil {
+		return x.AccountRef
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetDeviceRef() string {
+	if x != nil {
+		return x.DeviceRef
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetCustodyRef() string {
+	if x != nil {
+		return x.CustodyRef
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetIdempotencyKey() string {
+	if x != nil {
+		return x.IdempotencyKey
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetConsentRef() string {
+	if x != nil {
+		return x.ConsentRef
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetAuditRef() string {
+	if x != nil {
+		return x.AuditRef
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetCredentialRef() string {
+	if x != nil {
+		return x.CredentialRef
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetNonExportableKeyRef() string {
+	if x != nil {
+		return x.NonExportableKeyRef
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetChallengeRef() string {
+	if x != nil {
+		return x.ChallengeRef
+	}
+	return ""
+}
+
+func (x *ServiceTestUsernameReserveInput) GetExpiredCredentials() bool {
+	if x != nil {
+		return x.ExpiredCredentials
+	}
+	return false
+}
+
+type ServiceTestBackupUploadConfig struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	AccountRef         string                 `protobuf:"bytes,1,opt,name=account_ref,json=accountRef,proto3" json:"account_ref,omitempty"`
+	ExpiredCredentials bool                   `protobuf:"varint,2,opt,name=expired_credentials,json=expiredCredentials,proto3" json:"expired_credentials,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *ServiceTestBackupUploadConfig) Reset() {
+	*x = ServiceTestBackupUploadConfig{}
+	mi := &file_internal_contracts_signal_proto_msgTypes[94]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServiceTestBackupUploadConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServiceTestBackupUploadConfig) ProtoMessage() {}
+
+func (x *ServiceTestBackupUploadConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_contracts_signal_proto_msgTypes[94]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServiceTestBackupUploadConfig.ProtoReflect.Descriptor instead.
+func (*ServiceTestBackupUploadConfig) Descriptor() ([]byte, []int) {
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{94}
+}
+
+func (x *ServiceTestBackupUploadConfig) GetAccountRef() string {
+	if x != nil {
+		return x.AccountRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadConfig) GetExpiredCredentials() bool {
+	if x != nil {
+		return x.ExpiredCredentials
+	}
+	return false
+}
+
+type ServiceTestBackupUploadInput struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	AccountRef          string                 `protobuf:"bytes,1,opt,name=account_ref,json=accountRef,proto3" json:"account_ref,omitempty"`
+	DeviceRef           string                 `protobuf:"bytes,2,opt,name=device_ref,json=deviceRef,proto3" json:"device_ref,omitempty"`
+	CustodyRef          string                 `protobuf:"bytes,3,opt,name=custody_ref,json=custodyRef,proto3" json:"custody_ref,omitempty"`
+	IdempotencyKey      string                 `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	BackupRef           string                 `protobuf:"bytes,5,opt,name=backup_ref,json=backupRef,proto3" json:"backup_ref,omitempty"`
+	ConsentRef          string                 `protobuf:"bytes,6,opt,name=consent_ref,json=consentRef,proto3" json:"consent_ref,omitempty"`
+	AuditRef            string                 `protobuf:"bytes,7,opt,name=audit_ref,json=auditRef,proto3" json:"audit_ref,omitempty"`
+	CredentialRef       string                 `protobuf:"bytes,8,opt,name=credential_ref,json=credentialRef,proto3" json:"credential_ref,omitempty"`
+	NonExportableKeyRef string                 `protobuf:"bytes,9,opt,name=non_exportable_key_ref,json=nonExportableKeyRef,proto3" json:"non_exportable_key_ref,omitempty"`
+	ChallengeRef        string                 `protobuf:"bytes,10,opt,name=challenge_ref,json=challengeRef,proto3" json:"challenge_ref,omitempty"`
+	ExpiredCredentials  bool                   `protobuf:"varint,11,opt,name=expired_credentials,json=expiredCredentials,proto3" json:"expired_credentials,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *ServiceTestBackupUploadInput) Reset() {
+	*x = ServiceTestBackupUploadInput{}
+	mi := &file_internal_contracts_signal_proto_msgTypes[95]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServiceTestBackupUploadInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServiceTestBackupUploadInput) ProtoMessage() {}
+
+func (x *ServiceTestBackupUploadInput) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_contracts_signal_proto_msgTypes[95]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServiceTestBackupUploadInput.ProtoReflect.Descriptor instead.
+func (*ServiceTestBackupUploadInput) Descriptor() ([]byte, []int) {
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{95}
+}
+
+func (x *ServiceTestBackupUploadInput) GetAccountRef() string {
+	if x != nil {
+		return x.AccountRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetDeviceRef() string {
+	if x != nil {
+		return x.DeviceRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetCustodyRef() string {
+	if x != nil {
+		return x.CustodyRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetIdempotencyKey() string {
+	if x != nil {
+		return x.IdempotencyKey
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetBackupRef() string {
+	if x != nil {
+		return x.BackupRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetConsentRef() string {
+	if x != nil {
+		return x.ConsentRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetAuditRef() string {
+	if x != nil {
+		return x.AuditRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetCredentialRef() string {
+	if x != nil {
+		return x.CredentialRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetNonExportableKeyRef() string {
+	if x != nil {
+		return x.NonExportableKeyRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetChallengeRef() string {
+	if x != nil {
+		return x.ChallengeRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupUploadInput) GetExpiredCredentials() bool {
+	if x != nil {
+		return x.ExpiredCredentials
+	}
+	return false
+}
+
+type ServiceTestBackupDownloadConfig struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	AccountRef         string                 `protobuf:"bytes,1,opt,name=account_ref,json=accountRef,proto3" json:"account_ref,omitempty"`
+	ExpiredCredentials bool                   `protobuf:"varint,2,opt,name=expired_credentials,json=expiredCredentials,proto3" json:"expired_credentials,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *ServiceTestBackupDownloadConfig) Reset() {
+	*x = ServiceTestBackupDownloadConfig{}
+	mi := &file_internal_contracts_signal_proto_msgTypes[96]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServiceTestBackupDownloadConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServiceTestBackupDownloadConfig) ProtoMessage() {}
+
+func (x *ServiceTestBackupDownloadConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_contracts_signal_proto_msgTypes[96]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServiceTestBackupDownloadConfig.ProtoReflect.Descriptor instead.
+func (*ServiceTestBackupDownloadConfig) Descriptor() ([]byte, []int) {
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{96}
+}
+
+func (x *ServiceTestBackupDownloadConfig) GetAccountRef() string {
+	if x != nil {
+		return x.AccountRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadConfig) GetExpiredCredentials() bool {
+	if x != nil {
+		return x.ExpiredCredentials
+	}
+	return false
+}
+
+type ServiceTestBackupDownloadInput struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	AccountRef          string                 `protobuf:"bytes,1,opt,name=account_ref,json=accountRef,proto3" json:"account_ref,omitempty"`
+	DeviceRef           string                 `protobuf:"bytes,2,opt,name=device_ref,json=deviceRef,proto3" json:"device_ref,omitempty"`
+	CustodyRef          string                 `protobuf:"bytes,3,opt,name=custody_ref,json=custodyRef,proto3" json:"custody_ref,omitempty"`
+	IdempotencyKey      string                 `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	BackupId            string                 `protobuf:"bytes,5,opt,name=backup_id,json=backupId,proto3" json:"backup_id,omitempty"`
+	ConsentRef          string                 `protobuf:"bytes,6,opt,name=consent_ref,json=consentRef,proto3" json:"consent_ref,omitempty"`
+	AuditRef            string                 `protobuf:"bytes,7,opt,name=audit_ref,json=auditRef,proto3" json:"audit_ref,omitempty"`
+	CredentialRef       string                 `protobuf:"bytes,8,opt,name=credential_ref,json=credentialRef,proto3" json:"credential_ref,omitempty"`
+	NonExportableKeyRef string                 `protobuf:"bytes,9,opt,name=non_exportable_key_ref,json=nonExportableKeyRef,proto3" json:"non_exportable_key_ref,omitempty"`
+	ChallengeRef        string                 `protobuf:"bytes,10,opt,name=challenge_ref,json=challengeRef,proto3" json:"challenge_ref,omitempty"`
+	ExpiredCredentials  bool                   `protobuf:"varint,11,opt,name=expired_credentials,json=expiredCredentials,proto3" json:"expired_credentials,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *ServiceTestBackupDownloadInput) Reset() {
+	*x = ServiceTestBackupDownloadInput{}
+	mi := &file_internal_contracts_signal_proto_msgTypes[97]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServiceTestBackupDownloadInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServiceTestBackupDownloadInput) ProtoMessage() {}
+
+func (x *ServiceTestBackupDownloadInput) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_contracts_signal_proto_msgTypes[97]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServiceTestBackupDownloadInput.ProtoReflect.Descriptor instead.
+func (*ServiceTestBackupDownloadInput) Descriptor() ([]byte, []int) {
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{97}
+}
+
+func (x *ServiceTestBackupDownloadInput) GetAccountRef() string {
+	if x != nil {
+		return x.AccountRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetDeviceRef() string {
+	if x != nil {
+		return x.DeviceRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetCustodyRef() string {
+	if x != nil {
+		return x.CustodyRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetIdempotencyKey() string {
+	if x != nil {
+		return x.IdempotencyKey
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetBackupId() string {
+	if x != nil {
+		return x.BackupId
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetConsentRef() string {
+	if x != nil {
+		return x.ConsentRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetAuditRef() string {
+	if x != nil {
+		return x.AuditRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetCredentialRef() string {
+	if x != nil {
+		return x.CredentialRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetNonExportableKeyRef() string {
+	if x != nil {
+		return x.NonExportableKeyRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetChallengeRef() string {
+	if x != nil {
+		return x.ChallengeRef
+	}
+	return ""
+}
+
+func (x *ServiceTestBackupDownloadInput) GetExpiredCredentials() bool {
+	if x != nil {
+		return x.ExpiredCredentials
+	}
+	return false
+}
+
 type ServiceTestOutput struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AccountRef    string                 `protobuf:"bytes,1,opt,name=account_ref,json=accountRef,proto3" json:"account_ref,omitempty"`
@@ -7117,7 +7645,7 @@ type ServiceTestOutput struct {
 
 func (x *ServiceTestOutput) Reset() {
 	*x = ServiceTestOutput{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[92]
+	mi := &file_internal_contracts_signal_proto_msgTypes[98]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7129,7 +7657,7 @@ func (x *ServiceTestOutput) String() string {
 func (*ServiceTestOutput) ProtoMessage() {}
 
 func (x *ServiceTestOutput) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[92]
+	mi := &file_internal_contracts_signal_proto_msgTypes[98]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7142,7 +7670,7 @@ func (x *ServiceTestOutput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceTestOutput.ProtoReflect.Descriptor instead.
 func (*ServiceTestOutput) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{92}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{98}
 }
 
 func (x *ServiceTestOutput) GetAccountRef() string {
@@ -7211,7 +7739,7 @@ type ServiceEnvelopeTriggerConfig struct {
 
 func (x *ServiceEnvelopeTriggerConfig) Reset() {
 	*x = ServiceEnvelopeTriggerConfig{}
-	mi := &file_internal_contracts_signal_proto_msgTypes[93]
+	mi := &file_internal_contracts_signal_proto_msgTypes[99]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -7223,7 +7751,7 @@ func (x *ServiceEnvelopeTriggerConfig) String() string {
 func (*ServiceEnvelopeTriggerConfig) ProtoMessage() {}
 
 func (x *ServiceEnvelopeTriggerConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_contracts_signal_proto_msgTypes[93]
+	mi := &file_internal_contracts_signal_proto_msgTypes[99]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7236,7 +7764,7 @@ func (x *ServiceEnvelopeTriggerConfig) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceEnvelopeTriggerConfig.ProtoReflect.Descriptor instead.
 func (*ServiceEnvelopeTriggerConfig) Descriptor() ([]byte, []int) {
-	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{93}
+	return file_internal_contracts_signal_proto_rawDescGZIP(), []int{99}
 }
 
 func (x *ServiceEnvelopeTriggerConfig) GetSourceRef() string {
@@ -7961,6 +8489,70 @@ const file_internal_contracts_signal_proto_rawDesc = "" +
 	"\x16non_exportable_key_ref\x18\t \x01(\tR\x13nonExportableKeyRef\x12#\n" +
 	"\rchallenge_ref\x18\n" +
 	" \x01(\tR\fchallengeRef\x12/\n" +
+	"\x13expired_credentials\x18\v \x01(\bR\x12expiredCredentials\"t\n" +
+	" ServiceTestUsernameReserveConfig\x12\x1f\n" +
+	"\vaccount_ref\x18\x01 \x01(\tR\n" +
+	"accountRef\x12/\n" +
+	"\x13expired_credentials\x18\x02 \x01(\bR\x12expiredCredentials\"\xb7\x03\n" +
+	"\x1fServiceTestUsernameReserveInput\x12\x1f\n" +
+	"\vaccount_ref\x18\x01 \x01(\tR\n" +
+	"accountRef\x12\x1d\n" +
+	"\n" +
+	"device_ref\x18\x02 \x01(\tR\tdeviceRef\x12\x1f\n" +
+	"\vcustody_ref\x18\x03 \x01(\tR\n" +
+	"custodyRef\x12'\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\x12\x1a\n" +
+	"\busername\x18\x05 \x01(\tR\busername\x12\x1f\n" +
+	"\vconsent_ref\x18\x06 \x01(\tR\n" +
+	"consentRef\x12\x1b\n" +
+	"\taudit_ref\x18\a \x01(\tR\bauditRef\x12%\n" +
+	"\x0ecredential_ref\x18\b \x01(\tR\rcredentialRef\x123\n" +
+	"\x16non_exportable_key_ref\x18\t \x01(\tR\x13nonExportableKeyRef\x12#\n" +
+	"\rchallenge_ref\x18\n" +
+	" \x01(\tR\fchallengeRef\x12/\n" +
+	"\x13expired_credentials\x18\v \x01(\bR\x12expiredCredentials\"q\n" +
+	"\x1dServiceTestBackupUploadConfig\x12\x1f\n" +
+	"\vaccount_ref\x18\x01 \x01(\tR\n" +
+	"accountRef\x12/\n" +
+	"\x13expired_credentials\x18\x02 \x01(\bR\x12expiredCredentials\"\xb7\x03\n" +
+	"\x1cServiceTestBackupUploadInput\x12\x1f\n" +
+	"\vaccount_ref\x18\x01 \x01(\tR\n" +
+	"accountRef\x12\x1d\n" +
+	"\n" +
+	"device_ref\x18\x02 \x01(\tR\tdeviceRef\x12\x1f\n" +
+	"\vcustody_ref\x18\x03 \x01(\tR\n" +
+	"custodyRef\x12'\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\x12\x1d\n" +
+	"\n" +
+	"backup_ref\x18\x05 \x01(\tR\tbackupRef\x12\x1f\n" +
+	"\vconsent_ref\x18\x06 \x01(\tR\n" +
+	"consentRef\x12\x1b\n" +
+	"\taudit_ref\x18\a \x01(\tR\bauditRef\x12%\n" +
+	"\x0ecredential_ref\x18\b \x01(\tR\rcredentialRef\x123\n" +
+	"\x16non_exportable_key_ref\x18\t \x01(\tR\x13nonExportableKeyRef\x12#\n" +
+	"\rchallenge_ref\x18\n" +
+	" \x01(\tR\fchallengeRef\x12/\n" +
+	"\x13expired_credentials\x18\v \x01(\bR\x12expiredCredentials\"s\n" +
+	"\x1fServiceTestBackupDownloadConfig\x12\x1f\n" +
+	"\vaccount_ref\x18\x01 \x01(\tR\n" +
+	"accountRef\x12/\n" +
+	"\x13expired_credentials\x18\x02 \x01(\bR\x12expiredCredentials\"\xb7\x03\n" +
+	"\x1eServiceTestBackupDownloadInput\x12\x1f\n" +
+	"\vaccount_ref\x18\x01 \x01(\tR\n" +
+	"accountRef\x12\x1d\n" +
+	"\n" +
+	"device_ref\x18\x02 \x01(\tR\tdeviceRef\x12\x1f\n" +
+	"\vcustody_ref\x18\x03 \x01(\tR\n" +
+	"custodyRef\x12'\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\x12\x1b\n" +
+	"\tbackup_id\x18\x05 \x01(\tR\bbackupId\x12\x1f\n" +
+	"\vconsent_ref\x18\x06 \x01(\tR\n" +
+	"consentRef\x12\x1b\n" +
+	"\taudit_ref\x18\a \x01(\tR\bauditRef\x12%\n" +
+	"\x0ecredential_ref\x18\b \x01(\tR\rcredentialRef\x123\n" +
+	"\x16non_exportable_key_ref\x18\t \x01(\tR\x13nonExportableKeyRef\x12#\n" +
+	"\rchallenge_ref\x18\n" +
+	" \x01(\tR\fchallengeRef\x12/\n" +
 	"\x13expired_credentials\x18\v \x01(\bR\x12expiredCredentials\"\x92\x03\n" +
 	"\x11ServiceTestOutput\x12\x1f\n" +
 	"\vaccount_ref\x18\x01 \x01(\tR\n" +
@@ -7995,131 +8587,137 @@ func file_internal_contracts_signal_proto_rawDescGZIP() []byte {
 	return file_internal_contracts_signal_proto_rawDescData
 }
 
-var file_internal_contracts_signal_proto_msgTypes = make([]protoimpl.MessageInfo, 96)
+var file_internal_contracts_signal_proto_msgTypes = make([]protoimpl.MessageInfo, 102)
 var file_internal_contracts_signal_proto_goTypes = []any{
-	(*IdentityStoreConfig)(nil),           // 0: workflow.plugins.signal.v1.IdentityStoreConfig
-	(*SpaceConfig)(nil),                   // 1: workflow.plugins.signal.v1.SpaceConfig
-	(*EnvelopeTriggerConfig)(nil),         // 2: workflow.plugins.signal.v1.EnvelopeTriggerConfig
-	(*SignalFingerprintConfig)(nil),       // 3: workflow.plugins.signal.v1.SignalFingerprintConfig
-	(*SignalFingerprintInput)(nil),        // 4: workflow.plugins.signal.v1.SignalFingerprintInput
-	(*SignalFingerprintOutput)(nil),       // 5: workflow.plugins.signal.v1.SignalFingerprintOutput
-	(*SessionPrepareConfig)(nil),          // 6: workflow.plugins.signal.v1.SessionPrepareConfig
-	(*SessionPrepareInput)(nil),           // 7: workflow.plugins.signal.v1.SessionPrepareInput
-	(*PreKeyBundle)(nil),                  // 8: workflow.plugins.signal.v1.PreKeyBundle
-	(*SessionPrepareOutput)(nil),          // 9: workflow.plugins.signal.v1.SessionPrepareOutput
-	(*SignalEncryptConfig)(nil),           // 10: workflow.plugins.signal.v1.SignalEncryptConfig
-	(*SignalEncryptInput)(nil),            // 11: workflow.plugins.signal.v1.SignalEncryptInput
-	(*SignalEnvelope)(nil),                // 12: workflow.plugins.signal.v1.SignalEnvelope
-	(*SignalEncryptOutput)(nil),           // 13: workflow.plugins.signal.v1.SignalEncryptOutput
-	(*SignalDecryptConfig)(nil),           // 14: workflow.plugins.signal.v1.SignalDecryptConfig
-	(*SignalDecryptInput)(nil),            // 15: workflow.plugins.signal.v1.SignalDecryptInput
-	(*SignalDecryptOutput)(nil),           // 16: workflow.plugins.signal.v1.SignalDecryptOutput
-	(*AccountKeysConfig)(nil),             // 17: workflow.plugins.signal.v1.AccountKeysConfig
-	(*AccountKeysInput)(nil),              // 18: workflow.plugins.signal.v1.AccountKeysInput
-	(*AccountKeysOutput)(nil),             // 19: workflow.plugins.signal.v1.AccountKeysOutput
-	(*UsernameLinkCreateConfig)(nil),      // 20: workflow.plugins.signal.v1.UsernameLinkCreateConfig
-	(*UsernameLinkCreateInput)(nil),       // 21: workflow.plugins.signal.v1.UsernameLinkCreateInput
-	(*UsernameLinkCreateOutput)(nil),      // 22: workflow.plugins.signal.v1.UsernameLinkCreateOutput
-	(*UsernameLinkDecryptConfig)(nil),     // 23: workflow.plugins.signal.v1.UsernameLinkDecryptConfig
-	(*UsernameLinkDecryptInput)(nil),      // 24: workflow.plugins.signal.v1.UsernameLinkDecryptInput
-	(*UsernameLinkDecryptOutput)(nil),     // 25: workflow.plugins.signal.v1.UsernameLinkDecryptOutput
-	(*OfficialServiceBoundaryConfig)(nil), // 26: workflow.plugins.signal.v1.OfficialServiceBoundaryConfig
-	(*ServiceTransportConfig)(nil),        // 27: workflow.plugins.signal.v1.ServiceTransportConfig
-	(*LivePolicyConfig)(nil),              // 28: workflow.plugins.signal.v1.LivePolicyConfig
-	(*ApprovalPackage)(nil),               // 29: workflow.plugins.signal.v1.ApprovalPackage
-	(*KeyCustodyConfig)(nil),              // 30: workflow.plugins.signal.v1.KeyCustodyConfig
-	(*PersistentCustodyConfig)(nil),       // 31: workflow.plugins.signal.v1.PersistentCustodyConfig
-	(*CustodyStoreConfig)(nil),            // 32: workflow.plugins.signal.v1.CustodyStoreConfig
-	(*CustodyMetadata)(nil),               // 33: workflow.plugins.signal.v1.CustodyMetadata
-	(*CustodyCreateConfig)(nil),           // 34: workflow.plugins.signal.v1.CustodyCreateConfig
-	(*CustodyCreateInput)(nil),            // 35: workflow.plugins.signal.v1.CustodyCreateInput
-	(*CustodyCreateOutput)(nil),           // 36: workflow.plugins.signal.v1.CustodyCreateOutput
-	(*CustodyRotateConfig)(nil),           // 37: workflow.plugins.signal.v1.CustodyRotateConfig
-	(*CustodyRotateInput)(nil),            // 38: workflow.plugins.signal.v1.CustodyRotateInput
-	(*CustodyRotateOutput)(nil),           // 39: workflow.plugins.signal.v1.CustodyRotateOutput
-	(*CustodyRestoreConfig)(nil),          // 40: workflow.plugins.signal.v1.CustodyRestoreConfig
-	(*CustodyRestoreInput)(nil),           // 41: workflow.plugins.signal.v1.CustodyRestoreInput
-	(*CustodyRestoreOutput)(nil),          // 42: workflow.plugins.signal.v1.CustodyRestoreOutput
-	(*CustodyRevokeConfig)(nil),           // 43: workflow.plugins.signal.v1.CustodyRevokeConfig
-	(*CustodyRevokeInput)(nil),            // 44: workflow.plugins.signal.v1.CustodyRevokeInput
-	(*CustodyRevokeOutput)(nil),           // 45: workflow.plugins.signal.v1.CustodyRevokeOutput
-	(*CustodyInspectConfig)(nil),          // 46: workflow.plugins.signal.v1.CustodyInspectConfig
-	(*CustodyInspectInput)(nil),           // 47: workflow.plugins.signal.v1.CustodyInspectInput
-	(*CustodyInspectOutput)(nil),          // 48: workflow.plugins.signal.v1.CustodyInspectOutput
-	(*AccountRefConfig)(nil),              // 49: workflow.plugins.signal.v1.AccountRefConfig
-	(*ServiceContractCheckConfig)(nil),    // 50: workflow.plugins.signal.v1.ServiceContractCheckConfig
-	(*ServiceContractCheckInput)(nil),     // 51: workflow.plugins.signal.v1.ServiceContractCheckInput
-	(*ServiceContractCheckOutput)(nil),    // 52: workflow.plugins.signal.v1.ServiceContractCheckOutput
-	(*ServiceComplianceCheckConfig)(nil),  // 53: workflow.plugins.signal.v1.ServiceComplianceCheckConfig
-	(*ServiceComplianceCheckInput)(nil),   // 54: workflow.plugins.signal.v1.ServiceComplianceCheckInput
-	(*ServiceComplianceCheckOutput)(nil),  // 55: workflow.plugins.signal.v1.ServiceComplianceCheckOutput
-	(*ServicePolicyCheckConfig)(nil),      // 56: workflow.plugins.signal.v1.ServicePolicyCheckConfig
-	(*ServicePolicyCheckInput)(nil),       // 57: workflow.plugins.signal.v1.ServicePolicyCheckInput
-	(*ServicePolicyCheckOutput)(nil),      // 58: workflow.plugins.signal.v1.ServicePolicyCheckOutput
-	(*ServiceApprovalValidateConfig)(nil), // 59: workflow.plugins.signal.v1.ServiceApprovalValidateConfig
-	(*ServiceApprovalValidateInput)(nil),  // 60: workflow.plugins.signal.v1.ServiceApprovalValidateInput
-	(*ServiceApprovalValidateOutput)(nil), // 61: workflow.plugins.signal.v1.ServiceApprovalValidateOutput
-	(*ServiceLiveSubmitConfig)(nil),       // 62: workflow.plugins.signal.v1.ServiceLiveSubmitConfig
-	(*ServiceLiveSubmitInput)(nil),        // 63: workflow.plugins.signal.v1.ServiceLiveSubmitInput
-	(*ServiceSubmitOutput)(nil),           // 64: workflow.plugins.signal.v1.ServiceSubmitOutput
-	(*LinkedDeviceCeremony)(nil),          // 65: workflow.plugins.signal.v1.LinkedDeviceCeremony
-	(*ServiceOperationEnvelope)(nil),      // 66: workflow.plugins.signal.v1.ServiceOperationEnvelope
-	(*ServiceOperationPrepareOutput)(nil), // 67: workflow.plugins.signal.v1.ServiceOperationPrepareOutput
-	(*ServiceRegisterPrepareConfig)(nil),  // 68: workflow.plugins.signal.v1.ServiceRegisterPrepareConfig
-	(*ServiceRegisterPrepareInput)(nil),   // 69: workflow.plugins.signal.v1.ServiceRegisterPrepareInput
-	(*ServiceLinkPrepareConfig)(nil),      // 70: workflow.plugins.signal.v1.ServiceLinkPrepareConfig
-	(*ServiceLinkPrepareInput)(nil),       // 71: workflow.plugins.signal.v1.ServiceLinkPrepareInput
-	(*ServiceSendPrepareConfig)(nil),      // 72: workflow.plugins.signal.v1.ServiceSendPrepareConfig
-	(*ServiceSendPrepareInput)(nil),       // 73: workflow.plugins.signal.v1.ServiceSendPrepareInput
-	(*ServiceReceiveAdmitConfig)(nil),     // 74: workflow.plugins.signal.v1.ServiceReceiveAdmitConfig
-	(*ServiceReceiveAdmitInput)(nil),      // 75: workflow.plugins.signal.v1.ServiceReceiveAdmitInput
-	(*ServiceChallengeRespondConfig)(nil), // 76: workflow.plugins.signal.v1.ServiceChallengeRespondConfig
-	(*ServiceChallengeRespondInput)(nil),  // 77: workflow.plugins.signal.v1.ServiceChallengeRespondInput
-	(*UsernameProofPrepareConfig)(nil),    // 78: workflow.plugins.signal.v1.UsernameProofPrepareConfig
-	(*UsernameProofPrepareInput)(nil),     // 79: workflow.plugins.signal.v1.UsernameProofPrepareInput
-	(*BackupManifestVerifyConfig)(nil),    // 80: workflow.plugins.signal.v1.BackupManifestVerifyConfig
-	(*BackupManifestVerifyInput)(nil),     // 81: workflow.plugins.signal.v1.BackupManifestVerifyInput
-	(*BackupAuthPrepareConfig)(nil),       // 82: workflow.plugins.signal.v1.BackupAuthPrepareConfig
-	(*BackupAuthPrepareInput)(nil),        // 83: workflow.plugins.signal.v1.BackupAuthPrepareInput
-	(*ServiceTestRegisterConfig)(nil),     // 84: workflow.plugins.signal.v1.ServiceTestRegisterConfig
-	(*ServiceTestRegisterInput)(nil),      // 85: workflow.plugins.signal.v1.ServiceTestRegisterInput
-	(*ServiceTestLinkDeviceConfig)(nil),   // 86: workflow.plugins.signal.v1.ServiceTestLinkDeviceConfig
-	(*ServiceTestLinkDeviceInput)(nil),    // 87: workflow.plugins.signal.v1.ServiceTestLinkDeviceInput
-	(*ServiceTestSendConfig)(nil),         // 88: workflow.plugins.signal.v1.ServiceTestSendConfig
-	(*ServiceTestSendInput)(nil),          // 89: workflow.plugins.signal.v1.ServiceTestSendInput
-	(*ServiceTestReceiveConfig)(nil),      // 90: workflow.plugins.signal.v1.ServiceTestReceiveConfig
-	(*ServiceTestReceiveInput)(nil),       // 91: workflow.plugins.signal.v1.ServiceTestReceiveInput
-	(*ServiceTestOutput)(nil),             // 92: workflow.plugins.signal.v1.ServiceTestOutput
-	(*ServiceEnvelopeTriggerConfig)(nil),  // 93: workflow.plugins.signal.v1.ServiceEnvelopeTriggerConfig
-	nil,                                   // 94: workflow.plugins.signal.v1.ServiceSubmitOutput.SecretRefsEntry
-	nil,                                   // 95: workflow.plugins.signal.v1.ServiceTestOutput.SecretRefsEntry
+	(*IdentityStoreConfig)(nil),              // 0: workflow.plugins.signal.v1.IdentityStoreConfig
+	(*SpaceConfig)(nil),                      // 1: workflow.plugins.signal.v1.SpaceConfig
+	(*EnvelopeTriggerConfig)(nil),            // 2: workflow.plugins.signal.v1.EnvelopeTriggerConfig
+	(*SignalFingerprintConfig)(nil),          // 3: workflow.plugins.signal.v1.SignalFingerprintConfig
+	(*SignalFingerprintInput)(nil),           // 4: workflow.plugins.signal.v1.SignalFingerprintInput
+	(*SignalFingerprintOutput)(nil),          // 5: workflow.plugins.signal.v1.SignalFingerprintOutput
+	(*SessionPrepareConfig)(nil),             // 6: workflow.plugins.signal.v1.SessionPrepareConfig
+	(*SessionPrepareInput)(nil),              // 7: workflow.plugins.signal.v1.SessionPrepareInput
+	(*PreKeyBundle)(nil),                     // 8: workflow.plugins.signal.v1.PreKeyBundle
+	(*SessionPrepareOutput)(nil),             // 9: workflow.plugins.signal.v1.SessionPrepareOutput
+	(*SignalEncryptConfig)(nil),              // 10: workflow.plugins.signal.v1.SignalEncryptConfig
+	(*SignalEncryptInput)(nil),               // 11: workflow.plugins.signal.v1.SignalEncryptInput
+	(*SignalEnvelope)(nil),                   // 12: workflow.plugins.signal.v1.SignalEnvelope
+	(*SignalEncryptOutput)(nil),              // 13: workflow.plugins.signal.v1.SignalEncryptOutput
+	(*SignalDecryptConfig)(nil),              // 14: workflow.plugins.signal.v1.SignalDecryptConfig
+	(*SignalDecryptInput)(nil),               // 15: workflow.plugins.signal.v1.SignalDecryptInput
+	(*SignalDecryptOutput)(nil),              // 16: workflow.plugins.signal.v1.SignalDecryptOutput
+	(*AccountKeysConfig)(nil),                // 17: workflow.plugins.signal.v1.AccountKeysConfig
+	(*AccountKeysInput)(nil),                 // 18: workflow.plugins.signal.v1.AccountKeysInput
+	(*AccountKeysOutput)(nil),                // 19: workflow.plugins.signal.v1.AccountKeysOutput
+	(*UsernameLinkCreateConfig)(nil),         // 20: workflow.plugins.signal.v1.UsernameLinkCreateConfig
+	(*UsernameLinkCreateInput)(nil),          // 21: workflow.plugins.signal.v1.UsernameLinkCreateInput
+	(*UsernameLinkCreateOutput)(nil),         // 22: workflow.plugins.signal.v1.UsernameLinkCreateOutput
+	(*UsernameLinkDecryptConfig)(nil),        // 23: workflow.plugins.signal.v1.UsernameLinkDecryptConfig
+	(*UsernameLinkDecryptInput)(nil),         // 24: workflow.plugins.signal.v1.UsernameLinkDecryptInput
+	(*UsernameLinkDecryptOutput)(nil),        // 25: workflow.plugins.signal.v1.UsernameLinkDecryptOutput
+	(*OfficialServiceBoundaryConfig)(nil),    // 26: workflow.plugins.signal.v1.OfficialServiceBoundaryConfig
+	(*ServiceTransportConfig)(nil),           // 27: workflow.plugins.signal.v1.ServiceTransportConfig
+	(*LivePolicyConfig)(nil),                 // 28: workflow.plugins.signal.v1.LivePolicyConfig
+	(*ApprovalPackage)(nil),                  // 29: workflow.plugins.signal.v1.ApprovalPackage
+	(*KeyCustodyConfig)(nil),                 // 30: workflow.plugins.signal.v1.KeyCustodyConfig
+	(*PersistentCustodyConfig)(nil),          // 31: workflow.plugins.signal.v1.PersistentCustodyConfig
+	(*CustodyStoreConfig)(nil),               // 32: workflow.plugins.signal.v1.CustodyStoreConfig
+	(*CustodyMetadata)(nil),                  // 33: workflow.plugins.signal.v1.CustodyMetadata
+	(*CustodyCreateConfig)(nil),              // 34: workflow.plugins.signal.v1.CustodyCreateConfig
+	(*CustodyCreateInput)(nil),               // 35: workflow.plugins.signal.v1.CustodyCreateInput
+	(*CustodyCreateOutput)(nil),              // 36: workflow.plugins.signal.v1.CustodyCreateOutput
+	(*CustodyRotateConfig)(nil),              // 37: workflow.plugins.signal.v1.CustodyRotateConfig
+	(*CustodyRotateInput)(nil),               // 38: workflow.plugins.signal.v1.CustodyRotateInput
+	(*CustodyRotateOutput)(nil),              // 39: workflow.plugins.signal.v1.CustodyRotateOutput
+	(*CustodyRestoreConfig)(nil),             // 40: workflow.plugins.signal.v1.CustodyRestoreConfig
+	(*CustodyRestoreInput)(nil),              // 41: workflow.plugins.signal.v1.CustodyRestoreInput
+	(*CustodyRestoreOutput)(nil),             // 42: workflow.plugins.signal.v1.CustodyRestoreOutput
+	(*CustodyRevokeConfig)(nil),              // 43: workflow.plugins.signal.v1.CustodyRevokeConfig
+	(*CustodyRevokeInput)(nil),               // 44: workflow.plugins.signal.v1.CustodyRevokeInput
+	(*CustodyRevokeOutput)(nil),              // 45: workflow.plugins.signal.v1.CustodyRevokeOutput
+	(*CustodyInspectConfig)(nil),             // 46: workflow.plugins.signal.v1.CustodyInspectConfig
+	(*CustodyInspectInput)(nil),              // 47: workflow.plugins.signal.v1.CustodyInspectInput
+	(*CustodyInspectOutput)(nil),             // 48: workflow.plugins.signal.v1.CustodyInspectOutput
+	(*AccountRefConfig)(nil),                 // 49: workflow.plugins.signal.v1.AccountRefConfig
+	(*ServiceContractCheckConfig)(nil),       // 50: workflow.plugins.signal.v1.ServiceContractCheckConfig
+	(*ServiceContractCheckInput)(nil),        // 51: workflow.plugins.signal.v1.ServiceContractCheckInput
+	(*ServiceContractCheckOutput)(nil),       // 52: workflow.plugins.signal.v1.ServiceContractCheckOutput
+	(*ServiceComplianceCheckConfig)(nil),     // 53: workflow.plugins.signal.v1.ServiceComplianceCheckConfig
+	(*ServiceComplianceCheckInput)(nil),      // 54: workflow.plugins.signal.v1.ServiceComplianceCheckInput
+	(*ServiceComplianceCheckOutput)(nil),     // 55: workflow.plugins.signal.v1.ServiceComplianceCheckOutput
+	(*ServicePolicyCheckConfig)(nil),         // 56: workflow.plugins.signal.v1.ServicePolicyCheckConfig
+	(*ServicePolicyCheckInput)(nil),          // 57: workflow.plugins.signal.v1.ServicePolicyCheckInput
+	(*ServicePolicyCheckOutput)(nil),         // 58: workflow.plugins.signal.v1.ServicePolicyCheckOutput
+	(*ServiceApprovalValidateConfig)(nil),    // 59: workflow.plugins.signal.v1.ServiceApprovalValidateConfig
+	(*ServiceApprovalValidateInput)(nil),     // 60: workflow.plugins.signal.v1.ServiceApprovalValidateInput
+	(*ServiceApprovalValidateOutput)(nil),    // 61: workflow.plugins.signal.v1.ServiceApprovalValidateOutput
+	(*ServiceLiveSubmitConfig)(nil),          // 62: workflow.plugins.signal.v1.ServiceLiveSubmitConfig
+	(*ServiceLiveSubmitInput)(nil),           // 63: workflow.plugins.signal.v1.ServiceLiveSubmitInput
+	(*ServiceSubmitOutput)(nil),              // 64: workflow.plugins.signal.v1.ServiceSubmitOutput
+	(*LinkedDeviceCeremony)(nil),             // 65: workflow.plugins.signal.v1.LinkedDeviceCeremony
+	(*ServiceOperationEnvelope)(nil),         // 66: workflow.plugins.signal.v1.ServiceOperationEnvelope
+	(*ServiceOperationPrepareOutput)(nil),    // 67: workflow.plugins.signal.v1.ServiceOperationPrepareOutput
+	(*ServiceRegisterPrepareConfig)(nil),     // 68: workflow.plugins.signal.v1.ServiceRegisterPrepareConfig
+	(*ServiceRegisterPrepareInput)(nil),      // 69: workflow.plugins.signal.v1.ServiceRegisterPrepareInput
+	(*ServiceLinkPrepareConfig)(nil),         // 70: workflow.plugins.signal.v1.ServiceLinkPrepareConfig
+	(*ServiceLinkPrepareInput)(nil),          // 71: workflow.plugins.signal.v1.ServiceLinkPrepareInput
+	(*ServiceSendPrepareConfig)(nil),         // 72: workflow.plugins.signal.v1.ServiceSendPrepareConfig
+	(*ServiceSendPrepareInput)(nil),          // 73: workflow.plugins.signal.v1.ServiceSendPrepareInput
+	(*ServiceReceiveAdmitConfig)(nil),        // 74: workflow.plugins.signal.v1.ServiceReceiveAdmitConfig
+	(*ServiceReceiveAdmitInput)(nil),         // 75: workflow.plugins.signal.v1.ServiceReceiveAdmitInput
+	(*ServiceChallengeRespondConfig)(nil),    // 76: workflow.plugins.signal.v1.ServiceChallengeRespondConfig
+	(*ServiceChallengeRespondInput)(nil),     // 77: workflow.plugins.signal.v1.ServiceChallengeRespondInput
+	(*UsernameProofPrepareConfig)(nil),       // 78: workflow.plugins.signal.v1.UsernameProofPrepareConfig
+	(*UsernameProofPrepareInput)(nil),        // 79: workflow.plugins.signal.v1.UsernameProofPrepareInput
+	(*BackupManifestVerifyConfig)(nil),       // 80: workflow.plugins.signal.v1.BackupManifestVerifyConfig
+	(*BackupManifestVerifyInput)(nil),        // 81: workflow.plugins.signal.v1.BackupManifestVerifyInput
+	(*BackupAuthPrepareConfig)(nil),          // 82: workflow.plugins.signal.v1.BackupAuthPrepareConfig
+	(*BackupAuthPrepareInput)(nil),           // 83: workflow.plugins.signal.v1.BackupAuthPrepareInput
+	(*ServiceTestRegisterConfig)(nil),        // 84: workflow.plugins.signal.v1.ServiceTestRegisterConfig
+	(*ServiceTestRegisterInput)(nil),         // 85: workflow.plugins.signal.v1.ServiceTestRegisterInput
+	(*ServiceTestLinkDeviceConfig)(nil),      // 86: workflow.plugins.signal.v1.ServiceTestLinkDeviceConfig
+	(*ServiceTestLinkDeviceInput)(nil),       // 87: workflow.plugins.signal.v1.ServiceTestLinkDeviceInput
+	(*ServiceTestSendConfig)(nil),            // 88: workflow.plugins.signal.v1.ServiceTestSendConfig
+	(*ServiceTestSendInput)(nil),             // 89: workflow.plugins.signal.v1.ServiceTestSendInput
+	(*ServiceTestReceiveConfig)(nil),         // 90: workflow.plugins.signal.v1.ServiceTestReceiveConfig
+	(*ServiceTestReceiveInput)(nil),          // 91: workflow.plugins.signal.v1.ServiceTestReceiveInput
+	(*ServiceTestUsernameReserveConfig)(nil), // 92: workflow.plugins.signal.v1.ServiceTestUsernameReserveConfig
+	(*ServiceTestUsernameReserveInput)(nil),  // 93: workflow.plugins.signal.v1.ServiceTestUsernameReserveInput
+	(*ServiceTestBackupUploadConfig)(nil),    // 94: workflow.plugins.signal.v1.ServiceTestBackupUploadConfig
+	(*ServiceTestBackupUploadInput)(nil),     // 95: workflow.plugins.signal.v1.ServiceTestBackupUploadInput
+	(*ServiceTestBackupDownloadConfig)(nil),  // 96: workflow.plugins.signal.v1.ServiceTestBackupDownloadConfig
+	(*ServiceTestBackupDownloadInput)(nil),   // 97: workflow.plugins.signal.v1.ServiceTestBackupDownloadInput
+	(*ServiceTestOutput)(nil),                // 98: workflow.plugins.signal.v1.ServiceTestOutput
+	(*ServiceEnvelopeTriggerConfig)(nil),     // 99: workflow.plugins.signal.v1.ServiceEnvelopeTriggerConfig
+	nil,                                      // 100: workflow.plugins.signal.v1.ServiceSubmitOutput.SecretRefsEntry
+	nil,                                      // 101: workflow.plugins.signal.v1.ServiceTestOutput.SecretRefsEntry
 }
 var file_internal_contracts_signal_proto_depIdxs = []int32{
-	8,  // 0: workflow.plugins.signal.v1.SessionPrepareOutput.bundle:type_name -> workflow.plugins.signal.v1.PreKeyBundle
-	8,  // 1: workflow.plugins.signal.v1.SignalEncryptInput.remote_bundle:type_name -> workflow.plugins.signal.v1.PreKeyBundle
-	12, // 2: workflow.plugins.signal.v1.SignalEncryptOutput.envelope:type_name -> workflow.plugins.signal.v1.SignalEnvelope
-	12, // 3: workflow.plugins.signal.v1.SignalDecryptInput.envelope:type_name -> workflow.plugins.signal.v1.SignalEnvelope
-	29, // 4: workflow.plugins.signal.v1.ServiceTransportConfig.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
-	29, // 5: workflow.plugins.signal.v1.LivePolicyConfig.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
-	33, // 6: workflow.plugins.signal.v1.CustodyCreateOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
-	33, // 7: workflow.plugins.signal.v1.CustodyRotateOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
-	33, // 8: workflow.plugins.signal.v1.CustodyRestoreOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
-	33, // 9: workflow.plugins.signal.v1.CustodyRevokeOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
-	33, // 10: workflow.plugins.signal.v1.CustodyInspectOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
-	29, // 11: workflow.plugins.signal.v1.ServiceApprovalValidateConfig.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
-	29, // 12: workflow.plugins.signal.v1.ServiceApprovalValidateInput.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
-	29, // 13: workflow.plugins.signal.v1.ServiceLiveSubmitConfig.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
-	29, // 14: workflow.plugins.signal.v1.ServiceLiveSubmitInput.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
-	94, // 15: workflow.plugins.signal.v1.ServiceSubmitOutput.secret_refs:type_name -> workflow.plugins.signal.v1.ServiceSubmitOutput.SecretRefsEntry
-	65, // 16: workflow.plugins.signal.v1.ServiceOperationEnvelope.linked_device:type_name -> workflow.plugins.signal.v1.LinkedDeviceCeremony
-	66, // 17: workflow.plugins.signal.v1.ServiceOperationPrepareOutput.envelope:type_name -> workflow.plugins.signal.v1.ServiceOperationEnvelope
-	65, // 18: workflow.plugins.signal.v1.ServiceLinkPrepareInput.linked_device:type_name -> workflow.plugins.signal.v1.LinkedDeviceCeremony
-	95, // 19: workflow.plugins.signal.v1.ServiceTestOutput.secret_refs:type_name -> workflow.plugins.signal.v1.ServiceTestOutput.SecretRefsEntry
-	20, // [20:20] is the sub-list for method output_type
-	20, // [20:20] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	8,   // 0: workflow.plugins.signal.v1.SessionPrepareOutput.bundle:type_name -> workflow.plugins.signal.v1.PreKeyBundle
+	8,   // 1: workflow.plugins.signal.v1.SignalEncryptInput.remote_bundle:type_name -> workflow.plugins.signal.v1.PreKeyBundle
+	12,  // 2: workflow.plugins.signal.v1.SignalEncryptOutput.envelope:type_name -> workflow.plugins.signal.v1.SignalEnvelope
+	12,  // 3: workflow.plugins.signal.v1.SignalDecryptInput.envelope:type_name -> workflow.plugins.signal.v1.SignalEnvelope
+	29,  // 4: workflow.plugins.signal.v1.ServiceTransportConfig.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
+	29,  // 5: workflow.plugins.signal.v1.LivePolicyConfig.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
+	33,  // 6: workflow.plugins.signal.v1.CustodyCreateOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
+	33,  // 7: workflow.plugins.signal.v1.CustodyRotateOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
+	33,  // 8: workflow.plugins.signal.v1.CustodyRestoreOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
+	33,  // 9: workflow.plugins.signal.v1.CustodyRevokeOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
+	33,  // 10: workflow.plugins.signal.v1.CustodyInspectOutput.metadata:type_name -> workflow.plugins.signal.v1.CustodyMetadata
+	29,  // 11: workflow.plugins.signal.v1.ServiceApprovalValidateConfig.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
+	29,  // 12: workflow.plugins.signal.v1.ServiceApprovalValidateInput.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
+	29,  // 13: workflow.plugins.signal.v1.ServiceLiveSubmitConfig.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
+	29,  // 14: workflow.plugins.signal.v1.ServiceLiveSubmitInput.approval:type_name -> workflow.plugins.signal.v1.ApprovalPackage
+	100, // 15: workflow.plugins.signal.v1.ServiceSubmitOutput.secret_refs:type_name -> workflow.plugins.signal.v1.ServiceSubmitOutput.SecretRefsEntry
+	65,  // 16: workflow.plugins.signal.v1.ServiceOperationEnvelope.linked_device:type_name -> workflow.plugins.signal.v1.LinkedDeviceCeremony
+	66,  // 17: workflow.plugins.signal.v1.ServiceOperationPrepareOutput.envelope:type_name -> workflow.plugins.signal.v1.ServiceOperationEnvelope
+	65,  // 18: workflow.plugins.signal.v1.ServiceLinkPrepareInput.linked_device:type_name -> workflow.plugins.signal.v1.LinkedDeviceCeremony
+	101, // 19: workflow.plugins.signal.v1.ServiceTestOutput.secret_refs:type_name -> workflow.plugins.signal.v1.ServiceTestOutput.SecretRefsEntry
+	20,  // [20:20] is the sub-list for method output_type
+	20,  // [20:20] is the sub-list for method input_type
+	20,  // [20:20] is the sub-list for extension type_name
+	20,  // [20:20] is the sub-list for extension extendee
+	0,   // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_internal_contracts_signal_proto_init() }
@@ -8133,7 +8731,7 @@ func file_internal_contracts_signal_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_contracts_signal_proto_rawDesc), len(file_internal_contracts_signal_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   96,
+			NumMessages:   102,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
