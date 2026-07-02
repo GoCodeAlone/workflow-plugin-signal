@@ -72,6 +72,9 @@ var signalStepTypes = []string{
 	"step.signal_service_test_link_device",
 	"step.signal_service_test_send",
 	"step.signal_service_test_receive",
+	"step.signal_service_test_username_reserve",
+	"step.signal_service_test_backup_upload",
+	"step.signal_service_test_backup_download",
 	"step.signal_custody_create",
 	"step.signal_custody_rotate",
 	"step.signal_custody_restore",
@@ -346,6 +349,30 @@ func (p *SignalProvider) CreateTypedStep(typeName, name string, config *anypb.An
 			ExecuteSignalServiceTestReceive,
 		)
 		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_test_username_reserve":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceTestUsernameReserveConfig{},
+			&contracts.ServiceTestUsernameReserveInput{},
+			ExecuteSignalServiceTestUsernameReserve,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_test_backup_upload":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceTestBackupUploadConfig{},
+			&contracts.ServiceTestBackupUploadInput{},
+			ExecuteSignalServiceTestBackupUpload,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
+	case "step.signal_service_test_backup_download":
+		factory := sdk.NewTypedStepFactory(
+			typeName,
+			&contracts.ServiceTestBackupDownloadConfig{},
+			&contracts.ServiceTestBackupDownloadInput{},
+			ExecuteSignalServiceTestBackupDownload,
+		)
+		return factory.CreateTypedStep(typeName, name, config)
 	case "step.signal_custody_create":
 		factory := sdk.NewTypedStepFactory(
 			typeName,
@@ -435,6 +462,9 @@ func (p *SignalProvider) ContractRegistry() *pb.ContractRegistry {
 			stepContract("step.signal_service_test_link_device", pkg+"ServiceTestLinkDeviceConfig", pkg+"ServiceTestLinkDeviceInput", pkg+"ServiceTestOutput"),
 			stepContract("step.signal_service_test_send", pkg+"ServiceTestSendConfig", pkg+"ServiceTestSendInput", pkg+"ServiceTestOutput"),
 			stepContract("step.signal_service_test_receive", pkg+"ServiceTestReceiveConfig", pkg+"ServiceTestReceiveInput", pkg+"ServiceTestOutput"),
+			stepContract("step.signal_service_test_username_reserve", pkg+"ServiceTestUsernameReserveConfig", pkg+"ServiceTestUsernameReserveInput", pkg+"ServiceTestOutput"),
+			stepContract("step.signal_service_test_backup_upload", pkg+"ServiceTestBackupUploadConfig", pkg+"ServiceTestBackupUploadInput", pkg+"ServiceTestOutput"),
+			stepContract("step.signal_service_test_backup_download", pkg+"ServiceTestBackupDownloadConfig", pkg+"ServiceTestBackupDownloadInput", pkg+"ServiceTestOutput"),
 			stepContract("step.signal_custody_create", pkg+"CustodyCreateConfig", pkg+"CustodyCreateInput", pkg+"CustodyCreateOutput"),
 			stepContract("step.signal_custody_rotate", pkg+"CustodyRotateConfig", pkg+"CustodyRotateInput", pkg+"CustodyRotateOutput"),
 			stepContract("step.signal_custody_restore", pkg+"CustodyRestoreConfig", pkg+"CustodyRestoreInput", pkg+"CustodyRestoreOutput"),

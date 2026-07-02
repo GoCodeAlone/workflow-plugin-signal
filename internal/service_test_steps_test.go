@@ -127,6 +127,55 @@ func TestServiceTestStepsUseDeterministicFakeAndRefsOnly(t *testing.T) {
 	if receive.Output.GetStatus() != "accepted" {
 		t.Fatalf("receive status = %q", receive.Output.GetStatus())
 	}
+
+	username, err := ExecuteSignalServiceTestUsernameReserve(ctx, sdk.TypedStepRequest[*contracts.ServiceTestUsernameReserveConfig, *contracts.ServiceTestUsernameReserveInput]{
+		Config: &contracts.ServiceTestUsernameReserveConfig{AccountRef: "account-a"},
+		Input: &contracts.ServiceTestUsernameReserveInput{
+			IdempotencyKey: "idem-username-1",
+			Username:       "alice.2",
+		},
+	})
+	if err != nil {
+		t.Fatalf("username reserve: %v", err)
+	}
+	if username.Output.GetStatus() != "accepted" {
+		t.Fatalf("username reserve status = %q", username.Output.GetStatus())
+	}
+	if username.Output.GetRequestId() != "idem-username-1" {
+		t.Fatalf("username reserve request id = %q", username.Output.GetRequestId())
+	}
+
+	upload, err := ExecuteSignalServiceTestBackupUpload(ctx, sdk.TypedStepRequest[*contracts.ServiceTestBackupUploadConfig, *contracts.ServiceTestBackupUploadInput]{
+		Config: &contracts.ServiceTestBackupUploadConfig{AccountRef: "account-a"},
+		Input: &contracts.ServiceTestBackupUploadInput{
+			IdempotencyKey: "idem-backup-upload-1",
+			BackupRef:      "backup://signal/account-a/snapshot-1",
+		},
+	})
+	if err != nil {
+		t.Fatalf("backup upload: %v", err)
+	}
+	if upload.Output.GetStatus() != "accepted" {
+		t.Fatalf("backup upload status = %q", upload.Output.GetStatus())
+	}
+
+	download, err := ExecuteSignalServiceTestBackupDownload(ctx, sdk.TypedStepRequest[*contracts.ServiceTestBackupDownloadConfig, *contracts.ServiceTestBackupDownloadInput]{
+		Config: &contracts.ServiceTestBackupDownloadConfig{AccountRef: "account-a"},
+		Input: &contracts.ServiceTestBackupDownloadInput{
+			IdempotencyKey: "idem-backup-download-1",
+			BackupId:       "backup-id://signal/account-a/snapshot-1",
+			ChallengeRef:   "challenge://backup/download/1",
+		},
+	})
+	if err != nil {
+		t.Fatalf("backup download: %v", err)
+	}
+	if download.Output.GetStatus() != "challenge_required" {
+		t.Fatalf("backup download status = %q", download.Output.GetStatus())
+	}
+	if download.Output.GetChallengeRef() != "challenge://backup/download/1" {
+		t.Fatalf("backup download challenge = %q", download.Output.GetChallengeRef())
+	}
 }
 
 func registerServiceTestAccount(t *testing.T) {

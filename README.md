@@ -47,6 +47,9 @@ make install-local
 - `step.signal_service_test_link_device` - exercise deterministic fake linked-device setup with idempotency and ref-only outputs.
 - `step.signal_service_test_send` - exercise deterministic fake sends, including challenge-required status.
 - `step.signal_service_test_receive` - exercise deterministic fake receives with idempotency and ref-only outputs.
+- `step.signal_service_test_username_reserve` - exercise deterministic fake username reservation with idempotency and ref-only outputs.
+- `step.signal_service_test_backup_upload` - exercise deterministic fake backup upload with idempotency and ref-only outputs.
+- `step.signal_service_test_backup_download` - exercise deterministic fake backup download with idempotency and ref-only outputs.
 - `step.signal_custody_create` - create account/device custody refs and return sealed custody metadata.
 - `step.signal_custody_rotate` - rotate custody KEK metadata while preserving ref-only outputs.
 - `step.signal_custody_restore` - restore a sealed custody bundle through host-managed KEK refs.

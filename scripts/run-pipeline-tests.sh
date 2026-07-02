@@ -23,15 +23,15 @@ find_workflow_repo() {
 }
 
 if [[ -z "$WFCTL" ]]; then
-  WORKFLOW_REPO="$(find_workflow_repo)" || {
-    echo "workflow repo not found; set WFCTL or WORKFLOW_REPO" >&2
-    exit 1
-  }
-  if [[ -x "$WORKFLOW_REPO/bin/wfctl" ]]; then
-    WFCTL="$WORKFLOW_REPO/bin/wfctl"
+  if WORKFLOW_REPO="$(find_workflow_repo)"; then
+    mkdir -p "$ROOT/.wfctl/bin"
+    (cd "$WORKFLOW_REPO" && GOWORK=off go build -o "$ROOT/.wfctl/bin/wfctl" ./cmd/wfctl)
+    WFCTL="$ROOT/.wfctl/bin/wfctl"
+  elif command -v wfctl >/dev/null 2>&1; then
+    WFCTL="$(command -v wfctl)"
   else
-    (cd "$WORKFLOW_REPO" && GOWORK=off go build -o bin/wfctl ./cmd/wfctl)
-    WFCTL="$WORKFLOW_REPO/bin/wfctl"
+    echo "wfctl not found; set WFCTL, set WORKFLOW_REPO, or install wfctl in PATH" >&2
+    exit 1
   fi
 fi
 

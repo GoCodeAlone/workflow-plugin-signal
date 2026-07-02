@@ -18,3 +18,7 @@ jobs:
         run: go test ./...
       - name: Vet
         run: go vet ./...
+      - name: Setup wfctl
+        uses: GoCodeAlone/setup-wfctl@526e23ee7d3cae9ba8ba09d87090879e04c7aab2 # v1
+      - name: Pipeline test
+        run: make pipeline-test

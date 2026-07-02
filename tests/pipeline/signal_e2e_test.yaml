@@ -15,6 +15,14 @@ yaml: |
         local_id: bob@example.test
         device_id: 1
         registration_id: 2002
+    - name: service_account
+      type: signal.account_ref
+      config:
+        account_ref: account://signal/service-test
+        device_ref: device://signal/service-test/device-1
+        credential_ref: secret://signal/service-test/credential
+        consent_ref: consent://signal/service-test/consent
+        audit_ref: audit://signal/service-test/audit
 
   pipelines:
     signal-e2e:
@@ -66,6 +74,40 @@ yaml: |
             identity_ref: bob
             required_principal: bob-user
       on_error: stop
+    signal-service-fake:
+      steps:
+        - name: username_input
+          type: step.set
+          config:
+            values:
+              idempotency_key: "{{ .idempotency_prefix }}-username"
+              username: "{{ .username }}"
+        - name: username_reserve
+          type: step.signal_service_test_username_reserve
+          config:
+            account_ref: account://signal/service-test
+        - name: backup_upload_input
+          type: step.set
+          config:
+            values:
+              idempotency_key: "{{ .idempotency_prefix }}-backup-upload"
+              backup_ref: "{{ .backup_ref }}"
+        - name: backup_upload
+          type: step.signal_service_test_backup_upload
+          config:
+            account_ref: account://signal/service-test
+        - name: backup_download_input
+          type: step.set
+          config:
+            values:
+              idempotency_key: "{{ .idempotency_prefix }}-backup-download"
+              backup_id: "{{ .backup_id }}"
+              challenge_ref: "{{ .backup_challenge_ref }}"
+        - name: backup_download
+          type: step.signal_service_test_backup_download
+          config:
+            account_ref: account://signal/service-test
+      on_error: stop
 tests:
   signal-session-roundtrip:
     trigger:
@@ -79,3 +121,31 @@ tests:
       - step: decrypt
         output:
           plaintext: cHJpdmF0ZSB3b3JrZmxvdyBtZXNzYWdl
+  signal-service-fake-username-backup:
+    trigger:
+      type: pipeline
+      name: signal-service-fake
+      data:
+        idempotency_prefix: caller-a
+        username: caller_a.42
+        backup_ref: backup://signal/caller-a/snapshot-1
+        backup_id: backup-id://signal/caller-a/snapshot-1
+        backup_challenge_ref: challenge://signal/caller-a/backup-download
+    assertions:
+      - step: username_reserve
+        output:
+          account_ref: account://signal/service-test
+          status: accepted
+          request_id: caller-a-username
+          credential_ref: secret://signal/service-test/credential
+      - step: backup_upload
+        output:
+          account_ref: account://signal/service-test
+          status: accepted
+          request_id: caller-a-backup-upload
+      - step: backup_download
+        output:
+          account_ref: account://signal/service-test
+          status: challenge_required
+          request_id: caller-a-backup-download
+          challenge_ref: challenge://signal/caller-a/backup-download
