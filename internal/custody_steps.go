@@ -2,6 +2,8 @@ package internal
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"strings"
 	"time"
@@ -131,6 +133,64 @@ func ExecuteSignalCustodyInspect(
 	}, nil
 }
 
+func ExecuteSignalCustodyAttest(
+	_ context.Context,
+	req sdk.TypedStepRequest[*contracts.CustodyAttestConfig, *contracts.CustodyAttestInput],
+) (*sdk.TypedStepResult[*contracts.CustodyAttestOutput], error) {
+	store, err := lookupSignalCustodyStore(req.Config.GetStoreRef())
+	if err != nil {
+		return nil, err
+	}
+	if req.Input.GetAudienceRef() == "" {
+		return nil, fmt.Errorf("signal custody attest: audience_ref is required")
+	}
+	meta, err := store.Inspect(req.Input.GetCustodyRef())
+	if err != nil {
+		return nil, err
+	}
+	attestationRef := custodyProofRef("attest", req.Input.GetCustodyRef(), req.Input.GetAudienceRef(), req.Input.GetRequestedAtUnix())
+	evidenceRef := custodyProofRef("evidence", req.Input.GetCustodyRef(), req.Input.GetAudienceRef(), req.Input.GetRequestedAtUnix())
+	return &sdk.TypedStepResult[*contracts.CustodyAttestOutput]{
+		Output: &contracts.CustodyAttestOutput{
+			CustodyRef:     req.Input.GetCustodyRef(),
+			Metadata:       custodyMetadata(meta),
+			AttestationRef: attestationRef,
+			EvidenceRef:    evidenceRef,
+		},
+	}, nil
+}
+
+func ExecuteSignalCustodyExportRequest(
+	_ context.Context,
+	req sdk.TypedStepRequest[*contracts.CustodyExportRequestConfig, *contracts.CustodyExportRequestInput],
+) (*sdk.TypedStepResult[*contracts.CustodyExportRequestOutput], error) {
+	store, err := lookupSignalCustodyStore(req.Config.GetStoreRef())
+	if err != nil {
+		return nil, err
+	}
+	if req.Input.GetRequesterRef() == "" {
+		return nil, fmt.Errorf("signal custody export request: requester_ref is required")
+	}
+	if req.Input.GetReasonRef() == "" {
+		return nil, fmt.Errorf("signal custody export request: reason_ref is required")
+	}
+	meta, err := store.Inspect(req.Input.GetCustodyRef())
+	if err != nil {
+		return nil, err
+	}
+	requestRef := custodyProofRef("export-request", req.Input.GetCustodyRef(), req.Input.GetRequesterRef()+"\x00"+req.Input.GetReasonRef(), req.Input.GetRequestedAtUnix())
+	approvalRef := custodyProofRef("approval-required", req.Input.GetCustodyRef(), req.Input.GetRequesterRef()+"\x00"+req.Input.GetReasonRef(), req.Input.GetRequestedAtUnix())
+	return &sdk.TypedStepResult[*contracts.CustodyExportRequestOutput]{
+		Output: &contracts.CustodyExportRequestOutput{
+			CustodyRef:          req.Input.GetCustodyRef(),
+			ExportRequestRef:    requestRef,
+			ApprovalRequiredRef: approvalRef,
+			Status:              "approval_required",
+			Metadata:            custodyMetadata(meta),
+		},
+	}, nil
+}
+
 func custodyMetadata(meta sealedcustody.Metadata) *contracts.CustodyMetadata {
 	revokedAt := int64(0)
 	if !meta.RevokedAt.IsZero() {
@@ -166,6 +226,17 @@ func custodyAuditRef(custodyRef string) string {
 		suffix = "unknown"
 	}
 	return "audit://custody/" + suffix
+}
+
+func custodyProofRef(kind, custodyRef, audience string, requestedAt int64) string {
+	suffix := strings.TrimPrefix(custodyRef, "custody://")
+	suffix = strings.ReplaceAll(suffix, "://", "/")
+	suffix = strings.Trim(suffix, "/")
+	if suffix == "" {
+		suffix = "unknown"
+	}
+	sum := sha256.Sum256([]byte(kind + "\x00" + custodyRef + "\x00" + audience + "\x00" + fmt.Sprint(requestedAt)))
+	return kind + "://custody/" + suffix + "/" + hex.EncodeToString(sum[:8])
 }
 
 func validateCustodyRestoreHints(in *contracts.CustodyRestoreInput, meta sealedcustody.Metadata) error {

@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/GoCodeAlone/workflow/plugin/external/sdk"
+
 	contracts "github.com/GoCodeAlone/workflow-plugin-signal/internal/contracts"
 )
 
@@ -18,13 +20,14 @@ func TestPersistentCustodyAcceptsHostSecretBackedConfig(t *testing.T) {
 	t.Cleanup(restore)
 
 	module, err := newPersistentCustodyModule("persistent", &contracts.PersistentCustodyConfig{
-		CustodyRef:       "custody-a",
-		AccountRef:       "account-a",
-		Backend:          persistentCustodyBackendLocalFile,
-		StoragePath:      filepath.Join(t.TempDir(), "custody.json"),
-		KeyHandle:        "kms://signal/account-a/device-1",
-		HostSecretRef:    "secret://signal/kek",
-		AllowTestBackend: false,
+		CustodyRef:            "custody-a",
+		AccountRef:            "account-a",
+		Backend:               persistentCustodyBackendLocalFile,
+		StoragePath:           filepath.Join(t.TempDir(), "custody.json"),
+		KeyHandle:             "kms://signal/account-a/device-1",
+		HostSecretRef:         "secret://signal/kek",
+		AllowTestBackend:      false,
+		AllowLocalFileCustody: true,
 	})
 	if err != nil {
 		t.Fatalf("newPersistentCustodyModule: %v", err)
@@ -49,6 +52,57 @@ func TestPersistentCustodyAcceptsHostSecretBackedConfig(t *testing.T) {
 	}
 	if meta.HostSecretRef != "secret://signal/kek" || meta.KeyHandle != "kms://signal/account-a/device-1" {
 		t.Fatalf("metadata refs = %+v", meta)
+	}
+}
+
+func TestPersistentCustodyLocalFileRequiresExplicitDevelopmentOptIn(t *testing.T) {
+	t.Cleanup(resetServiceTestState)
+	if _, err := newPersistentCustodyModule("persistent", &contracts.PersistentCustodyConfig{
+		CustodyRef:    "custody-a",
+		AccountRef:    "account-a",
+		Backend:       persistentCustodyBackendLocalFile,
+		StoragePath:   filepath.Join(t.TempDir(), "custody.json"),
+		KeyHandle:     "kms://signal/account-a/device-1",
+		HostSecretRef: "secret://signal/kek",
+	}); err == nil {
+		t.Fatal("expected local file custody to require explicit opt-in")
+	}
+
+	if _, err := newPersistentCustodyModule("persistent", &contracts.PersistentCustodyConfig{
+		CustodyRef:            "custody-a",
+		AccountRef:            "account-a",
+		Backend:               persistentCustodyBackendLocalFile,
+		StoragePath:           filepath.Join(t.TempDir(), "custody.json"),
+		KeyHandle:             "kms://signal/account-a/device-1",
+		HostSecretRef:         "secret://signal/kek",
+		AllowLocalFileCustody: true,
+		PolicyMode:            "production",
+	}); err == nil {
+		t.Fatal("expected production policy to reject local file custody")
+	}
+
+	if _, err := newCustodyStoreModule("store", &contracts.CustodyStoreConfig{
+		BackendId:     "local",
+		Backend:       persistentCustodyBackendLocalFile,
+		StoragePath:   filepath.Join(t.TempDir(), "store"),
+		KekRef:        "secret://signal/kek",
+		KekVersion:    "v1",
+		SchemaVersion: 1,
+	}); err == nil {
+		t.Fatal("expected local file custody store to require explicit opt-in")
+	}
+
+	if _, err := newCustodyStoreModule("store", &contracts.CustodyStoreConfig{
+		BackendId:             "local",
+		Backend:               persistentCustodyBackendLocalFile,
+		StoragePath:           filepath.Join(t.TempDir(), "store"),
+		KekRef:                "secret://signal/kek",
+		KekVersion:            "v1",
+		SchemaVersion:         1,
+		AllowLocalFileCustody: true,
+		PolicyMode:            "production",
+	}); err == nil {
+		t.Fatal("expected production policy to reject local file custody store")
 	}
 }
 
@@ -94,6 +148,37 @@ func TestPersistentCustodyTestBackendIsNonProduction(t *testing.T) {
 	}
 }
 
+func TestCustodyStoreTestBackendCanUseHermeticTestSecretRefs(t *testing.T) {
+	t.Cleanup(resetServiceTestState)
+
+	store, err := newCustodyStoreModule("store", &contracts.CustodyStoreConfig{
+		BackendId:        "local-test",
+		Backend:          persistentCustodyBackendTestFile,
+		StoragePath:      filepath.Join(t.TempDir(), "custody"),
+		KekRef:           "test://signal/kek",
+		KekVersion:       "v1",
+		SchemaVersion:    1,
+		AllowTestBackend: true,
+	})
+	if err != nil {
+		t.Fatalf("newCustodyStoreModule: %v", err)
+	}
+	if err := store.Init(); err != nil {
+		t.Fatalf("Init: %v", err)
+	}
+	if _, err := ExecuteSignalCustodyCreate(t.Context(), sdk.TypedStepRequest[*contracts.CustodyCreateConfig, *contracts.CustodyCreateInput]{
+		Config: &contracts.CustodyCreateConfig{StoreRef: "store"},
+		Input: &contracts.CustodyCreateInput{
+			AccountRef:     "account-a",
+			DeviceRef:      "device-1",
+			MaterialRefs:   []string{"secret://signal/private-key"},
+			IdempotencyKey: "create-1",
+		},
+	}); err != nil {
+		t.Fatalf("create: %v", err)
+	}
+}
+
 func TestPersistentCustodyRestartReloadsHandleAndDerivesSameKey(t *testing.T) {
 	t.Cleanup(resetServiceTestState)
 	restore := setSignalHostSecretResolverForTest(map[string][]byte{
@@ -102,12 +187,13 @@ func TestPersistentCustodyRestartReloadsHandleAndDerivesSameKey(t *testing.T) {
 	t.Cleanup(restore)
 	storagePath := filepath.Join(t.TempDir(), "custody.json")
 	cfg := &contracts.PersistentCustodyConfig{
-		CustodyRef:    "custody-a",
-		AccountRef:    "account-a",
-		Backend:       persistentCustodyBackendLocalFile,
-		StoragePath:   storagePath,
-		KeyHandle:     "kms://signal/account-a/device-1",
-		HostSecretRef: "secret://signal/kek",
+		CustodyRef:            "custody-a",
+		AccountRef:            "account-a",
+		Backend:               persistentCustodyBackendLocalFile,
+		StoragePath:           storagePath,
+		KeyHandle:             "kms://signal/account-a/device-1",
+		HostSecretRef:         "secret://signal/kek",
+		AllowLocalFileCustody: true,
 	}
 
 	first, err := newPersistentCustodyModule("persistent", cfg)
@@ -156,12 +242,13 @@ func TestPersistentCustodyMetadataRedactsKeyMaterial(t *testing.T) {
 	t.Cleanup(restore)
 	storagePath := filepath.Join(t.TempDir(), "custody.json")
 	module, err := newPersistentCustodyModule("persistent", &contracts.PersistentCustodyConfig{
-		CustodyRef:    "custody-a",
-		AccountRef:    "account-a",
-		Backend:       persistentCustodyBackendLocalFile,
-		StoragePath:   storagePath,
-		KeyHandle:     "kms://signal/account-a/device-1",
-		HostSecretRef: "secret://signal/kek",
+		CustodyRef:            "custody-a",
+		AccountRef:            "account-a",
+		Backend:               persistentCustodyBackendLocalFile,
+		StoragePath:           storagePath,
+		KeyHandle:             "kms://signal/account-a/device-1",
+		HostSecretRef:         "secret://signal/kek",
+		AllowLocalFileCustody: true,
 	})
 	if err != nil {
 		t.Fatalf("newPersistentCustodyModule: %v", err)

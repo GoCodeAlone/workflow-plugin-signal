@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	contracts "github.com/GoCodeAlone/workflow-plugin-signal/internal/contracts"
@@ -25,6 +26,8 @@ const (
 
 var (
 	errPersistentCustodyTestBackendDenied = errors.New("signal persistent custody: test backend requires explicit opt-in")
+	errPersistentCustodyLocalFileDenied   = errors.New("signal persistent custody: local file backend requires explicit development opt-in")
+	errPersistentCustodyProductionFile    = errors.New("signal persistent custody: production policy rejects file-backed custody")
 	errSignalHostSecretResolverMissing    = errors.New("signal persistent custody: host secret resolver is not configured")
 
 	signalHostSecretResolverMu sync.RWMutex
@@ -92,7 +95,16 @@ func newPersistentCustodyModule(name string, cfg *contracts.PersistentCustodyCon
 	}
 	switch cfg.GetBackend() {
 	case persistentCustodyBackendLocalFile:
+		if productionPolicyMode(cfg.GetPolicyMode()) {
+			return nil, errPersistentCustodyProductionFile
+		}
+		if !cfg.GetAllowLocalFileCustody() {
+			return nil, errPersistentCustodyLocalFileDenied
+		}
 	case persistentCustodyBackendTestFile:
+		if productionPolicyMode(cfg.GetPolicyMode()) {
+			return nil, errPersistentCustodyProductionFile
+		}
 		if !cfg.GetAllowTestBackend() {
 			return nil, errPersistentCustodyTestBackendDenied
 		}
@@ -120,7 +132,16 @@ func newCustodyStoreModule(name string, cfg *contracts.CustodyStoreConfig) (*cus
 	}
 	switch cfg.GetBackend() {
 	case persistentCustodyBackendLocalFile:
+		if productionPolicyMode(cfg.GetPolicyMode()) {
+			return nil, errPersistentCustodyProductionFile
+		}
+		if !cfg.GetAllowLocalFileCustody() {
+			return nil, errPersistentCustodyLocalFileDenied
+		}
 	case persistentCustodyBackendTestFile:
+		if productionPolicyMode(cfg.GetPolicyMode()) {
+			return nil, errPersistentCustodyProductionFile
+		}
 		if !cfg.GetAllowTestBackend() {
 			return nil, errPersistentCustodyTestBackendDenied
 		}
@@ -128,6 +149,15 @@ func newCustodyStoreModule(name string, cfg *contracts.CustodyStoreConfig) (*cus
 		return nil, fmt.Errorf("signal custody store: unsupported backend %q", cfg.GetBackend())
 	}
 	return &custodyStoreModule{name: name, config: cfg}, nil
+}
+
+func productionPolicyMode(mode string) bool {
+	switch strings.ToLower(strings.TrimSpace(mode)) {
+	case "production", "prod":
+		return true
+	default:
+		return false
+	}
 }
 
 func (m *custodyStoreModule) Init() error {
@@ -328,6 +358,10 @@ func resolveSignalHostSecret(ref string) ([]byte, error) {
 	resolver := signalHostSecretResolver
 	signalHostSecretResolverMu.RUnlock()
 	if resolver == nil {
+		if strings.HasPrefix(ref, "test://signal/") {
+			sum := sha256.Sum256([]byte("workflow-plugin-signal-test-secret\x00" + ref))
+			return sum[:], nil
+		}
 		return nil, errSignalHostSecretResolverMissing
 	}
 	secret, err := resolver(ref)

@@ -68,7 +68,9 @@
     "step.signal_custody_rotate",
     "step.signal_custody_restore",
     "step.signal_custody_revoke",
-    "step.signal_custody_inspect"
+    "step.signal_custody_inspect",
+    "step.signal_custody_attest",
+    "step.signal_custody_export_request"
   ],
   "capabilities": {
     "configProvider": false,
@@ -115,7 +117,9 @@
       "step.signal_custody_rotate",
       "step.signal_custody_restore",
       "step.signal_custody_revoke",
-      "step.signal_custody_inspect"
+      "step.signal_custody_inspect",
+      "step.signal_custody_attest",
+      "step.signal_custody_export_request"
     ],
     "triggerTypes": [
       "trigger.signal_envelope",
