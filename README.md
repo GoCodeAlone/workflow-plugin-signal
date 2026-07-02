@@ -26,6 +26,10 @@ make install-local
 - `step.signal_session_prepare` - create a public pre-key bundle for a local identity store.
 - `step.signal_encrypt` - encrypt plaintext into a Signal session envelope.
 - `step.signal_decrypt` - decrypt an inbound Signal session envelope after the configured principal gate passes.
+- `step.signal_outbox_enqueue` - queue a ciphertext envelope with sender, recipient, custody, authorization, and message refs.
+- `step.signal_outbox_claim` - claim a queued outbox envelope for host transport without exposing plaintext.
+- `step.signal_inbox_receive` - admit a ciphertext envelope into an inbox queue for a recipient ref.
+- `step.signal_inbox_decrypt` - decrypt an inbox envelope only when the caller supplies custody and authorization refs.
 - `step.signal_fingerprint` - compute a Signal safety number and scannable fingerprint from serialized identity public keys.
 - `step.signal_account_keys` - derive account entropy, SVR, backup, backup-id, and PIN hash keys.
 - `step.signal_username_link_create` - create an encrypted Signal username link payload.
@@ -59,6 +63,7 @@ make install-local
 ## Modules
 
 - `signal.identity_store` - in-memory identity, pre-key, and session state for local composition and conformance tests.
+- `signal.envelope_store` - memory or explicit local-file ciphertext queues for outbox/inbox application flows.
 - `signal.space` - typed configuration surface for binding encrypted spaces to rooms/eventbus.
 - `signal.official_service_boundary` - typed disabled/test-double boundary for selected upstream service wire shapes.
 - `signal.service_transport` - registered fake, sandbox, or approval-gated live transport boundary.
@@ -74,6 +79,13 @@ The built-in identity store remains in-memory for application composition and
 conformance testing. Production deployments should bind identities to
 `signal.key_custody` and host-managed persistence before relying on restart
 survival.
+
+`signal.envelope_store` keeps queued outbox and inbox payloads as Signal
+ciphertext plus redacted routing metadata. The memory backend is intended for
+application composition and conformance tests. The `local_file` backend must be
+explicitly enabled, is rejected under production policy mode, and persists only
+ciphertext envelopes and refs. Inbox decrypt requires both custody and
+authorization refs before it delegates to the local Signal decrypt primitive.
 
 `signal.persistent_custody` stores encrypted custody state in a host-selected
 file and registers only non-exportable key handles with Workflow. `local_file`

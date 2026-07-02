@@ -112,6 +112,113 @@ message SignalDecryptOutput {
   bytes plaintext = 3;
 }
 
+message EnvelopeStoreConfig {
+  string store_ref = 1;
+  string backend = 2;
+  string storage_path = 3;
+  uint32 retention_limit = 4;
+  bool allow_local_file_envelope = 5;
+  string policy_mode = 6;
+}
+
+message EnvelopeQueueMetadata {
+  string envelope_ref = 1;
+  string queue = 2;
+  string status = 3;
+  string sender_ref = 4;
+  string recipient_ref = 5;
+  string custody_ref = 6;
+  string authz_ref = 7;
+  string message_ref = 8;
+  int64 created_at_unix = 9;
+  int64 claimed_at_unix = 10;
+  int64 received_at_unix = 11;
+  string lease_ref = 12;
+}
+
+message OutboxEnqueueConfig {
+  string store_ref = 1;
+}
+
+message OutboxEnqueueInput {
+  string store_ref = 1;
+  SignalEnvelope envelope = 2;
+  string message_ref = 3;
+  string sender_ref = 4;
+  string recipient_ref = 5;
+  string custody_ref = 6;
+  string authz_ref = 7;
+  string idempotency_key = 8;
+  int64 requested_at_unix = 9;
+}
+
+message OutboxEnqueueOutput {
+  string envelope_ref = 1;
+  string status = 2;
+  EnvelopeQueueMetadata metadata = 3;
+}
+
+message OutboxClaimConfig {
+  string store_ref = 1;
+}
+
+message OutboxClaimInput {
+  string store_ref = 1;
+  string envelope_ref = 2;
+  string claimant_ref = 3;
+  string lease_id = 4;
+  int64 requested_at_unix = 5;
+}
+
+message OutboxClaimOutput {
+  string envelope_ref = 1;
+  string status = 2;
+  SignalEnvelope envelope = 3;
+  string lease_ref = 4;
+  EnvelopeQueueMetadata metadata = 5;
+}
+
+message InboxReceiveConfig {
+  string store_ref = 1;
+}
+
+message InboxReceiveInput {
+  string store_ref = 1;
+  string envelope_ref = 2;
+  SignalEnvelope envelope = 3;
+  string recipient_ref = 4;
+  string idempotency_key = 5;
+  int64 requested_at_unix = 6;
+}
+
+message InboxReceiveOutput {
+  string envelope_ref = 1;
+  string status = 2;
+  EnvelopeQueueMetadata metadata = 3;
+}
+
+message InboxDecryptConfig {
+  string store_ref = 1;
+  string identity_ref = 2;
+  string required_principal = 3;
+}
+
+message InboxDecryptInput {
+  string store_ref = 1;
+  string envelope_ref = 2;
+  string identity_ref = 3;
+  string principal = 4;
+  string custody_ref = 5;
+  string authz_ref = 6;
+}
+
+message InboxDecryptOutput {
+  bool denied = 1;
+  string error = 2;
+  bytes plaintext = 3;
+  EnvelopeQueueMetadata metadata = 4;
+}
+
 message AccountKeysConfig {
   string entropy_pool = 1;
   bytes aci = 2;

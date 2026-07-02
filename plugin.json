@@ -68,7 +68,11 @@
     "step.signal_custody_rotate",
     "step.signal_custody_restore",
     "step.signal_custody_revoke",
-    "step.signal_custody_inspect"
+    "step.signal_custody_inspect",
+    "step.signal_outbox_enqueue",
+    "step.signal_outbox_claim",
+    "step.signal_inbox_receive",
+    "step.signal_inbox_decrypt"
   ],
   "capabilities": {
     "configProvider": false,
@@ -81,6 +85,7 @@
       "signal.key_custody",
       "signal.persistent_custody",
       "signal.custody_store",
+      "signal.envelope_store",
       "signal.account_ref"
     ],
     "stepTypes": [
@@ -115,7 +120,11 @@
       "step.signal_custody_rotate",
       "step.signal_custody_restore",
       "step.signal_custody_revoke",
-      "step.signal_custody_inspect"
+      "step.signal_custody_inspect",
+      "step.signal_outbox_enqueue",
+      "step.signal_outbox_claim",
+      "step.signal_inbox_receive",
+      "step.signal_inbox_decrypt"
     ],
     "triggerTypes": [
       "trigger.signal_envelope",

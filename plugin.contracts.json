@@ -49,6 +49,12 @@
       "type": "signal.custody_store"
     },
     {
+      "config": "workflow.plugins.signal.v1.EnvelopeStoreConfig",
+      "kind": "module",
+      "mode": "strict",
+      "type": "signal.envelope_store"
+    },
+    {
       "config": "workflow.plugins.signal.v1.AccountRefConfig",
       "kind": "module",
       "mode": "strict",
@@ -297,6 +303,38 @@
       "mode": "strict",
       "output": "workflow.plugins.signal.v1.CustodyInspectOutput",
       "type": "step.signal_custody_inspect"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.OutboxEnqueueConfig",
+      "input": "workflow.plugins.signal.v1.OutboxEnqueueInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.OutboxEnqueueOutput",
+      "type": "step.signal_outbox_enqueue"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.OutboxClaimConfig",
+      "input": "workflow.plugins.signal.v1.OutboxClaimInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.OutboxClaimOutput",
+      "type": "step.signal_outbox_claim"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.InboxReceiveConfig",
+      "input": "workflow.plugins.signal.v1.InboxReceiveInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.InboxReceiveOutput",
+      "type": "step.signal_inbox_receive"
+    },
+    {
+      "config": "workflow.plugins.signal.v1.InboxDecryptConfig",
+      "input": "workflow.plugins.signal.v1.InboxDecryptInput",
+      "kind": "step",
+      "mode": "strict",
+      "output": "workflow.plugins.signal.v1.InboxDecryptOutput",
+      "type": "step.signal_inbox_decrypt"
     }
   ],
   "version": "v1"
