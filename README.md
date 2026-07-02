@@ -35,11 +35,11 @@ make install-local
 - `step.signal_service_policy_check` - evaluate live-service approval metadata and requested actions without opening live transport.
 - `step.signal_service_approval_validate` - validate machine-checkable live-service approval metadata and return denial reasons.
 - `step.signal_service_live_submit` - submit fake/sandbox service operations through a registered transport or return a no-egress live denial.
-- `step.signal_service_register_prepare` - build a register operation envelope without submitting it.
+- `step.signal_service_register_prepare` - build a register operation envelope without submitting it, enriched from registered account/custody refs when available.
 - `step.signal_service_link_prepare` - build a linked-device operation envelope with consent, revocation, and unlink proof metadata.
-- `step.signal_service_send_prepare` - build a send operation envelope using recipient and payload refs only.
-- `step.signal_service_receive_admit` - build a receive admission envelope using cursor refs only.
-- `step.signal_service_challenge_respond` - build a challenge response envelope using challenge and response refs only.
+- `step.signal_service_send_prepare` - build a send operation envelope using recipient and payload refs only, with custody attestation metadata when account custody is registered.
+- `step.signal_service_receive_admit` - build a receive admission envelope using cursor refs only, with custody attestation metadata when account custody is registered.
+- `step.signal_service_challenge_respond` - build a challenge response envelope using challenge and response refs only, with custody attestation metadata when account custody is registered.
 - `step.signal_username_proof_prepare` - report username proof readiness without reserving usernames.
 - `step.signal_backup_manifest_verify` - report backup manifest readiness without uploading or downloading backups.
 - `step.signal_backup_auth_prepare` - report backup auth readiness without opening service transport.
@@ -103,7 +103,11 @@ complete machine-checkable approval package.
 
 Operation-specific `*_prepare`, `receive_admit`, and `challenge_respond` steps
 produce `ServiceOperationEnvelope` metadata for application composition and
-approval review. Linked-device envelopes require display name, consent evidence,
+approval review. When `signal.account_ref` and `signal.key_custody` or
+`signal.persistent_custody` are registered, prepare steps inherit device,
+credential, consent, audit, custody, and non-exportable key refs, validate
+custody ownership, and return custody attestation metadata plus readiness
+warnings. Linked-device envelopes require display name, consent evidence,
 consent expiry, revocation URI, and unlink proof refs, and reject replayed or
 revoked ceremony artifacts. Username and backup steps expose readiness
 classifications rather than claiming upstream parity without vector proof.

@@ -56,17 +56,68 @@ func TestKeyCustodyRequiresHostManagedRefs(t *testing.T) {
 	}
 }
 
-func TestAccountRefRejectsUnknownCustody(t *testing.T) {
+func TestAccountRefRejectsMismatchedRegisteredCustody(t *testing.T) {
 	t.Cleanup(resetServiceTestState)
+
+	custody, err := newKeyCustodyModule("custody", &contracts.KeyCustodyConfig{
+		CustodyRef:          "custody-a",
+		AccountRef:          "account-b",
+		NonExportableKeyRef: "kms://signal/account-b/device-1",
+	})
+	if err != nil {
+		t.Fatalf("newKeyCustodyModule: %v", err)
+	}
+	if err := custody.Init(); err != nil {
+		t.Fatalf("custody Init: %v", err)
+	}
 
 	account, err := newAccountRefModule("account", &contracts.AccountRefConfig{
 		AccountRef: "account-a",
-		CustodyRef: "missing",
+		CustodyRef: "custody-a",
 	})
 	if err != nil {
 		t.Fatalf("newAccountRefModule: %v", err)
 	}
 	if err := account.Init(); err == nil {
-		t.Fatal("expected missing custody error")
+		t.Fatal("expected mismatched custody error")
+	}
+}
+
+func TestAccountRefAllowsForwardCustodyResolution(t *testing.T) {
+	t.Cleanup(resetServiceTestState)
+
+	account, err := newAccountRefModule("account", &contracts.AccountRefConfig{
+		AccountRef:    "account-a",
+		DeviceRef:     "device-1",
+		CustodyRef:    "custody-a",
+		CredentialRef: "secret://signal/credential",
+		ConsentRef:    "consent://case/1",
+		AuditRef:      "audit://case/1",
+	})
+	if err != nil {
+		t.Fatalf("newAccountRefModule: %v", err)
+	}
+	if err := account.Init(); err != nil {
+		t.Fatalf("account Init before custody: %v", err)
+	}
+
+	custody, err := newKeyCustodyModule("custody", &contracts.KeyCustodyConfig{
+		CustodyRef:          "custody-a",
+		AccountRef:          "account-a",
+		NonExportableKeyRef: "kms://signal/account-a/device-1",
+	})
+	if err != nil {
+		t.Fatalf("newKeyCustodyModule: %v", err)
+	}
+	if err := custody.Init(); err != nil {
+		t.Fatalf("custody Init after account: %v", err)
+	}
+
+	got, err := lookupSignalAccountRef("account-a")
+	if err != nil {
+		t.Fatalf("lookup account: %v", err)
+	}
+	if got.custodyRef != "custody-a" {
+		t.Fatalf("custody ref = %q", got.custodyRef)
 	}
 }

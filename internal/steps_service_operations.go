@@ -34,7 +34,7 @@ func ExecuteSignalServiceRegisterPrepare(
 		CredentialRef:       req.Input.GetCredentialRef(),
 		NonExportableKeyRef: req.Input.GetNonExportableKeyRef(),
 		RequestedAtUnix:     req.Input.GetRequestedAtUnix(),
-	}), nil
+	})
 }
 
 func ExecuteSignalServiceLinkPrepare(
@@ -56,7 +56,7 @@ func ExecuteSignalServiceLinkPrepare(
 		NonExportableKeyRef: req.Input.GetNonExportableKeyRef(),
 		RequestedAtUnix:     req.Input.GetRequestedAtUnix(),
 		LinkedDevice:        req.Input.GetLinkedDevice(),
-	}), nil
+	})
 }
 
 func validateLinkedDeviceCeremony(ceremony *contracts.LinkedDeviceCeremony) error {
@@ -117,7 +117,7 @@ func ExecuteSignalServiceSendPrepare(
 		CredentialRef:       req.Input.GetCredentialRef(),
 		NonExportableKeyRef: req.Input.GetNonExportableKeyRef(),
 		RequestedAtUnix:     req.Input.GetRequestedAtUnix(),
-	}), nil
+	})
 }
 
 func ExecuteSignalServiceReceiveAdmit(
@@ -136,7 +136,7 @@ func ExecuteSignalServiceReceiveAdmit(
 		CredentialRef:       req.Input.GetCredentialRef(),
 		NonExportableKeyRef: req.Input.GetNonExportableKeyRef(),
 		RequestedAtUnix:     req.Input.GetRequestedAtUnix(),
-	}), nil
+	})
 }
 
 func ExecuteSignalServiceChallengeRespond(
@@ -156,7 +156,7 @@ func ExecuteSignalServiceChallengeRespond(
 		CredentialRef:        req.Input.GetCredentialRef(),
 		NonExportableKeyRef:  req.Input.GetNonExportableKeyRef(),
 		RequestedAtUnix:      req.Input.GetRequestedAtUnix(),
-	}), nil
+	})
 }
 
 func ExecuteSignalUsernameProofPrepare(
@@ -170,7 +170,7 @@ func ExecuteSignalUsernameProofPrepare(
 		Username:        req.Input.GetUsername(),
 		AuditRef:        req.Input.GetAuditRef(),
 		RequestedAtUnix: req.Input.GetRequestedAtUnix(),
-	}), nil
+	})
 }
 
 func ExecuteSignalBackupManifestVerify(
@@ -185,7 +185,7 @@ func ExecuteSignalBackupManifestVerify(
 		BackupID:        req.Input.GetBackupId(),
 		AuditRef:        req.Input.GetAuditRef(),
 		RequestedAtUnix: req.Input.GetRequestedAtUnix(),
-	}), nil
+	})
 }
 
 func ExecuteSignalBackupAuthPrepare(
@@ -199,7 +199,7 @@ func ExecuteSignalBackupAuthPrepare(
 		BackupRef:       req.Input.GetBackupRef(),
 		AuditRef:        req.Input.GetAuditRef(),
 		RequestedAtUnix: req.Input.GetRequestedAtUnix(),
-	}), nil
+	})
 }
 
 type serviceEnvelopeFields struct {
@@ -224,22 +224,80 @@ type serviceEnvelopeFields struct {
 	LinkedDevice         *contracts.LinkedDeviceCeremony
 }
 
-func serviceOperationPrepared(operation service.Operation, fields serviceEnvelopeFields) *sdk.TypedStepResult[*contracts.ServiceOperationPrepareOutput] {
+func serviceOperationPrepared(operation service.Operation, fields serviceEnvelopeFields) (*sdk.TypedStepResult[*contracts.ServiceOperationPrepareOutput], error) {
 	return serviceOperationReport(operation, "prepared", "", fields)
 }
 
-func serviceOperationReport(operation service.Operation, classification, reason string, fields serviceEnvelopeFields) *sdk.TypedStepResult[*contracts.ServiceOperationPrepareOutput] {
+func serviceOperationReport(operation service.Operation, classification, reason string, fields serviceEnvelopeFields) (*sdk.TypedStepResult[*contracts.ServiceOperationPrepareOutput], error) {
+	fields, readiness, err := resolveServicePrepareReadiness(fields)
+	if err != nil {
+		return nil, err
+	}
 	envelope := serviceOperationEnvelope(operation, fields)
 	return &sdk.TypedStepResult[*contracts.ServiceOperationPrepareOutput]{
 		Output: &contracts.ServiceOperationPrepareOutput{
-			Envelope:             envelope,
-			Status:               "prepared",
-			ReportClassification: classification,
-			DeferredReason:       reason,
-			AuditRef:             safeSignalRef(firstNonEmpty(fields.AuditRef, serviceOperationAuditRef(envelope))),
-			LiveEgressAttempted:  false,
+			Envelope:              envelope,
+			Status:                "prepared",
+			ReportClassification:  classification,
+			DeferredReason:        reason,
+			AuditRef:              safeSignalRef(firstNonEmpty(fields.AuditRef, serviceOperationAuditRef(envelope))),
+			LiveEgressAttempted:   false,
+			CustodyAttested:       readiness.custodyAttested,
+			CustodyAttestationRef: readiness.custodyAttestationRef,
+			ReadinessWarnings:     readiness.warnings,
 		},
+	}, nil
+}
+
+type servicePrepareReadiness struct {
+	custodyAttested       bool
+	custodyAttestationRef string
+	warnings              []string
+}
+
+func resolveServicePrepareReadiness(fields serviceEnvelopeFields) (serviceEnvelopeFields, servicePrepareReadiness, error) {
+	var readiness servicePrepareReadiness
+	account, accountRegistered := registeredSignalAccountRef(fields.AccountRef)
+	if accountRegistered {
+		fields.DeviceRef = firstNonEmpty(fields.DeviceRef, account.deviceRef)
+		fields.ConsentRef = firstNonEmpty(fields.ConsentRef, account.consentRef)
+		fields.AuditRef = firstNonEmpty(fields.AuditRef, account.auditRef)
+		fields.CredentialRef = firstNonEmpty(fields.CredentialRef, account.credentialRef)
+		if fields.CustodyRef == "" && account.custody != nil {
+			fields.CustodyRef = account.custody.ref
+		} else if fields.CustodyRef == "" {
+			fields.CustodyRef = account.custodyRef
+		}
 	}
+
+	custody, custodyRegistered := registeredSignalKeyCustody(fields.CustodyRef)
+	if fields.CustodyRef != "" && accountRegistered && !custodyRegistered {
+		return fields, readiness, fmt.Errorf("signal service prepare: custody %q is not registered", fields.CustodyRef)
+	}
+	if custodyRegistered {
+		if fields.AccountRef != "" && custody.accountRef != "" && custody.accountRef != fields.AccountRef {
+			return fields, readiness, fmt.Errorf("signal service prepare: custody %q belongs to account %q", custody.ref, custody.accountRef)
+		}
+		fields.NonExportableKeyRef = firstNonEmpty(fields.NonExportableKeyRef, custody.nonExportableKeyRef)
+		if fields.AccountRef == "" {
+			fields.AccountRef = custody.accountRef
+		}
+		if fields.NonExportableKeyRef != "" {
+			readiness.custodyAttested = true
+			readiness.custodyAttestationRef = "attest://signal/custody/" + signalRefSegment(custody.ref)
+		}
+	}
+
+	if fields.AccountRef != "" && !accountRegistered {
+		readiness.warnings = append(readiness.warnings, "account_ref_not_registered")
+	}
+	if fields.CustodyRef != "" && !custodyRegistered {
+		readiness.warnings = append(readiness.warnings, "custody_ref_not_registered")
+	}
+	if fields.CustodyRef == "" {
+		readiness.warnings = append(readiness.warnings, "custody_ref_missing")
+	}
+	return fields, readiness, nil
 }
 
 func serviceOperationEnvelope(operation service.Operation, fields serviceEnvelopeFields) *contracts.ServiceOperationEnvelope {

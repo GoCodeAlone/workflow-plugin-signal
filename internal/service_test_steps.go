@@ -204,7 +204,7 @@ func serviceTestRequestContext(configAccountRef string, configExpired bool, in s
 	if err != nil {
 		return nil, serviceclient.RequestMetadata{}, nil, err
 	}
-	if custodyRef := in.GetCustodyRef(); custodyRef != "" {
+	if custodyRef := firstNonEmpty(in.GetCustodyRef(), account.custodyRef); custodyRef != "" {
 		custody, err := lookupSignalKeyCustody(custodyRef)
 		if err != nil {
 			return nil, serviceclient.RequestMetadata{}, nil, err

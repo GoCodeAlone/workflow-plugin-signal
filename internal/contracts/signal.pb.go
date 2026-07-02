@@ -4970,15 +4970,18 @@ func (x *ServiceOperationEnvelope) GetLinkedDevice() *LinkedDeviceCeremony {
 }
 
 type ServiceOperationPrepareOutput struct {
-	state                protoimpl.MessageState    `protogen:"open.v1"`
-	Envelope             *ServiceOperationEnvelope `protobuf:"bytes,1,opt,name=envelope,proto3" json:"envelope,omitempty"`
-	Status               string                    `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	ReportClassification string                    `protobuf:"bytes,3,opt,name=report_classification,json=reportClassification,proto3" json:"report_classification,omitempty"`
-	DeferredReason       string                    `protobuf:"bytes,4,opt,name=deferred_reason,json=deferredReason,proto3" json:"deferred_reason,omitempty"`
-	AuditRef             string                    `protobuf:"bytes,5,opt,name=audit_ref,json=auditRef,proto3" json:"audit_ref,omitempty"`
-	LiveEgressAttempted  bool                      `protobuf:"varint,6,opt,name=live_egress_attempted,json=liveEgressAttempted,proto3" json:"live_egress_attempted,omitempty"`
-	unknownFields        protoimpl.UnknownFields
-	sizeCache            protoimpl.SizeCache
+	state                 protoimpl.MessageState    `protogen:"open.v1"`
+	Envelope              *ServiceOperationEnvelope `protobuf:"bytes,1,opt,name=envelope,proto3" json:"envelope,omitempty"`
+	Status                string                    `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	ReportClassification  string                    `protobuf:"bytes,3,opt,name=report_classification,json=reportClassification,proto3" json:"report_classification,omitempty"`
+	DeferredReason        string                    `protobuf:"bytes,4,opt,name=deferred_reason,json=deferredReason,proto3" json:"deferred_reason,omitempty"`
+	AuditRef              string                    `protobuf:"bytes,5,opt,name=audit_ref,json=auditRef,proto3" json:"audit_ref,omitempty"`
+	LiveEgressAttempted   bool                      `protobuf:"varint,6,opt,name=live_egress_attempted,json=liveEgressAttempted,proto3" json:"live_egress_attempted,omitempty"`
+	CustodyAttested       bool                      `protobuf:"varint,7,opt,name=custody_attested,json=custodyAttested,proto3" json:"custody_attested,omitempty"`
+	CustodyAttestationRef string                    `protobuf:"bytes,8,opt,name=custody_attestation_ref,json=custodyAttestationRef,proto3" json:"custody_attestation_ref,omitempty"`
+	ReadinessWarnings     []string                  `protobuf:"bytes,9,rep,name=readiness_warnings,json=readinessWarnings,proto3" json:"readiness_warnings,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *ServiceOperationPrepareOutput) Reset() {
@@ -5051,6 +5054,27 @@ func (x *ServiceOperationPrepareOutput) GetLiveEgressAttempted() bool {
 		return x.LiveEgressAttempted
 	}
 	return false
+}
+
+func (x *ServiceOperationPrepareOutput) GetCustodyAttested() bool {
+	if x != nil {
+		return x.CustodyAttested
+	}
+	return false
+}
+
+func (x *ServiceOperationPrepareOutput) GetCustodyAttestationRef() string {
+	if x != nil {
+		return x.CustodyAttestationRef
+	}
+	return ""
+}
+
+func (x *ServiceOperationPrepareOutput) GetReadinessWarnings() []string {
+	if x != nil {
+		return x.ReadinessWarnings
+	}
+	return nil
 }
 
 type ServiceRegisterPrepareConfig struct {
@@ -8244,14 +8268,17 @@ const file_internal_contracts_signal_proto_rawDesc = "" +
 	"\tbackup_id\x18\x11 \x01(\tR\bbackupId\x12#\n" +
 	"\rchallenge_ref\x18\x12 \x01(\tR\fchallengeRef\x124\n" +
 	"\x16challenge_response_ref\x18\x13 \x01(\tR\x14challengeResponseRef\x12U\n" +
-	"\rlinked_device\x18\x14 \x01(\v20.workflow.plugins.signal.v1.LinkedDeviceCeremonyR\flinkedDevice\"\xb8\x02\n" +
+	"\rlinked_device\x18\x14 \x01(\v20.workflow.plugins.signal.v1.LinkedDeviceCeremonyR\flinkedDevice\"\xca\x03\n" +
 	"\x1dServiceOperationPrepareOutput\x12P\n" +
 	"\benvelope\x18\x01 \x01(\v24.workflow.plugins.signal.v1.ServiceOperationEnvelopeR\benvelope\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x123\n" +
 	"\x15report_classification\x18\x03 \x01(\tR\x14reportClassification\x12'\n" +
 	"\x0fdeferred_reason\x18\x04 \x01(\tR\x0edeferredReason\x12\x1b\n" +
 	"\taudit_ref\x18\x05 \x01(\tR\bauditRef\x122\n" +
-	"\x15live_egress_attempted\x18\x06 \x01(\bR\x13liveEgressAttempted\"x\n" +
+	"\x15live_egress_attempted\x18\x06 \x01(\bR\x13liveEgressAttempted\x12)\n" +
+	"\x10custody_attested\x18\a \x01(\bR\x0fcustodyAttested\x126\n" +
+	"\x17custody_attestation_ref\x18\b \x01(\tR\x15custodyAttestationRef\x12-\n" +
+	"\x12readiness_warnings\x18\t \x03(\tR\x11readinessWarnings\"x\n" +
 	"\x1cServiceRegisterPrepareConfig\x12\x1f\n" +
 	"\vaccount_ref\x18\x01 \x01(\tR\n" +
 	"accountRef\x12#\n" +

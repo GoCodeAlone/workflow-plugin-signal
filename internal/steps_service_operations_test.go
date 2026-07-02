@@ -59,6 +59,92 @@ func TestServiceOperationPrepareBuildsEnvelopeWithoutSubmit(t *testing.T) {
 	}
 }
 
+func TestServiceOperationPrepareResolvesAccountCustodyReadiness(t *testing.T) {
+	t.Cleanup(resetServiceTestState)
+	custody, err := newKeyCustodyModule("custody", &contracts.KeyCustodyConfig{
+		CustodyRef:          "custody://signal/alice/device-1",
+		AccountRef:          "account://signal/alice",
+		NonExportableKeyRef: "kms://signal/account-a/device-1",
+	})
+	if err != nil {
+		t.Fatalf("new custody: %v", err)
+	}
+	if err := custody.Init(); err != nil {
+		t.Fatalf("custody init: %v", err)
+	}
+	account, err := newAccountRefModule("account", &contracts.AccountRefConfig{
+		AccountRef:    "account://signal/alice",
+		DeviceRef:     "device://signal/alice/1",
+		CustodyRef:    "custody://signal/alice/device-1",
+		CredentialRef: "secret://signal/credential",
+		ConsentRef:    "consent://case/1",
+		AuditRef:      "audit://case/1",
+	})
+	if err != nil {
+		t.Fatalf("new account: %v", err)
+	}
+	if err := account.Init(); err != nil {
+		t.Fatalf("account init: %v", err)
+	}
+
+	result, err := ExecuteSignalServiceSendPrepare(context.Background(), sdk.TypedStepRequest[*contracts.ServiceSendPrepareConfig, *contracts.ServiceSendPrepareInput]{
+		Config: &contracts.ServiceSendPrepareConfig{AccountRef: "account://signal/alice"},
+		Input: &contracts.ServiceSendPrepareInput{
+			IdempotencyKey: "send-1",
+			RecipientRef:   "recipient://bob",
+			PayloadRef:     "payload://ciphertext/1",
+		},
+	})
+	if err != nil {
+		t.Fatalf("prepare send: %v", err)
+	}
+	out := result.Output
+	if !out.GetCustodyAttested() {
+		t.Fatalf("custody_attested = false, output = %+v", out)
+	}
+	if out.GetCustodyAttestationRef() != "attest://signal/custody/custody-signal-alice-device-1" {
+		t.Fatalf("custody_attestation_ref = %q", out.GetCustodyAttestationRef())
+	}
+	if got := out.GetEnvelope().GetCustodyRef(); got != "custody://signal/alice/device-1" {
+		t.Fatalf("custody_ref = %q", got)
+	}
+	if got := out.GetEnvelope().GetNonExportableKeyRef(); got != "kms://signal/account-a/device-1" {
+		t.Fatalf("non_exportable_key_ref = %q", got)
+	}
+	if got := out.GetEnvelope().GetCredentialRef(); got != "secret://signal/credential" {
+		t.Fatalf("credential_ref = %q", got)
+	}
+	if got := out.GetEnvelope().GetDeviceRef(); got != "device://signal/alice/1" {
+		t.Fatalf("device_ref = %q", got)
+	}
+	if got := out.GetEnvelope().GetAuditRef(); got != "audit://case/1" {
+		t.Fatalf("audit_ref = %q", got)
+	}
+
+	otherCustody, err := newKeyCustodyModule("other-custody", &contracts.KeyCustodyConfig{
+		CustodyRef:          "custody://signal/bob/device-1",
+		AccountRef:          "account://signal/bob",
+		NonExportableKeyRef: "kms://signal/account-b/device-1",
+	})
+	if err != nil {
+		t.Fatalf("new other custody: %v", err)
+	}
+	if err := otherCustody.Init(); err != nil {
+		t.Fatalf("other custody init: %v", err)
+	}
+	_, err = ExecuteSignalServiceSendPrepare(context.Background(), sdk.TypedStepRequest[*contracts.ServiceSendPrepareConfig, *contracts.ServiceSendPrepareInput]{
+		Config: &contracts.ServiceSendPrepareConfig{AccountRef: "account://signal/alice"},
+		Input: &contracts.ServiceSendPrepareInput{
+			CustodyRef:   "custody://signal/bob/device-1",
+			RecipientRef: "recipient://bob",
+			PayloadRef:   "payload://ciphertext/1",
+		},
+	})
+	if err == nil || !strings.Contains(err.Error(), "belongs to account") {
+		t.Fatalf("mismatched custody error = %v", err)
+	}
+}
+
 func TestServiceLinkPrepareValidatesCeremony(t *testing.T) {
 	t.Cleanup(resetServiceTestState)
 	ctx := context.Background()
