@@ -3,6 +3,7 @@ package internal
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"path/filepath"
 	"testing"
@@ -180,7 +181,10 @@ func TestSignalCustodyAttestAndExportRequestReturnRefsOnly(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if bytes.Contains(raw, []byte("private-key")) || bytes.Contains(raw, bytes.Repeat([]byte{0x51}, 32)) {
+	encodedKey := []byte(base64.StdEncoding.EncodeToString(bytes.Repeat([]byte{0x51}, 32)))
+	if bytes.Contains(raw, []byte("private-key")) ||
+		bytes.Contains(raw, bytes.Repeat([]byte{0x51}, 32)) ||
+		bytes.Contains(raw, encodedKey) {
 		t.Fatalf("custody proof steps exposed key material: %s", raw)
 	}
 }
